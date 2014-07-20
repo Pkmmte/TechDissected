@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Core -->
+  <color name="app_background">#FFE6E6E6</color>
+  <color name="text_primary">#DD000000</color>
+  <color name="text_secondary">#89000000</color>
+
+  <!-- Action Bar -->
+  <color name="action_background">#FF19232D</color>
+
+  <!-- General -->
+  <color name="transparent">#00000000</color>
+  <color name="white">#FFFFFFFF</color>
+</resources>
