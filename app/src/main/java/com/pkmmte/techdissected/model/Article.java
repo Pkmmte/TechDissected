@@ -3,26 +3,46 @@ package com.pkmmte.techdissected.model;
 import android.net.Uri;
 
 public class Article {
+	private Uri source;
 	private Uri image;
 	private String title;
 	private String description;
+	private String content;
+	private String category;
 	private String author;
+	private long date;
 	private int id;
 
 	public Article() {
+		this.source = null;
 		this.image = null;
 		this.title = null;
 		this.description = null;
+		this.content = null;
+		this.category = null;
 		this.author = null;
+		this.date = 0;
 		this.id = -1;
 	}
 
-	public Article(Uri image, String title, String description, String author, int id) {
+	public Article(Uri source, Uri image, String title, String description, String content, String category, String author, long date, int id) {
+		this.source = source;
 		this.image = image;
 		this.title = title;
 		this.description = description;
+		this.content = content;
+		this.category = category;
 		this.author = author;
+		this.date = date;
 		this.id = id;
+	}
+
+	public Uri getSource() {
+		return source;
+	}
+
+	public void setSource(Uri source) {
+		this.source = source;
 	}
 
 	public Uri getImage() {
@@ -49,12 +69,36 @@ public class Article {
 		this.description = description;
 	}
 
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public String getAuthor() {
 		return author;
 	}
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public long getDate() {
+		return date;
+	}
+
+	public void setDate(long date) {
+		this.date = date;
 	}
 
 	public int getId() {
@@ -66,19 +110,57 @@ public class Article {
 	}
 
 	@Override
-	public int hashCode() {
-		int result = title != null ? title.hashCode() : 0;
-		result = 31 * result + (description != null ? description.hashCode() : 0);
-		result = 31 * result + id;
-		return result;
+	public String toString() {
+		return "Article{" +
+			"source=" + source +
+			", image=" + image +
+			", title='" + title + '\'' +
+			", description='" + description + '\'' +
+			", content='" + content + '\'' +
+			", category='" + category + '\'' +
+			", author='" + author + '\'' +
+			", date=" + date +
+			", id=" + id +
+			'}';
 	}
 
 	@Override
-	public String toString() {
-		return "Article{" +
-			"title='" + title + '\'' +
-			", description='" + description + '\'' +
-			", id=" + id +
-			'}';
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Article article = (Article) o;
+
+		if (date != article.date) return false;
+		if (id != article.id) return false;
+		if (author != null ? !author.equals(article.author) : article.author != null) return false;
+		if (category != null ? !category.equals(article.category) : article.category != null) {
+			return false;
+		}
+		if (content != null ? !content.equals(article.content) : article.content != null)
+			return false;
+		if (description != null ? !description.equals(article.description)
+			: article.description != null) {
+			return false;
+		}
+		if (image != null ? !image.equals(article.image) : article.image != null) return false;
+		if (source != null ? !source.equals(article.source) : article.source != null) return false;
+		if (title != null ? !title.equals(article.title) : article.title != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = source != null ? source.hashCode() : 0;
+		result = 31 * result + (image != null ? image.hashCode() : 0);
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (content != null ? content.hashCode() : 0);
+		result = 31 * result + (category != null ? category.hashCode() : 0);
+		result = 31 * result + (author != null ? author.hashCode() : 0);
+		result = 31 * result + (int) (date ^ (date >>> 32));
+		result = 31 * result + id;
+		return result;
 	}
 }
