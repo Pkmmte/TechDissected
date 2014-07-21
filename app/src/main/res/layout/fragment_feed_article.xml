@@ -1,122 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="wrap_content"
+  android:background="@drawable/selector_card_bg"
+  android:orientation="vertical">
 
-  <LinearLayout
+  <FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="4dp"
-    android:background="@drawable/selector_card_bg"
-    android:orientation="vertical">
+    android:layout_height="144dp">
 
-    <FrameLayout
+
+    <ImageView
+      android:id="@+id/imgPreview"
       android:layout_width="match_parent"
-      android:layout_height="144dp">
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop"
+      android:src="@drawable/placeholder" />
 
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
 
-      <ImageView
-        android:id="@+id/imgPreview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder" />
-
-      <LinearLayout
-        android:layout_width="match_parent"
+      <Button
+        android:id="@+id/btnCategory"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-          android:id="@+id/btnCategory"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:background="#FF4db6ac"
-          android:fontFamily="sans-serif-light"
-          android:minHeight="0dp"
-          android:paddingBottom="4dp"
-          android:paddingLeft="8dp"
-          android:paddingRight="8dp"
-          android:paddingTop="4dp"
-          android:text="Category"
-          android:textAllCaps="true"
-          android:textColor="@color/white"
-          android:textSize="16sp" />
-      </LinearLayout>
-
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@drawable/shadow_feed_article"
-        android:orientation="horizontal">
-
-        <TextView
-          android:id="@+id/txtAuthor"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:ellipsize="end"
-          android:fontFamily="sans-serif-light"
-          android:gravity="left"
-          android:maxLines="1"
-          android:paddingLeft="16dp"
-          android:paddingTop="8dp"
-          android:text="By Cliff Wade"
-          android:textColor="@color/white"
-          android:textSize="14sp" />
-
-        <TextView
-          android:id="@+id/txtDate"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:ellipsize="end"
-          android:fontFamily="sans-serif-light"
-          android:gravity="right"
-          android:maxLines="1"
-          android:paddingRight="16dp"
-          android:paddingTop="8dp"
-          android:text="9 minutes ago"
-          android:textColor="@color/white"
-          android:textSize="14sp" />
-      </LinearLayout>
-    </FrameLayout>
+        android:layout_marginTop="8dp"
+        android:background="#FF4db6ac"
+        android:fontFamily="sans-serif-light"
+        android:minHeight="0dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:text="Category"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+    </LinearLayout>
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="bottom"
-      android:orientation="vertical">
+      android:background="@drawable/shadow_feed_article"
+      android:orientation="horizontal">
 
       <TextView
-        android:id="@+id/txtTitle"
-        android:layout_width="match_parent"
+        android:id="@+id/txtAuthor"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:gravity="left"
         android:maxLines="1"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:paddingTop="8dp"
-        android:text="Android One: Pushing For The Next Billion"
-        android:textColor="@color/text_primary"
-        android:textSize="18sp" />
+        android:text="By Cliff Wade"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
       <TextView
-        android:id="@+id/txtDescription"
-        android:layout_width="match_parent"
+        android:id="@+id/txtDate"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:ellipsize="end"
-        android:maxLines="3"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="right"
+        android:maxLines="1"
         android:paddingRight="16dp"
-        android:text="Google has announced its plan to gain its next Billion Android users. Android One brings low cost handsets with direct support from Google."
-        android:textColor="@color/text_secondary"
+        android:paddingTop="8dp"
+        android:text="9 minutes ago"
+        android:textColor="@color/white"
         android:textSize="14sp" />
     </LinearLayout>
+  </FrameLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/txtTitle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:paddingTop="8dp"
+      android:text="Android One: Pushing For The Next Billion"
+      android:textColor="@color/text_primary"
+      android:textSize="18sp" />
+
+    <TextView
+      android:id="@+id/txtDescription"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:maxLines="3"
+      android:paddingBottom="8dp"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:text="Google has announced its plan to gain its next Billion Android users. Android One brings low cost handsets with direct support from Google."
+      android:textColor="@color/text_secondary"
+      android:textSize="14sp" />
   </LinearLayout>
-</FrameLayout>
+</LinearLayout>

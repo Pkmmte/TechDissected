@@ -12,7 +12,7 @@
     android:clipToPadding="false"
     android:listSelector="@color/transparent"
     android:numColumns="@integer/feed_columns"
-    android:paddingBottom="8dp"
-    android:paddingTop="4dp"
+    android:padding="8dp"
+    android:verticalSpacing="4dp"
     tools:listitem="@layout/fragment_feed_article" />
 </LinearLayout>

@@ -61,8 +61,7 @@ public class RSSManager {
 	}
 
 	public void parse(String url) {
-		Log.e(TAG, "FETCHING ARTICLEEZZZ!!!");
-
+		long time = System.currentTimeMillis();
 		Request request = new Request.Builder()
 			.url(url)
 			.build();
@@ -72,6 +71,7 @@ public class RSSManager {
 		try {
 			// 1. get a http response
 			Response response = httpClient.newCall(request).execute();
+			Log.e(TAG, "OkHttp response took " + (System.currentTimeMillis() - time) + "ms");
 
 			// 2. construct a string from the response
 			xmlString = response.body().string();
@@ -81,6 +81,8 @@ public class RSSManager {
 		}
 		// 3. construct an InputSource from the string
 		InputStream inputStream = new ByteArrayInputStream(xmlString.getBytes());
+
+		Log.e(TAG, "Overall " + (System.currentTimeMillis() - time) + "ms");
 
 		// 4. start parsing with SAXParser and handler object
 		// ( both must have been created before )

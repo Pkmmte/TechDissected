@@ -2,12 +2,14 @@ package com.pkmmte.techdissected.util;
 
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import com.pkmmte.techdissected.model.Article;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import org.xmlpull.v1.XmlPullParser;
@@ -20,12 +22,14 @@ class RSSParser {
 	private XmlPullParser xmlParser;
 
 	protected RSSParser() {
-		dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
+		dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.getDefault());
+		dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
 		initParser();
 	}
 
 	public List<Article> parse(InputStream input) {
 		articleList.clear();
+		long time = System.currentTimeMillis();
 
 		try {
 			xmlParser.setInput(input, null);
@@ -62,6 +66,8 @@ class RSSParser {
 			e.printStackTrace();
 		}
 
+		Log.e("TIME", "Parsing took " + (System.currentTimeMillis() - time) + "ms");
+
 		return articleList;
 	}
 
@@ -76,14 +82,15 @@ class RSSParser {
 				article.setTitle(xmlParser.getText());
 			else if (tag.equalsIgnoreCase("description"))
 				article.setDescription(Html.fromHtml(xmlParser.getText()).toString());
-			else if (tag.equalsIgnoreCase("encoded"))
+			else if (tag.equalsIgnoreCase("content:encoded"))
 				article.setContent(xmlParser.getText());
 			else if (tag.equalsIgnoreCase("category"))
 				article.setCategory(xmlParser.getText());
-			else if (tag.equalsIgnoreCase("creator"))
+			else if (tag.equalsIgnoreCase("dc:creator"))
 				article.setAuthor(xmlParser.getText());
-			else if (tag.equalsIgnoreCase("pubDate"))
+			else if (tag.equalsIgnoreCase("pubDate")) {
 				article.setDate(getParsedDate(xmlParser.getText()));
+			}
 
 			return true;
 		}
@@ -99,7 +106,7 @@ class RSSParser {
 
 	private long getParsedDate(String encodedDate) {
 		try {
-			return dateFormat.parse(encodedDate).getTime();
+			return dateFormat.parse(dateFormat.format(dateFormat.parseObject(encodedDate))).getTime();
 		}
 		catch (ParseException e) {
 			e.printStackTrace();
@@ -110,7 +117,7 @@ class RSSParser {
 	private void initParser() {
 		try {
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-			factory.setNamespaceAware(true);
+			factory.setNamespaceAware(false);
 			xmlParser = factory.newPullParser();
 		}
 		catch (XmlPullParserException e) {
