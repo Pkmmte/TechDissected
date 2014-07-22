@@ -92,4 +92,13 @@ public class RSSManager {
 	public List<Article> get() {
 		return mArticles;
 	}
+
+	public Article get(int id) {
+		for(Article article : mArticles) {
+			if(article.getId() == id)
+				return article;
+		}
+
+		return null;
+	}
 }

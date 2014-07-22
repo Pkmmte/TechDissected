@@ -1,8 +1,12 @@
 package com.pkmmte.techdissected.model;
 
 import android.net.Uri;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Article {
+	public static final AtomicLong NEXT_ID = new AtomicLong(0);
+
 	private Uri source;
 	private Uri image;
 	private String title;
@@ -22,7 +26,7 @@ public class Article {
 		this.category = null;
 		this.author = null;
 		this.date = 0;
-		this.id = -1;
+		long id = -1;
 	}
 
 	public Article(Uri source, Uri image, String title, String description, String content, String category, String author, long date, int id) {
@@ -156,11 +160,9 @@ public class Article {
 		result = 31 * result + (image != null ? image.hashCode() : 0);
 		result = 31 * result + (title != null ? title.hashCode() : 0);
 		result = 31 * result + (description != null ? description.hashCode() : 0);
-		result = 31 * result + (content != null ? content.hashCode() : 0);
 		result = 31 * result + (category != null ? category.hashCode() : 0);
 		result = 31 * result + (author != null ? author.hashCode() : 0);
 		result = 31 * result + (int) (date ^ (date >>> 32));
-		result = 31 * result + id;
 		return result;
 	}
 }

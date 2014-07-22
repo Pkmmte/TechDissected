@@ -6,6 +6,7 @@ import android.util.Log;
 import com.pkmmte.techdissected.model.Article;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,7 +50,14 @@ class RSSParser {
 						break;
 					case XmlPullParser.END_TAG:
 						if (tagname.equalsIgnoreCase("item")) {
-							// add article object to list
+							// Generate ID
+							article.setId(Math.abs(article.hashCode()));
+
+							// Remove content thumbnail
+							if(article.getImage() != null)
+								article.setContent(article.getContent().replaceFirst("<img.+?>", ""));
+
+							// Add article object to list
 							articleList.add(article);
 						}
 						break;
@@ -80,8 +88,11 @@ class RSSParser {
 				article.setSource(Uri.parse(xmlParser.getText()));
 			else if (tag.equalsIgnoreCase("title"))
 				article.setTitle(xmlParser.getText());
-			else if (tag.equalsIgnoreCase("description"))
-				article.setDescription(Html.fromHtml(xmlParser.getText()).toString());
+			else if (tag.equalsIgnoreCase("description")) {
+				String encoded = xmlParser.getText();
+				article.setImage(Uri.parse(pullImageLink(encoded)));
+				article.setDescription(Html.fromHtml(encoded.replaceAll("<img.+?>", "")).toString());
+			}
 			else if (tag.equalsIgnoreCase("content:encoded"))
 				article.setContent(xmlParser.getText());
 			else if (tag.equalsIgnoreCase("category"))
@@ -112,6 +123,31 @@ class RSSParser {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+
+	public static String pullImageLink(String encoded) {
+		try {
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser xpp = factory.newPullParser();
+
+			xpp.setInput(new StringReader(encoded));
+			int eventType = xpp.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				if (eventType == XmlPullParser.START_TAG && "img".equals(xpp.getName())) {
+					int count = xpp.getAttributeCount();
+					for (int x = 0; x < count; x++) {
+						if (xpp.getAttributeName(x).equalsIgnoreCase("src"))
+							return xpp.getAttributeValue(x).replaceAll("-110x52", "");
+					}
+				}
+				eventType = xpp.next();
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
 	}
 
 	private void initParser() {

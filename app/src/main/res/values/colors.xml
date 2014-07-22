@@ -2,13 +2,16 @@
 <resources>
   <!-- Core -->
   <color name="app_background">#FFE6E6E6</color>
+  <color name="app_background2">#FFEEEEEE</color>
   <color name="text_primary">#DD000000</color>
   <color name="text_secondary">#89000000</color>
 
   <!-- Action Bar -->
   <color name="action_background">#FF19232D</color>
+  <color name="action_overlay">#33FB8F4B</color>
 
   <!-- General -->
   <color name="transparent">#00000000</color>
   <color name="white">#FFFFFFFF</color>
+  <color name="white_transparent_ex">#33FFFFFF</color>
 </resources>

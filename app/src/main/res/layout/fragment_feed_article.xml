@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+  android:id="@+id/card"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:background="@drawable/selector_card_bg"
+  android:clickable="true"
   android:orientation="vertical">
 
   <FrameLayout
@@ -12,12 +13,18 @@
     android:layout_height="144dp">
 
 
-    <ImageView
-      android:id="@+id/imgPreview"
+    <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:scaleType="centerCrop"
-      android:src="@drawable/placeholder" />
+      android:foreground="@drawable/selector_preview_overlay">
+
+      <ImageView
+        android:id="@+id/imgPreview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder" />
+    </FrameLayout>
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -30,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="#FF4db6ac"
+        android:clickable="false"
         android:fontFamily="sans-serif-light"
         android:minHeight="0dp"
         android:paddingBottom="4dp"
@@ -84,7 +92,6 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
     android:orientation="vertical">
 
     <TextView
