@@ -2,12 +2,13 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical"
   android:background="@color/app_background2"
+  android:orientation="vertical"
   tools:context="com.pkmmte.techdissected.activity.ArticleActivity">
 
 
-  <ScrollView
+  <com.pkmmte.techdissected.view.PkScrollView
+    android:id="@+id/sticky_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical">
@@ -27,7 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFB8F4B"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:tag="sticky">
 
         <TextView
           android:id="@+id/txtTitle"
@@ -82,5 +84,5 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp" />
     </LinearLayout>
-  </ScrollView>
+  </com.pkmmte.techdissected.view.PkScrollView>
 </LinearLayout>

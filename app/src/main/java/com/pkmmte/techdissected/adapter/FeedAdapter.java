@@ -35,7 +35,7 @@ public class FeedAdapter extends BaseAdapter {
 
 	public void updateFeed(List<Article> feed) {
 		this.mFeed = feed;
-		notifyDataSetChanged();
+		this.notifyDataSetChanged();
 	}
 
 	public void setOnClickListener(OnArticleClickListener listener) {
@@ -91,7 +91,6 @@ public class FeedAdapter extends BaseAdapter {
 		holder.mCard.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.e("ROAR", "Clicked card... " + (mListener == null));
 				if(mListener != null)
 					mListener.onClick(mArticle);
 			}

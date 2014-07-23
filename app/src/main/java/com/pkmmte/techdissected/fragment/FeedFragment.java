@@ -32,6 +32,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		initViews(view);
 		mAdapter = new FeedAdapter(getActivity());
+		mGrid.setAdapter(mAdapter);
 		return view;
 	}
 
@@ -45,19 +46,20 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		super.onStart();
 
 		mFeed = RSSManager.with(getActivity()).get();
-		mAdapter = new FeedAdapter(getActivity(), mFeed);
-		mGrid.setAdapter(mAdapter);
 
 		initFeed();
 	}
 
 	private void initFeed() {
 		if(mFeed != null && mFeed.size() > 0) {
+			noContent.setVisibility(View.GONE);
+			mGrid.setVisibility(View.VISIBLE);
+
 			if(mAdapter == null)
 				mAdapter = new FeedAdapter(getActivity(), mFeed);
 			else
 				mAdapter.updateFeed(mFeed);
-			mGrid.setAdapter(mAdapter);
+
 			mAdapter.setOnClickListener(FeedFragment.this);
 		}
 		else {
@@ -79,7 +81,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 						mAdapter = new FeedAdapter(getActivity(), mFeed);
 					else
 						mAdapter.updateFeed(mFeed);
-					mGrid.setAdapter(mAdapter);
+
 					mAdapter.setOnClickListener(FeedFragment.this);
 				}
 			}.execute();
