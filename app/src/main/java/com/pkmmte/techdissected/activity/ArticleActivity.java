@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,7 +51,6 @@ public class ArticleActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	    getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_article);
 	    getActionBar().setDisplayHomeAsUpEnabled(true);
 	    //getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.transparent)));
@@ -56,6 +58,22 @@ public class ArticleActivity extends Activity {
 	    mActionBarBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.action_background));
 	    mActionBarBackgroundDrawable.setAlpha(0);
 		getActionBar().setBackgroundDrawable(mActionBarBackgroundDrawable);
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			mActionBarBackgroundDrawable.setCallback( new Drawable.Callback() {
+				@Override
+				public void invalidateDrawable(Drawable who) {
+					getActionBar().setBackgroundDrawable(who);
+				}
+
+				@Override
+				public void scheduleDrawable(Drawable who, Runnable what, long when) {
+				}
+
+				@Override
+				public void unscheduleDrawable(Drawable who, Runnable what) {
+				}
+			});
+		}
 
 	    article = RSSManager.with(this).get(getIntent().getIntExtra(Constants.ARTICLE_ID, -1));
 	    TextView txtTitle = (TextView) findViewById(R.id.txtTitle);
@@ -66,6 +84,13 @@ public class ArticleActivity extends Activity {
 
 	    final ImageView imgBanner = (ImageView) findViewById(R.id.imgBanner);
 	    Picasso.with(this).load(article.getImage()).placeholder(R.drawable.placeholder).into(imgBanner);
+	    final FrameLayout imgContainer = (FrameLayout) findViewById(R.id.imgContainer);
+		imgContainer.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Utils.getImageDialog(ArticleActivity.this, article.getImage()).show();
+			}
+		});
 
 	    PkScrollView mScroll = (PkScrollView) findViewById(R.id.sticky_scroll);
 	    mScroll.setExtraTopOffset(getResources().getDimensionPixelSize(R.dimen.action_height));
@@ -124,61 +149,17 @@ public class ArticleActivity extends Activity {
 	    });
 
 	    webView.setWebViewClient(new WebViewClient() {
-		    boolean loaded;
-
-		    @Override
-		    public void onPageFinished(WebView view, String url) {
-			    super.onPageFinished(view, url);
-			    this.loaded = true;
-		    }
-
-		    @Override
-		    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			    super.onPageStarted(view, url, favicon);
-			    this.loaded = false;
-		    }
-
 		    @Override
 		    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			    if (!loaded) return false;
-
-			    if (url.contains(".jpg")
-				    || url.contains(".png")
-				    || url.contains(".webp")
-				    || url.contains(".gif")
-				    || url.contains("/attachment/"))
-				    Toast.makeText(ArticleActivity.this, "IMAGE!!", Toast.LENGTH_SHORT).show();
-			    else {
-				    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				    startActivity(i);
-			    }
+			    if (Utils.containsImage(url))
+				    Utils.getImageDialog(ArticleActivity.this, Uri.parse(url)).show();
+			    else
+				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 
 			    return true;
 		    }
-
-		    @Override
-		    public void onLoadResource(WebView view, String url) {
-			    if (!loaded) {
-				    super.onLoadResource(view, url);
-				    return;
-			    }
-
-			    Toast.makeText(ArticleActivity.this, url, Toast.LENGTH_SHORT).show();
-			    if (url.contains(".jpg")
-				    || url.contains(".png")
-				    || url.contains(".webp")
-				    || url.contains(".gif")
-				    || url.contains("/attachment/"))
-				    Toast.makeText(ArticleActivity.this, "IMAGE!!", Toast.LENGTH_SHORT).show();
-			    else {
-				    Toast.makeText(ArticleActivity.this, "Not an image...", Toast.LENGTH_SHORT)
-					    .show();
-				    super.onLoadResource(view, url);
-			    }
-		    }
 	    });
 	    webView.loadDataWithBaseURL(null, article.getContent(), mime, encoding, null);
-
 	    webView.setBackgroundColor(getResources().getColor(R.color.app_background2));
 
 	    configureShare(mShareActionProvider);

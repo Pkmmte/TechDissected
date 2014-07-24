@@ -19,11 +19,25 @@
       android:layout_height="match_parent"
       android:orientation="vertical">
 
-      <ImageView
-        android:id="@+id/imgBanner"
+      <FrameLayout
+        android:id="@+id/imgContainer"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:scaleType="centerCrop" />
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="@drawable/selector_preview_overlay">
+
+
+        <ImageView
+          android:id="@+id/imgBanner"
+          android:layout_width="match_parent"
+          android:layout_height="256dp"
+          android:scaleType="centerCrop" />
+
+        <View
+          android:layout_width="match_parent"
+          android:layout_height="104dp"
+          android:background="@drawable/fab_gradient" />
+      </FrameLayout>
 
       <LinearLayout
         android:layout_width="match_parent"
