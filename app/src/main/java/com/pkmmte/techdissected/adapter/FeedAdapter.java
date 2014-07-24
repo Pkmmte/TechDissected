@@ -1,6 +1,8 @@
 package com.pkmmte.techdissected.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,19 +20,24 @@ import com.pkmmte.techdissected.view.PkImageView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FeedAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<Article> mFeed;
+	private Handler mHander;
 	private OnArticleClickListener mListener;
 
 	public FeedAdapter(Context context) {
 		this.mContext = context;
 		this.mFeed = new ArrayList<Article>();
+		this.mHander = new Handler(Looper.getMainLooper());
 	}
 	public FeedAdapter(Context context, List<Article> feed) {
 		this.mContext = context;
 		this.mFeed = feed;
+		this.mHander = new Handler(Looper.getMainLooper());
 	}
 
 	public void updateFeed(List<Article> feed) {
@@ -74,6 +81,7 @@ public class FeedAdapter extends BaseAdapter {
 			holder.txtDescription = (TextView) convertView.findViewById(R.id.txtDescription);
 			holder.txtAuthor = (TextView) convertView.findViewById(R.id.txtAuthor);
 			holder.txtDate= (TextView) convertView.findViewById(R.id.txtDate);
+			holder.currentTag = 0;
 
 			convertView.setTag(holder);
 		}
@@ -96,6 +104,29 @@ public class FeedAdapter extends BaseAdapter {
 			}
 		});
 
+		/*final ViewHolder fHolder = holder;
+		Timer timer = new Timer("Article " + String.valueOf(mArticle.getId()));
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				mHander.post(new Runnable() {
+					@Override
+					public void run() {
+						Log.e("TAZ", "[" + fHolder.currentTag + "] Updating timer..." + mArticle.getId());
+						// Reset tag index if at max
+						if(fHolder.currentTag >= mArticle.getTags().size())
+							fHolder.currentTag = 0;
+
+						//
+						fHolder.btnCategory.setText(mArticle.getTags().get(fHolder.currentTag));
+
+						//
+						fHolder.currentTag++;
+					}
+				});
+			}
+		}, 0, 4000);*/
+
 		return convertView;
 	}
 
@@ -112,5 +143,6 @@ public class FeedAdapter extends BaseAdapter {
 		public TextView txtDescription;
 		public TextView txtAuthor;
 		public TextView txtDate;
+		public int currentTag;
 	}
 }

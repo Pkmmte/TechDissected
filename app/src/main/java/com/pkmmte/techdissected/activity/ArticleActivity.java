@@ -4,16 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.emilsjolander.components.StickyScrollViewItems.StickyScrollView;
@@ -23,6 +30,7 @@ import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.RSSManager;
 import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.CustomShareActionProvider;
+import com.pkmmte.techdissected.view.FlowLayout;
 import com.pkmmte.techdissected.view.PkScrollView;
 import com.squareup.picasso.Picasso;
 
@@ -36,25 +44,39 @@ public class ArticleActivity extends Activity {
 	CustomShareActionProvider mShareActionProvider;
 	float m_downX = 0;
 	int lastTopValue = 0;
+	private Drawable mActionBarBackgroundDrawable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	    getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_article);
 	    getActionBar().setDisplayHomeAsUpEnabled(true);
+	    //getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.transparent)));
+
+	    mActionBarBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.action_background));
+	    mActionBarBackgroundDrawable.setAlpha(0);
+		getActionBar().setBackgroundDrawable(mActionBarBackgroundDrawable);
 
 	    article = RSSManager.with(this).get(getIntent().getIntExtra(Constants.ARTICLE_ID, -1));
 	    TextView txtTitle = (TextView) findViewById(R.id.txtTitle);
 	    TextView txtAuthor = (TextView) findViewById(R.id.txtAuthor);
 	    TextView txtDate = (TextView) findViewById(R.id.txtDate);
 
+	    FlowLayout tagContainer = (FlowLayout) findViewById(R.id.tagContainer);
+
 	    final ImageView imgBanner = (ImageView) findViewById(R.id.imgBanner);
 	    Picasso.with(this).load(article.getImage()).placeholder(R.drawable.placeholder).into(imgBanner);
 
 	    PkScrollView mScroll = (PkScrollView) findViewById(R.id.sticky_scroll);
+	    mScroll.setExtraTopOffset(getResources().getDimensionPixelSize(R.dimen.action_height));
 	    mScroll.setOnScrollListener(new PkScrollView.PkScrollViewListener() {
 		    @Override
 		    public void onScrollChanged(PkScrollView scrollView, int x, int y, int oldx, int oldy) {
 			    parallaxHeader(imgBanner);
+			    final int headerHeight = imgBanner.getHeight() - getActionBar().getHeight();
+			    final float ratio = (float) Math.min(Math.max(y, 0), headerHeight) / headerHeight;
+			    final int newAlpha = (int) (ratio * 255);
+			    mActionBarBackgroundDrawable.setAlpha(newAlpha);
 		    }
 	    });
 
@@ -62,15 +84,21 @@ public class ArticleActivity extends Activity {
 	    txtAuthor.setText(article.getAuthor());
 	    txtDate.setText(Utils.getRelativeDate(article.getDate()));
 
+	    LayoutInflater inflater = getLayoutInflater();
+	    for(String tag : article.getTags()) {
+		    Button btnTag = (Button) inflater.inflate(R.layout.tag, null);
+		    btnTag.setText(tag);
+		    tagContainer.addView(btnTag);
+	    }
 
 	    WebView webView = (WebView) findViewById(R.id.webView);
 	    String mime = "text/html";
 	    String encoding = "utf-8";
 
+	    webView.setWebChromeClient(new WebChromeClient());
 	    webView.getSettings().setJavaScriptEnabled(true);
 	    webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 	    webView.setHorizontalScrollBarEnabled(false);
-	    webView.loadDataWithBaseURL(null, article.getContent(), mime, encoding, null);
 	    webView.setOnTouchListener(new View.OnTouchListener() {
 		    public boolean onTouch(View v, MotionEvent event) {
 
@@ -112,10 +140,13 @@ public class ArticleActivity extends Activity {
 
 		    @Override
 		    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if(!loaded)
-					return false;
+			    if (!loaded) return false;
 
-			    if(url.contains(".jpg") || url.contains(".png") || url.contains(".webp") || url.contains(".gif") || url.contains("/attachment/"))
+			    if (url.contains(".jpg")
+				    || url.contains(".png")
+				    || url.contains(".webp")
+				    || url.contains(".gif")
+				    || url.contains("/attachment/"))
 				    Toast.makeText(ArticleActivity.this, "IMAGE!!", Toast.LENGTH_SHORT).show();
 			    else {
 				    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -127,21 +158,26 @@ public class ArticleActivity extends Activity {
 
 		    @Override
 		    public void onLoadResource(WebView view, String url) {
-			    if(!loaded) {
+			    if (!loaded) {
 				    super.onLoadResource(view, url);
 				    return;
 			    }
 
 			    Toast.makeText(ArticleActivity.this, url, Toast.LENGTH_SHORT).show();
-			    if(url.contains(".jpg") || url.contains(".png") || url.contains(".webp") || url.contains(".gif") || url.contains("/attachment/"))
+			    if (url.contains(".jpg")
+				    || url.contains(".png")
+				    || url.contains(".webp")
+				    || url.contains(".gif")
+				    || url.contains("/attachment/"))
 				    Toast.makeText(ArticleActivity.this, "IMAGE!!", Toast.LENGTH_SHORT).show();
 			    else {
-				    Toast.makeText(ArticleActivity.this, "Not an image...", Toast.LENGTH_SHORT).show();
+				    Toast.makeText(ArticleActivity.this, "Not an image...", Toast.LENGTH_SHORT)
+					    .show();
 				    super.onLoadResource(view, url);
 			    }
-
 		    }
 	    });
+	    webView.loadDataWithBaseURL(null, article.getContent(), mime, encoding, null);
 
 	    webView.setBackgroundColor(getResources().getColor(R.color.app_background2));
 

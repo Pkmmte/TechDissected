@@ -2,6 +2,7 @@
 <resources>
   <!-- Core -->
   <color name="brand_orange">#FFFB8F4B</color>
+  <color name="brand_orange_light">#BFFB8F4B</color>
   <color name="app_background">#FFE6E6E6</color>
   <color name="app_background2">#FFEEEEEE</color>
   <color name="text_primary">#DD000000</color>

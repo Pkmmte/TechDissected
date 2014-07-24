@@ -57,6 +57,8 @@ class RSSParser {
 							if(article.getImage() != null)
 								article.setContent(article.getContent().replaceFirst("<img.+?>", ""));
 
+							// TODO TEST REMOVE
+							Log.e("TAG", article.toString());
 							// Add article object to list
 							articleList.add(article);
 						}
@@ -95,8 +97,10 @@ class RSSParser {
 			}
 			else if (tag.equalsIgnoreCase("content:encoded"))
 				article.setContent(xmlParser.getText());
-			else if (tag.equalsIgnoreCase("category"))
+			else if (tag.equalsIgnoreCase("category")) {
+				article.setNewTag(xmlParser.getText());
 				article.setCategory(xmlParser.getText());
+			}
 			else if (tag.equalsIgnoreCase("dc:creator"))
 				article.setAuthor(xmlParser.getText());
 			else if (tag.equalsIgnoreCase("pubDate")) {

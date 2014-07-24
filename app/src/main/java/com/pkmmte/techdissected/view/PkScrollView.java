@@ -2,10 +2,11 @@ package com.pkmmte.techdissected.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import com.emilsjolander.components.StickyScrollViewItems.StickyScrollView;
+import android.view.View;
 
 public class PkScrollView extends StickyScrollView {
 	private PkScrollViewListener mScrollListener = null;
+	private int extraTop = 0;
 
 	public PkScrollView(Context context)
 	{
@@ -21,6 +22,12 @@ public class PkScrollView extends StickyScrollView {
 	{
 		super(context, attrs, defStyle);
 	}
+
+	public void setExtraTop(int extra) {
+		this.extraTop = extra;
+	}
+
+
 
 	public void setOnScrollListener(PkScrollViewListener scrollListener)
 	{

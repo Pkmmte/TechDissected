@@ -1,12 +1,13 @@
 package com.pkmmte.techdissected.model;
 
 import android.net.Uri;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Article {
-	public static final AtomicLong NEXT_ID = new AtomicLong(0);
-
+	private List<String> tags;
 	private Uri source;
 	private Uri image;
 	private String title;
@@ -18,6 +19,7 @@ public class Article {
 	private int id;
 
 	public Article() {
+		this.tags = new ArrayList<String>();
 		this.source = null;
 		this.image = null;
 		this.title = null;
@@ -29,7 +31,8 @@ public class Article {
 		long id = -1;
 	}
 
-	public Article(Uri source, Uri image, String title, String description, String content, String category, String author, long date, int id) {
+	public Article(List<String> tags, Uri source, Uri image, String title, String description, String content, String category, String author, long date, int id) {
+		this.tags = tags;
 		this.source = source;
 		this.image = image;
 		this.title = title;
@@ -39,6 +42,18 @@ public class Article {
 		this.author = author;
 		this.date = date;
 		this.id = id;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+
+	public void setNewTag(String tag) {
+		this.tags.add(tag);
 	}
 
 	public Uri getSource() {
@@ -116,7 +131,8 @@ public class Article {
 	@Override
 	public String toString() {
 		return "Article{" +
-			"source=" + source +
+			"tags=" + tags +
+			", source=" + source +
 			", image=" + image +
 			", title='" + title + '\'' +
 			", description='" + description + '\'' +
@@ -149,6 +165,7 @@ public class Article {
 		}
 		if (image != null ? !image.equals(article.image) : article.image != null) return false;
 		if (source != null ? !source.equals(article.source) : article.source != null) return false;
+		if (!tags.equals(article.tags)) return false;
 		if (title != null ? !title.equals(article.title) : article.title != null) return false;
 
 		return true;
@@ -156,13 +173,16 @@ public class Article {
 
 	@Override
 	public int hashCode() {
-		int result = source != null ? source.hashCode() : 0;
+		int result = tags.hashCode();
+		result = 31 * result + (source != null ? source.hashCode() : 0);
 		result = 31 * result + (image != null ? image.hashCode() : 0);
 		result = 31 * result + (title != null ? title.hashCode() : 0);
 		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (content != null ? content.hashCode() : 0);
 		result = 31 * result + (category != null ? category.hashCode() : 0);
 		result = 31 * result + (author != null ? author.hashCode() : 0);
 		result = 31 * result + (int) (date ^ (date >>> 32));
+		result = 31 * result + id;
 		return result;
 	}
 }
