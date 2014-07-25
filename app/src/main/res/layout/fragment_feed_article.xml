@@ -26,29 +26,31 @@
         android:src="@drawable/placeholder" />
     </FrameLayout>
 
-    <LinearLayout
-      android:layout_width="match_parent"
+    <Button
+      android:id="@+id/btnCategory"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:orientation="horizontal">
+      android:layout_marginTop="8dp"
+      android:background="#FF4db6ac"
+      android:clickable="false"
+      android:fontFamily="sans-serif-light"
+      android:minHeight="0dp"
+      android:paddingBottom="4dp"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:paddingTop="4dp"
+      android:text="Category"
+      android:textAllCaps="true"
+      android:textColor="@color/white"
+      android:textSize="16sp" />
 
-      <Button
-        android:id="@+id/btnCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="#FF4db6ac"
-        android:clickable="false"
-        android:fontFamily="sans-serif-light"
-        android:minHeight="0dp"
-        android:paddingBottom="4dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="4dp"
-        android:text="Category"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-    </LinearLayout>
+    <ImageButton
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="right|top"
+      android:background="@drawable/selector_action_overlay"
+      android:padding="4dp"
+      android:src="@drawable/ic_favorite_empty" />
 
     <LinearLayout
       android:layout_width="match_parent"

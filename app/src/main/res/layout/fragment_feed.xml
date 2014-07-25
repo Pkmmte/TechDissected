@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
+  android:id="@+id/ptr_layout"
   android:layout_height="match_parent"
   android:background="@color/app_background">
 
@@ -28,7 +29,7 @@
       android:textSize="28sp" />
   </LinearLayout>
 
-  <GridView
+  <com.pkmmte.techdissected.view.HeaderGridView
     android:id="@+id/feedGrid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -40,4 +41,4 @@
     android:verticalSpacing="4dp"
     android:visibility="gone"
     tools:listitem="@layout/fragment_feed_article" />
-</FrameLayout>
+</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
