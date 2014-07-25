@@ -78,18 +78,11 @@ public class RSSManager {
 		return isParsing;
 	}
 
-	public RequestCreator parse(String url) {
+	public RequestCreator load(String url) {
 		return new RequestCreator(this, url);
 	}
 
-	public RequestCreator parseNext(String url) {
-		if(!mPages.containsKey(url))
-			mPages.put(url, 0);
-
-		return new RequestCreator(this, url).page(mPages.get(url) + 1);
-	}
-
-	protected void parse(String url, int page) {
+	protected void load(String url, int page) {
 		//if(isParsing)
 		//	return;
 		isParsing = true;
@@ -139,6 +132,10 @@ public class RSSManager {
 		}
 
 		return null;
+	}
+
+	protected Map<String, Integer> getPageTracker() {
+		return mPages;
 	}
 
 	public interface Callback {

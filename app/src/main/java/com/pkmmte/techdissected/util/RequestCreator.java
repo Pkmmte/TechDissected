@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.pkmmte.techdissected.model.Article;
 import com.squareup.picasso.Picasso;
 import java.util.List;
+import java.util.Map;
 
 // TODO Assign an id to each request (could be by AtomicLong.getInstance()) and
 // TODO ... handle them in threads appropriately.
@@ -23,6 +24,19 @@ public class RequestCreator {
 		return this;
 	}
 
+	public RequestCreator nextPage() {
+		Request request = data.build();
+		String url = request.getUrl();
+		int page = request.getPage();
+
+		Map<String, Integer> pageTracker = rssManager.getPageTracker();
+		if(pageTracker.containsKey(url))
+			page = pageTracker.get(url);
+
+		this.data.page(page + 1);
+		return this;
+	}
+
 	public RequestCreator callback(RSSManager.Callback callback) {
 		this.data.callback(callback);
 		return this;
@@ -30,7 +44,7 @@ public class RequestCreator {
 
 	public List<Article> get() {
 		final Request request = data.build();
-		rssManager.parse(request.getUrl(), request.getPage());
+		rssManager.load(request.getUrl(), request.getPage());
 		return rssManager.get();
 	}
 
@@ -42,7 +56,7 @@ public class RequestCreator {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				rssManager.parse(request.getUrl(), request.getPage());
+				rssManager.load(request.getUrl(), request.getPage());
 				return null;
 			}
 		}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

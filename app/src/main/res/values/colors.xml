@@ -10,7 +10,7 @@
 
   <!-- Action Bar -->
   <color name="action_background">#FF19232D</color>
-  <color name="action_overlay">#3FFB8F4B</color>
+  <color name="action_overlay">#7FFB8F4B</color>
 
   <!-- General -->
   <color name="transparent">#00000000</color>

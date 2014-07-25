@@ -69,7 +69,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		if(mFeed != null && mFeed.size() > 0)
 			refreshFeedContent();
 		else
-			RSSManager.with(getActivity()).parseNext(Constants.HOME_FEED).callback(this).async();
+			RSSManager.with(getActivity()).load(Constants.HOME_FEED).callback(this).async();
 	}
 
 	private void refreshFeedContent() {
@@ -97,7 +97,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				if(lastItem == totalItemCount - 1) {
 					if(preLast != lastItem){ //to avoid multiple calls for last item
 						mPullToRefreshLayout.setRefreshing(true);
-						RSSManager.with(getActivity()).parseNext(Constants.HOME_FEED).callback(FeedFragment.this).async();
+						RSSManager.with(getActivity()).load(Constants.HOME_FEED).nextPage().callback(FeedFragment.this).async();
 						preLast = lastItem;
 					}
 				}
@@ -114,7 +114,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	@Override
 	public void onRefreshStarted(View view) {
-		RSSManager.with(getActivity()).parse(Constants.HOME_FEED).callback(this).async();
+		RSSManager.with(getActivity()).load(Constants.HOME_FEED).callback(this).async();
 	}
 
 	@Override
