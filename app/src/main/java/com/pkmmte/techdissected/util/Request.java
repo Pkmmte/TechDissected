@@ -1,45 +1,56 @@
 package com.pkmmte.techdissected.util;
 
-import android.net.Uri;
-
 public class Request {
-	public final Uri uri;
+	public final String url;
 	public final int page;
+	public final RSSManager.Callback callback;
 
-	public Request(Uri uri, int page) {
-		this.uri = uri;
+	public Request(String url, int page, RSSManager.Callback callback) {
+		this.url = url;
 		this.page = page;
+		this.callback = callback;
 	}
 
 	public Request(Builder builder) {
-		this.uri = builder.uri;
+		this.url = builder.url;
 		this.page = builder.page;
+		this.callback = builder.callback;
 	}
 
-	public Uri getUri() {
-		return uri;
+	public String getUrl() {
+		return url;
 	}
 
 	public int getPage() {
 		return page;
 	}
 
-	public static final class Builder {
-		private Uri uri;
-		private int page;
+	public RSSManager.Callback getCallback() {
+		return callback;
+	}
 
-		public Builder(Uri uri, int page) {
-			this.uri = uri;
-			this.page = page;
+	public static final class Builder {
+		private String url;
+		private int page;
+		private RSSManager.Callback callback;
+
+		public Builder(String url) {
+			this.url = url;
+			this.page = 1;
 		}
 
-		public Builder uri(Uri uri) {
-			this.uri = uri;
+		public Builder url(String url) {
+			this.url = url;
 			return this;
 		}
 
 		public Builder page(int page) {
 			this.page = page;
+			return this;
+		}
+
+		public Builder callback(RSSManager.Callback callback) {
+			this.callback = callback;
 			return this;
 		}
 

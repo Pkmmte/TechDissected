@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,12 +28,13 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener,
-	OnRefreshListener {
+	OnRefreshListener, RSSManager.Callback {
 	private List<Article> mFeed = new ArrayList<Article>();
 	private View noContent;
 	private HeaderGridView mGrid;
 	private FeedAdapter mAdapter;
 	private PullToRefreshLayout mPullToRefreshLayout;
+	private Handler mHandler;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		initViews(view);
 		mAdapter = new FeedAdapter(getActivity());
 		mGrid.setAdapter(mAdapter);
+		mHandler = new Handler();
 		return view;
 	}
 
@@ -59,27 +62,14 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			.setup(mPullToRefreshLayout);
 
 		mFeed = RSSManager.with(getActivity()).get();
-		initFeed(false);
+		initFeed();
 	}
 
-	private void initFeed(boolean next) {
-		if(mFeed != null && mFeed.size() > 0 && !next)
+	private void initFeed() {
+		if(mFeed != null && mFeed.size() > 0)
 			refreshFeedContent();
-		else {
-			new AsyncTask<Void, Void, Void>() {
-				@Override
-				protected Void doInBackground(Void... params) {
-					RSSManager.with(getActivity()).parseNext(Constants.HOME_FEED);
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(Void p) {
-					mFeed = RSSManager.with(getActivity()).get();
-					refreshFeedContent();
-				}
-			}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-		}
+		else
+			RSSManager.with(getActivity()).parseNext(Constants.HOME_FEED).callback(this).async();
 	}
 
 	private void refreshFeedContent() {
@@ -95,8 +85,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 		mGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
 			int currentVisibleItemCount = 0;
-			int currentScrollState = 0;
 			int preLast = 0;
+
+			@Override public void onScrollStateChanged(AbsListView view, int scrollState) {}
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
@@ -104,25 +95,12 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				this.currentVisibleItemCount = visibleItemCount;
 				final int lastItem = firstVisibleItem + visibleItemCount;
 				if(lastItem == totalItemCount - 1) {
-					if(preLast!=lastItem){ //to avoid multiple calls for last item
-						Log.e("Last", "Last");
-						initFeed(true);
+					if(preLast != lastItem){ //to avoid multiple calls for last item
+						mPullToRefreshLayout.setRefreshing(true);
+						RSSManager.with(getActivity()).parseNext(Constants.HOME_FEED).callback(FeedFragment.this).async();
 						preLast = lastItem;
 					}
 				}
-			}
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState)
-			{
-				this.currentScrollState = scrollState;
-				//this.isScrollCompleted();
-			}
-
-			private void isScrollCompleted()
-			{
-				if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE && !RSSManager.with(getActivity()).isParsing())
-					initFeed(true);
 			}
 		});
 	}
@@ -132,7 +110,6 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		Intent intent = new Intent(getActivity(), ArticleActivity.class);
 		intent.putExtra(Constants.ARTICLE_ID, article.getId());
 		startActivity(intent);
-		//Toast.makeText(getActivity(), "" + RSSManager.with(getActivity()).get(article.getId()).getId(), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -142,6 +119,19 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	@Override
 	public void onRefreshStarted(View view) {
+		RSSManager.with(getActivity()).parse(Constants.HOME_FEED).callback(this).async();
+	}
 
+	@Override
+	public void postParse(List<Article> articleList) {
+		mFeed = articleList;
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				mPullToRefreshLayout.setRefreshComplete();
+				refreshFeedContent();
+			}
+		});
+		// TODO Add manager support for callbacks on UI thread (Builder feature)
 	}
 }

@@ -77,11 +77,18 @@ public class RSSManager {
 		return isParsing;
 	}
 
-	public void parse(String url) {
-		parse(url, 1);
+	public RequestCreator parse(String url) {
+		return new RequestCreator(this, url);
 	}
 
-	public void parse(String url, int page) {
+	public RequestCreator parseNext(String url) {
+		if(!mPages.containsKey(url))
+			mPages.put(url, 0);
+
+		return new RequestCreator(this, url).page(mPages.get(url) + 1);
+	}
+
+	protected void parse(String url, int page) {
 		//if(isParsing)
 		//	return;
 		isParsing = true;
@@ -118,13 +125,6 @@ public class RSSManager {
 			mCallback.postParse(mArticles);
 
 		isParsing = false;
-	}
-
-	public void parseNext(String url) {
-		if(!mPages.containsKey(url))
-			mPages.put(url, 0);
-
-		parse(url, mPages.get(url) + 1);
 	}
 
 	public List<Article> get() {
