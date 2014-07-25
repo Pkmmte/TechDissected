@@ -3,25 +3,19 @@ package com.pkmmte.techdissected.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.model.Article;
 import com.pkmmte.techdissected.util.Utils;
-import com.pkmmte.techdissected.view.PkImageView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class FeedAdapter extends BaseAdapter {
 	private Context mContext;
@@ -132,7 +126,6 @@ public class FeedAdapter extends BaseAdapter {
 
 	public interface OnArticleClickListener {
 		public void onClick(Article article);
-		public void onCategoryClick(String category);
 	}
 
 	private class ViewHolder {

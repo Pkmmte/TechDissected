@@ -18,11 +18,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 class RSSParser {
+	private final RSSManager rssManager;
 	private List<Article> articleList = new ArrayList<Article>();
 	private SimpleDateFormat dateFormat;
 	private XmlPullParser xmlParser;
 
-	protected RSSParser() {
+	protected RSSParser(RSSManager rssManager) {
+		this.rssManager = rssManager;
 		dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.getDefault());
 		dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
 		initParser();

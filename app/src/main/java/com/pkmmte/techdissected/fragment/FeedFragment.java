@@ -113,11 +113,6 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	@Override
-	public void onCategoryClick(String category) {
-
-	}
-
-	@Override
 	public void onRefreshStarted(View view) {
 		RSSManager.with(getActivity()).parse(Constants.HOME_FEED).callback(this).async();
 	}

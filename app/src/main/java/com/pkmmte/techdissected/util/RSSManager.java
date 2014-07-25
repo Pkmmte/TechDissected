@@ -29,9 +29,10 @@ public class RSSManager {
 
 	// Our handy client for getting XML feed data
 	private OkHttpClient httpClient = new OkHttpClient();
+	private final int httpCacheSize = 1024 * 1024;
 
 	// Reusable XML Parser
-	private RSSParser rssParser = new RSSParser();
+	private RSSParser rssParser = new RSSParser(this);
 
 	// List of stored articles
 	private List<Article> mArticles = new ArrayList<Article>();
@@ -54,7 +55,7 @@ public class RSSManager {
 	protected RSSManager(Context context) {
 		this.mContext = context;
 		try {
-			this.httpClient.setCache(new Cache(context.getCacheDir(), 2000));
+			this.httpClient.setCache(new Cache(context.getCacheDir(), httpCacheSize));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
