@@ -21,11 +21,12 @@ public class Utils {
 	}
 
 	public static boolean containsImage(String encoded) {
-		return (encoded.contains(".jpg")
-			 || encoded.contains(".png")
-			 || encoded.contains(".webp")
-			 || encoded.contains(".gif")
-			 || encoded.contains("/attachment/"));
+		String str = encoded.toLowerCase();
+		return (str.contains(".jpg")
+			 || str.contains(".png")
+			 || str.contains(".webp")
+			 || str.contains(".gif")
+			 || str.contains("/attachment/"));
 	}
 
 	public static Dialog getImageDialog(final Context context, final Uri uri) {

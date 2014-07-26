@@ -125,15 +125,13 @@ public class RSSManager {
 		for(List<Article> articleList : articleMap.values()) {
 			for(Article article : articleList) {
 				if(article.getId() == id) {
-					if(loggingEnabled)
-						Log.d(TAG, "get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
+					log("get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
 					return article;
 				}
 			}
 		}
 
-		if(loggingEnabled)
-			Log.d(TAG, "get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
+		log("get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
 
 		return null;
 	}
@@ -149,8 +147,47 @@ public class RSSManager {
 		List<Article> articleList = articleMap.get(url);
 		articleList.addAll(newArticles);
 
-		if(isLoggingEnabled())
-			Log.d(TAG, "New size for " + url + " is " + articleList.size());
+		log("New size for " + url + " is " + articleList.size());
+	}
+
+	protected void log(String message) {
+		log(TAG, message, Log.DEBUG);
+	}
+
+	protected void log(String tag, String message) {
+		log(tag, message, Log.DEBUG);
+	}
+
+	protected void log(String message, int type) {
+		log(TAG, message, type);
+	}
+
+	protected void log(String tag, String message, int type) {
+		if(!loggingEnabled)
+			return;
+
+		switch(type) {
+			case Log.VERBOSE:
+				Log.v(tag, message);
+				break;
+			case Log.DEBUG:
+				Log.d(tag, message);
+				break;
+			case Log.INFO:
+				Log.i(tag, message);
+				break;
+			case Log.WARN:
+				Log.w(tag, message);
+				break;
+			case Log.ERROR:
+				Log.e(tag, message);
+				break;
+			case Log.ASSERT:
+			//	break;
+			default:
+				Log.wtf(tag, message);
+				break;
+		}
 	}
 
 	public interface Callback {

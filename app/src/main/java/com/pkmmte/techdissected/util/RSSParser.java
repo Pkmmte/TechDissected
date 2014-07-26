@@ -18,6 +18,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 class RSSParser {
+	private final String TAG = "RSSParser";
 	private final RSSManager rssManager;
 	private List<Article> articleList = new ArrayList<Article>();
 	private SimpleDateFormat dateFormat;
@@ -59,8 +60,7 @@ class RSSParser {
 							if(article.getImage() != null)
 								article.setContent(article.getContent().replaceFirst("<img.+?>", ""));
 
-							// TODO TEST REMOVE
-							Log.e("TAG", article.toShortString());
+							rssManager.log(TAG, article.toShortString(), Log.INFO);
 							// Add article object to list
 							articleList.add(article);
 						}
@@ -78,7 +78,7 @@ class RSSParser {
 			e.printStackTrace();
 		}
 
-		Log.e("TIME", "Parsing took " + (System.currentTimeMillis() - time) + "ms");
+		rssManager.log(TAG, "Parsing took " + (System.currentTimeMillis() - time) + "ms");
 
 		return articleList;
 	}
@@ -151,7 +151,7 @@ class RSSParser {
 		}
 		catch (Exception e) {
 			if(rssManager.isLoggingEnabled())
-				Log.e(rssManager.TAG, "Error pulling image link from description!" + e.getMessage());
+				rssManager.log(TAG, "Error pulling image link from description!" + e.getMessage(), Log.WARN);
 		}
 
 		return "";
