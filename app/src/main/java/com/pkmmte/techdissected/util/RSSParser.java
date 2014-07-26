@@ -150,8 +150,7 @@ class RSSParser {
 			}
 		}
 		catch (Exception e) {
-			if(rssManager.isLoggingEnabled())
-				rssManager.log(TAG, "Error pulling image link from description!" + e.getMessage(), Log.WARN);
+			rssManager.log(TAG, "Error pulling image link from description!\n" + e.getMessage(), Log.WARN);
 		}
 
 		return "";

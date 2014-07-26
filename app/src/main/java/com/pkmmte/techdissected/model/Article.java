@@ -1,12 +1,14 @@
 package com.pkmmte.techdissected.model;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Article {
+public class Article implements Parcelable {
 	private List<String> tags;
 	private Uri source;
 	private Uri image;
@@ -160,7 +162,7 @@ public class Article {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (o == null || !(o instanceof Article)) return false;
 
 		Article article = (Article) o;
 
@@ -198,4 +200,59 @@ public class Article {
 		result = 31 * result + id;
 		return result;
 	}
+
+	protected Article(Parcel in) {
+		if (in.readByte() == 0x01) {
+			tags = new ArrayList<String>();
+			in.readList(tags, String.class.getClassLoader());
+		} else {
+			tags = null;
+		}
+		source = (Uri) in.readValue(Uri.class.getClassLoader());
+		image = (Uri) in.readValue(Uri.class.getClassLoader());
+		title = in.readString();
+		description = in.readString();
+		content = in.readString();
+		category = in.readString();
+		author = in.readString();
+		date = in.readLong();
+		id = in.readInt();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		if (tags == null) {
+			dest.writeByte((byte) (0x00));
+		} else {
+			dest.writeByte((byte) (0x01));
+			dest.writeList(tags);
+		}
+		dest.writeValue(source);
+		dest.writeValue(image);
+		dest.writeString(title);
+		dest.writeString(description);
+		dest.writeString(content);
+		dest.writeString(category);
+		dest.writeString(author);
+		dest.writeLong(date);
+		dest.writeInt(id);
+	}
+
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>() {
+		@Override
+		public Article createFromParcel(Parcel in) {
+			return new Article(in);
+		}
+
+		@Override
+		public Article[] newArray(int size) {
+			return new Article[size];
+		}
+	};
 }
