@@ -19,6 +19,11 @@ public class RequestCreator {
 		this.data = new Request.Builder(url);
 	}
 
+	public RequestCreator search(String search) {
+		this.data.search(search);
+		return this;
+	}
+
 	public RequestCreator page(int page) {
 		this.data.page(page);
 		return this;
@@ -28,6 +33,9 @@ public class RequestCreator {
 		Request request = data.build();
 		String url = request.getUrl();
 		int page = request.getPage();
+
+		if(request.getSearchTerm() != null)
+			url += "?s=" + request.getSearchTerm();
 
 		Map<String, Integer> pageTracker = rssManager.getPageTracker();
 		if(pageTracker.containsKey(url))
@@ -44,8 +52,8 @@ public class RequestCreator {
 
 	public List<Article> get() {
 		final Request request = data.build();
-		rssManager.load(request.getUrl(), request.getPage());
-		return rssManager.get();
+		rssManager.load(request.getUrl(), request.getSearchTerm(), request.getPage());
+		return rssManager.get(request.getUrl());
 	}
 
 	public void async() {
@@ -56,7 +64,7 @@ public class RequestCreator {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				rssManager.load(request.getUrl(), request.getPage());
+				rssManager.load(request.getUrl(), request.getSearchTerm(), request.getPage());
 				return null;
 			}
 		}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

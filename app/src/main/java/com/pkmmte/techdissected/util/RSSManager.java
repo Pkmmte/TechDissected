@@ -1,15 +1,13 @@
 package com.pkmmte.techdissected.util;
 
 import android.content.Context;
-import android.util.SparseArray;
+import android.util.Log;
 import com.pkmmte.techdissected.model.Article;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.picasso.Picasso;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,26 +23,23 @@ public class RSSManager {
 	protected static final String TAG = "RSSManager";
 
 	// Context is always useful for some reason.
-	private Context mContext;
+	private final Context mContext;
 
 	// Our handy client for getting XML feed data
-	private OkHttpClient httpClient = new OkHttpClient();
+	private final OkHttpClient httpClient = new OkHttpClient();
 	private final int httpCacheSize = 1024 * 1024;
 
 	// Reusable XML Parser
 	private RSSParser rssParser = new RSSParser(this);
 
 	// List of stored articles
-	private List<Article> mArticles = new ArrayList<Article>();
+	private Map<String, List<Article>> articleMap = new HashMap<String, List<Article>>();
 
 	// Keep track of pages already loaded on specific feeds
-	private Map<String, Integer> mPages = new HashMap<String, Integer>();
+	private Map<String, Integer> pageTracker = new HashMap<String, Integer>();
 
 	//
 	private Callback mCallback;
-
-	//
-	private boolean isParsing = false;
 
 	public static  RSSManager with(Context context) {
 		if(rssManager == null)
@@ -74,26 +69,22 @@ public class RSSManager {
 		return loggingEnabled;
 	}
 
-	public boolean isParsing() {
-		return isParsing;
-	}
-
 	public RequestCreator load(String url) {
 		return new RequestCreator(this, url);
 	}
 
-	protected void load(String url, int page) {
-		//if(isParsing)
-		//	return;
-		isParsing = true;
+	protected void load(String url, String search, int page) {
+		if(search != null)
+			url += "?s=" + search;
+		String requestUrl = url;
 
 		//
-		mPages.put(url, page);
+		pageTracker.put(requestUrl, page);
 		if(page > 1)
-			url += "?paged=" + String.valueOf(page);
+			requestUrl += "?paged=" + String.valueOf(page);
 
 		Request request = new Request.Builder()
-			.url(url)
+			.url(requestUrl)
 			.build();
 
 		String xmlString = null;
@@ -113,29 +104,53 @@ public class RSSManager {
 
 		// 4. start parsing with SAXParser and handler object
 		// ( both must have been created before )
-		mArticles.addAll(rssParser.parse(inputStream));
+		List<Article> newArticles = rssParser.parse(inputStream);
+		insert(url, newArticles);
 
 		if(mCallback != null)
-			mCallback.postParse(mArticles);
-
-		isParsing = false;
+			mCallback.postParse(newArticles);
 	}
 
-	public List<Article> get() {
-		return mArticles;
+	public Map<String, List<Article>> get() {
+		return articleMap;
+	}
+
+	public List<Article> get(String url) {
+		return articleMap.get(url);
 	}
 
 	public Article get(int id) {
-		for(Article article : mArticles) {
-			if(article.getId() == id)
-				return article;
+		long time = System.currentTimeMillis();
+
+		for(List<Article> articleList : articleMap.values()) {
+			for(Article article : articleList) {
+				if(article.getId() == id) {
+					if(loggingEnabled)
+						Log.d(TAG, "get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
+					return article;
+				}
+			}
 		}
+
+		if(loggingEnabled)
+			Log.d(TAG, "get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
 
 		return null;
 	}
 
 	protected Map<String, Integer> getPageTracker() {
-		return mPages;
+		return pageTracker;
+	}
+
+	private void insert(String url, List<Article> newArticles) {
+		if(!articleMap.containsKey(url))
+			articleMap.put(url, new ArrayList<Article>());
+
+		List<Article> articleList = articleMap.get(url);
+		articleList.addAll(newArticles);
+
+		if(isLoggingEnabled())
+			Log.d(TAG, "New size for " + url + " is " + articleList.size());
 	}
 
 	public interface Callback {

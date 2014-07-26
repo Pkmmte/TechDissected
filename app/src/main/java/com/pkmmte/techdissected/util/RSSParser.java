@@ -60,7 +60,7 @@ class RSSParser {
 								article.setContent(article.getContent().replaceFirst("<img.+?>", ""));
 
 							// TODO TEST REMOVE
-							Log.e("TAG", article.toString());
+							Log.e("TAG", article.toShortString());
 							// Add article object to list
 							articleList.add(article);
 						}
@@ -131,7 +131,7 @@ class RSSParser {
 		}
 	}
 
-	public static String pullImageLink(String encoded) {
+	private String pullImageLink(String encoded) {
 		try {
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 			XmlPullParser xpp = factory.newPullParser();
@@ -150,7 +150,8 @@ class RSSParser {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			if(rssManager.isLoggingEnabled())
+				Log.e(rssManager.TAG, "Error pulling image link from description!" + e.getMessage());
 		}
 
 		return "";

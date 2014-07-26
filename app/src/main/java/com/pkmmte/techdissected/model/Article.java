@@ -128,6 +128,19 @@ public class Article {
 		this.id = id;
 	}
 
+	public String toShortString() {
+		return "Article{" +
+			"tags=" + tags +
+			", source=" + source +
+			", image=" + image +
+			", title='" + title + '\'' +
+			", category='" + category + '\'' +
+			", author='" + author + '\'' +
+			", date=" + date +
+			", id=" + id +
+			'}';
+	}
+
 	@Override
 	public String toString() {
 		return "Article{" +

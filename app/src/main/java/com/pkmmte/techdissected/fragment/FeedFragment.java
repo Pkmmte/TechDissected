@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.activity.ArticleActivity;
+import com.pkmmte.techdissected.activity.MainActivity;
 import com.pkmmte.techdissected.adapter.FeedAdapter;
 import com.pkmmte.techdissected.model.Article;
 import com.pkmmte.techdissected.util.Constants;
@@ -61,7 +62,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			.listener(this)
 			.setup(mPullToRefreshLayout);
 
-		mFeed = RSSManager.with(getActivity()).get();
+		mFeed = RSSManager.with(getActivity()).get(Constants.HOME_FEED);
 		initFeed();
 	}
 
@@ -97,7 +98,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				if(lastItem == totalItemCount - 1) {
 					if(preLast != lastItem){ //to avoid multiple calls for last item
 						mPullToRefreshLayout.setRefreshing(true);
-						RSSManager.with(getActivity()).load(Constants.HOME_FEED).nextPage().callback(FeedFragment.this).async();
+						RSSManager.with(getActivity()).load(
+							Constants.HOME_FEED).nextPage().callback(FeedFragment.this).async();
 						preLast = lastItem;
 					}
 				}
@@ -119,7 +121,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	@Override
 	public void postParse(List<Article> articleList) {
-		mFeed = articleList;
+		//mFeed = articleList;
+		mFeed = RSSManager.with(getActivity()).get(Constants.HOME_FEED);
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
