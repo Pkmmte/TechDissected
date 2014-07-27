@@ -7,7 +7,9 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.internal.http.OkHeaders;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ public class RSSManager {
 
 	// Our handy client for getting XML feed data
 	private final OkHttpClient httpClient = new OkHttpClient();
+	private final String httpCacheDir = "/okhttp";
 	private final int httpCacheSize = 1024 * 1024;
 
 	// Reusable XML Parser
@@ -50,9 +53,11 @@ public class RSSManager {
 	protected RSSManager(Context context) {
 		this.mContext = context;
 		try {
-			this.httpClient.setCache(new Cache(context.getCacheDir(), httpCacheSize));
+			File cacheDir = new File(context.getCacheDir().getAbsolutePath() + httpCacheDir);
+			this.httpClient.setCache(new Cache(cacheDir, httpCacheSize));
 		}
 		catch (Exception e) {
+			Log.e(TAG, "Error setting OkHttp client cache!");
 			e.printStackTrace();
 		}
 	}
@@ -84,6 +89,7 @@ public class RSSManager {
 			requestUrl += "?paged=" + String.valueOf(page);
 
 		Request request = new Request.Builder()
+			//.addHeader(OkHeaders.op;)
 			.url(requestUrl)
 			.build();
 

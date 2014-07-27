@@ -102,7 +102,6 @@
           android:background="@drawable/shadow_down" />
       </LinearLayout>
 
-
       <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"

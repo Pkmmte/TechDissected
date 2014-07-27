@@ -23,10 +23,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.emilsjolander.components.StickyScrollViewItems.StickyScrollView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.model.Article;
 import com.pkmmte.techdissected.util.Constants;
@@ -35,6 +32,7 @@ import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.CustomShareActionProvider;
 import com.pkmmte.techdissected.view.FlowLayout;
 import com.pkmmte.techdissected.view.PkScrollView;
+import com.pkmmte.techdissected.view.RippleButton;
 import com.squareup.picasso.Picasso;
 
 /**

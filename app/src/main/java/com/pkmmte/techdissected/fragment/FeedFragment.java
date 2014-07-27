@@ -1,22 +1,15 @@
 package com.pkmmte.techdissected.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.activity.ArticleActivity;
-import com.pkmmte.techdissected.activity.MainActivity;
 import com.pkmmte.techdissected.adapter.FeedAdapter;
 import com.pkmmte.techdissected.model.Article;
 import com.pkmmte.techdissected.util.Constants;
@@ -62,7 +55,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			.listener(this)
 			.setup(mPullToRefreshLayout);
 
-		mFeed = RSSManager.with(getActivity()).get(Constants.HOME_FEED);
+		mFeed = RSSManager.with(getActivity()).get(Constants.MAIN_FEED);
 		initFeed();
 	}
 
@@ -70,7 +63,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		if(mFeed != null && mFeed.size() > 0)
 			refreshFeedContent();
 		else
-			RSSManager.with(getActivity()).load(Constants.HOME_FEED).callback(this).async();
+			RSSManager.with(getActivity()).load(Constants.MAIN_FEED).callback(this).async();
 	}
 
 	private void refreshFeedContent() {
@@ -99,7 +92,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 					if(preLast != lastItem){ //to avoid multiple calls for last item
 						mPullToRefreshLayout.setRefreshing(true);
 						RSSManager.with(getActivity()).load(
-							Constants.HOME_FEED).nextPage().callback(FeedFragment.this).async();
+							Constants.MAIN_FEED).nextPage().callback(FeedFragment.this).async();
 						preLast = lastItem;
 					}
 				}
@@ -116,13 +109,13 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	@Override
 	public void onRefreshStarted(View view) {
-		RSSManager.with(getActivity()).load(Constants.HOME_FEED).callback(this).async();
+		RSSManager.with(getActivity()).load(Constants.MAIN_FEED).callback(this).async();
 	}
 
 	@Override
 	public void postParse(List<Article> articleList) {
 		//mFeed = articleList;
-		mFeed = RSSManager.with(getActivity()).get(Constants.HOME_FEED);
+		mFeed = RSSManager.with(getActivity()).get(Constants.MAIN_FEED);
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
