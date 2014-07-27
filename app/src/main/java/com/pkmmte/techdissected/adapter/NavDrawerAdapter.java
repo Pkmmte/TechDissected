@@ -77,7 +77,6 @@ public class NavDrawerAdapter extends BaseAdapter {
 		holder.txtTitle.setText(mDrawerItems.get(position).getName());
 
 		// Highlight if selected
-		holder.txtTitle.setBackgroundColor(mContext.getResources().getColor());
 		// holder.txtTitle.setTypeface((currentPage == position) ? fontSelected : fontNormal);
 
 		return convertView;

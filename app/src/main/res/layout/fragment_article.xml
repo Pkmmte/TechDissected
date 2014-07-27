@@ -1,0 +1,120 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/app_background2"
+  android:orientation="vertical">
+
+
+  <com.pkmmte.techdissected.view.PkScrollView
+    android:id="@+id/stickyScroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:id="@+id/imgContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="@drawable/selector_preview_overlay">
+
+
+        <ImageView
+          android:id="@+id/imgBanner"
+          android:layout_width="match_parent"
+          android:layout_height="256dp"
+          android:scaleType="centerCrop" />
+
+        <View
+          android:layout_width="match_parent"
+          android:layout_height="104dp"
+          android:background="@drawable/fab_gradient" />
+      </FrameLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:tag="sticky">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@color/brand_orange"
+          android:orientation="vertical">
+
+          <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:text="Android One: Pushing For The Next Billion"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+              android:id="@+id/txtAuthor"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:fontFamily="sans-serif-light"
+              android:gravity="left"
+              android:paddingBottom="8dp"
+              android:paddingLeft="16dp"
+              android:text="By Cliff Wade"
+              android:textColor="@color/white"
+              android:textSize="14sp" />
+
+            <TextView
+              android:id="@+id/txtDate"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:fontFamily="sans-serif-light"
+              android:gravity="right"
+              android:paddingBottom="8dp"
+              android:paddingRight="16dp"
+              android:text="9 minutes ago"
+              android:textColor="@color/white"
+              android:textSize="14sp" />
+          </LinearLayout>
+        </LinearLayout>
+
+        <View
+          android:layout_width="match_parent"
+          android:layout_height="8dp"
+          android:background="@drawable/shadow_down" />
+      </LinearLayout>
+
+      <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
+      <com.pkmmte.techdissected.view.FlowLayout
+        android:id="@+id/tagContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:horizontalSpacing="4dp"
+        app:orientation="horizontal"
+        app:verticalSpacing="4dp" />
+    </LinearLayout>
+  </com.pkmmte.techdissected.view.PkScrollView>
+</LinearLayout>

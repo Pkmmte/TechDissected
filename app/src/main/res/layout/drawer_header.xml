@@ -5,6 +5,23 @@
   android:background="@color/action_background"
   android:orientation="vertical">
 
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FF252e38"
+    android:ellipsize="end"
+    android:fontFamily="sans-serif-condensed"
+    android:gravity="center_horizontal"
+    android:maxLines="1"
+    android:paddingBottom="4dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="4dp"
+    android:text="Actions"
+    android:textAllCaps="true"
+    android:textColor="@color/brand_orange"
+    android:textSize="18sp" />
+
   <Button
     android:id="@+id/btnFavorites"
     android:layout_width="match_parent"
@@ -24,6 +41,11 @@
     android:text="Favorites"
     android:textColor="@color/white"
     android:textSize="20sp" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="#FF2f4154" />
 
   <Button
     android:id="@+id/btnSettings"
