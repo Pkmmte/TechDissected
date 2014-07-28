@@ -103,7 +103,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	@Override
 	public void onClick(Article article) {
 		Intent intent = new Intent(getActivity(), ArticleActivity.class);
-		intent.putExtra(Constants.ARTICLE_ID, article.getId());
+		intent.putExtra(Constants.KEY_ARTICLE_ID, article.getId());
+		intent.putExtra(Constants.KEY_FEED_URL, Constants.MAIN_FEED);
 		startActivity(intent);
 	}
 

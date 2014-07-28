@@ -1,7 +1,9 @@
 package com.pkmmte.techdissected.fragment;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +20,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -117,6 +122,9 @@ public class ArticleFragment extends Fragment {
 	{
 		switch (item.getItemId())
 		{
+			case android.R.id.home:
+				getActivity().finish();
+				return true;
 			case R.id.action_favorite:
 				//
 				return true;
@@ -209,11 +217,11 @@ public class ArticleFragment extends Fragment {
 		txtAuthor.setText(article.getAuthor());
 		txtDate.setText(Utils.getRelativeDate(article.getDate()));
 
-		// Load actual article content async
-		webView.loadDataWithBaseURL(base, article.getContent(), mime, encoding, history);
+		// Load actual article content async, after the view is drawn
+		webView.loadDataWithBaseURL(base, ("<html><head><style>img {max-width: 300px; width:auto; height: auto;} iframe {max-width: 100%; width:auto; height: auto;} div {max-width: 100%; width:auto; height: auto;}</style></head><body>" + article.getContent() + "</body></head>"), mime, encoding, history);
 
 		// End here if tags are already loaded (Prevent duplicates)
-		if(tagContainer.getChildCount() < 1)
+		if(tagContainer.getChildCount() > 0)
 			return;
 
 		// Loop through tags to create views and add them to the container
@@ -248,7 +256,7 @@ public class ArticleFragment extends Fragment {
 
 		// Enable javascript & set vertical only
 		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+		webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
 		webView.setHorizontalScrollBarEnabled(false);
 
 		// Make sure it doesn't move horizontally
@@ -275,8 +283,24 @@ public class ArticleFragment extends Fragment {
 			}
 		});
 
+		final String js = "javascript:(function () {" +
+		"var w = \" + 100 + \";" +
+		"for( var i = 0; i < document.images.length; i++ ) {" +
+		"	var img = document.images[i];" +
+		"	if( img.width > w ) {" +
+		"		img.height = Math.round( img.height * ( w/img.width ) );" +
+		"		img.width = w;" +
+		"		img.style.display='block';" +
+		"	};" +
+		"}})();";
+
 		// Catch content clicks and handle them appropriately
 		webView.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				webView.loadUrl(js);
+			}
+
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if (Utils.containsImage(url))
@@ -296,8 +320,6 @@ public class ArticleFragment extends Fragment {
 	 * Sets up the share intent.
 	 * Will return prematurely if either the ShareActionProvider
 	 * or current article are null/invalid.
-	 *
-	 * @param mShareActionProvider
 	 */
 	private void setupShare() {
 		// Can't configure if null
@@ -313,6 +335,16 @@ public class ArticleFragment extends Fragment {
 		shareIntent.setType("text/plain");
 		shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, article.getSource().toString());
 		mShareActionProvider.setShareIntent(shareIntent);
+	}
+
+	private String getCssStyle() {
+
+		return  "<style>" +
+				"    img {" +
+				"    max-width: 100%" +// + width + "px;" +
+				"    height: auto;" +
+				"    }" +
+				"</style>";
 	}
 
 	public static ArticleFragment newInstance(Article article)

@@ -98,7 +98,7 @@ class RSSParser {
 				article.setDescription(Html.fromHtml(encoded.replaceAll("<img.+?>", "")).toString());
 			}
 			else if (tag.equalsIgnoreCase("content:encoded"))
-				article.setContent(xmlParser.getText());
+				article.setContent(xmlParser.getText().replaceAll("[<](/)?div[^>]*[>]", ""));
 			else if (tag.equalsIgnoreCase("category")) {
 				article.setNewTag(xmlParser.getText());
 				article.setCategory(xmlParser.getText());

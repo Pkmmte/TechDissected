@@ -9,7 +9,8 @@ public class Constants {
 	public static final String CATEGORY_URL = WEBSITE_URL + "/category";
 	public static final String MAIN_FEED = WEBSITE_URL + "/feed";
 
-	public static final String ARTICLE_ID = "ARTICLE ID";
+	public static final String KEY_ARTICLE_ID = "ARTICLE ID";
+	public static final String KEY_FEED_URL = "FEED URL";
 
 	public static final List<Category> CATEGORIES = new Category.ListBuilder()
 													.add("All Posts", MAIN_FEED)

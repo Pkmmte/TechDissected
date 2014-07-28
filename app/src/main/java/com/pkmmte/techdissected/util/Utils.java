@@ -24,9 +24,9 @@ public class Utils {
 		String str = encoded.toLowerCase();
 		return (str.contains(".jpg")
 			 || str.contains(".png")
-			 || str.contains(".webp")
 			 || str.contains(".gif")
-			 || str.contains("/attachment/"));
+			 || str.contains(".webp")
+			 || str.contains(".jpeg"));
 	}
 
 	public static Dialog getImageDialog(final Context context, final Uri uri) {
