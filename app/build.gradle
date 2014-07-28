@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion 20
+  buildToolsVersion "20"
+
+  defaultConfig {
+    applicationId "com.pkmmte.techdissected"
+    minSdkVersion 15
+    targetSdkVersion 20
+    versionCode 1
+    versionName "1.0"
+  }
+  buildTypes {
+    debug {
+      //applicationIdSuffix = ".debug"
+      versionNameSuffix = "-DEBUG"
+      signingConfig signingConfigs.debug
+    }
+    release {
+      runProguard false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+    applicationVariants.all { variant ->
+
+      def apk = variant.outputFile;
+      def newName;
+
+      // newName = apk.name.replace(".apk", "-v" + defaultConfig.versionName + "-" + variant.buildType.name.toUpperCase() + ".apk");
+      if (variant.buildType.name == "release") {
+        newName = apk.name.replace(".apk", "-v" + defaultConfig.versionName + "-release.apk");
+      } else {
+        newName = apk.name.replace(".apk", "-v" + defaultConfig.versionName + "-beta.apk");
+      }
+
+      newName = newName
+              .replace("-" + variant.buildType.name, "")
+              .replace(project.name, "TechDissected");
+
+      variant.outputFile = new File(apk.parentFile, newName);
+
+      if (variant.zipAlign) {
+        variant.outputFile = new File(apk.parentFile, newName.replace("-unaligned", ""));
+      }
+
+      logger.info('INFO: Set outputFile to ' + variant.outputFile + " for [" + variant.name + "]");
+    }
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile("com.android.support:support-v13:20.+")
+  compile group: 'com.squareup.picasso', name: 'picasso', version: '2.3.2'
+  compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.0.0'
+  compile group: 'com.squareup.okhttp', name: 'okhttp-urlconnection', version: '2.0.0'
+  compile group: 'com.github.chrisbanes.photoview', name: 'library', version: '1.2.3'
+  compile 'se.emilsjolander:StickyScrollViewItems:1.1.0@aar'
+  compile ('com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.9') {
+    exclude group: 'com.android.support', module: 'appcompat-v7'
+  }
+}
