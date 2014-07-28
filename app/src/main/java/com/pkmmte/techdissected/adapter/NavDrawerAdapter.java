@@ -1,6 +1,7 @@
 package com.pkmmte.techdissected.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +20,20 @@ public class NavDrawerAdapter extends BaseAdapter {
 
 	// Current index and custom fonts
 	private int currentPage;
+	private int highlightColor;
 
 	public NavDrawerAdapter(Context context) {
 		this.mDrawerItems = new ArrayList<Category>();
 		this.mContext = context;
-		this.currentPage = 1;
+		this.currentPage = 0;
+		this.highlightColor = context.getResources().getColor(R.color.action_overlay);
 	}
 
 	public NavDrawerAdapter(Context context, List<Category> drawerItems) {
 		this.mDrawerItems = drawerItems;
 		this.mContext = context;
-		this.currentPage = 1;
+		this.currentPage = 0;
+		this.highlightColor = context.getResources().getColor(R.color.action_overlay);
 	}
 
 	public void addItem(Category drawerItem) {
@@ -77,7 +81,7 @@ public class NavDrawerAdapter extends BaseAdapter {
 		holder.txtTitle.setText(mDrawerItems.get(position).getName());
 
 		// Highlight if selected
-		// holder.txtTitle.setTypeface((currentPage == position) ? fontSelected : fontNormal);
+		holder.txtTitle.setBackgroundColor((currentPage == position) ? highlightColor : Color.TRANSPARENT);
 
 		return convertView;
 	}

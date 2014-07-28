@@ -3,6 +3,7 @@ package com.pkmmte.techdissected.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.activity.ArticleActivity;
 import com.pkmmte.techdissected.adapter.FeedAdapter;
 import com.pkmmte.techdissected.model.Article;
+import com.pkmmte.techdissected.model.Category;
 import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.RSSManager;
 import com.pkmmte.techdissected.view.HeaderGridView;
@@ -21,14 +23,24 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener,
-	OnRefreshListener, RSSManager.Callback {
+public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, OnRefreshListener, RSSManager.Callback {
+	// Arguments Key
+	protected static final String KEY_CATEGORY = "CATEGORY";
+
+	// Feed Category
+	private Category category;
+
+	// Handler to modify views from background threads
+	private Handler mHandler = new Handler(Looper.getMainLooper());
+
+	// Feed list & adapter
 	private List<Article> mFeed = new ArrayList<Article>();
-	private View noContent;
-	private HeaderGridView mGrid;
 	private FeedAdapter mAdapter;
+
+	// Views
 	private PullToRefreshLayout mPullToRefreshLayout;
-	private Handler mHandler;
+	private HeaderGridView mGrid;
+	private View noContent;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,34 +48,41 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		initViews(view);
 		mAdapter = new FeedAdapter(getActivity());
 		mGrid.setAdapter(mAdapter);
-		mHandler = new Handler();
 		return view;
-	}
-
-	private void initViews(View v) {
-		mPullToRefreshLayout = (PullToRefreshLayout) v.findViewById(R.id.ptr_layout);
-		noContent = v.findViewById(R.id.noContent);
-		mGrid = (HeaderGridView) v.findViewById(R.id.feedGrid);
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 
+		retrieveCategory();
+
+		//
 		ActionBarPullToRefresh.from(getActivity())
 			.allChildrenArePullable()
 			.listener(this)
 			.setup(mPullToRefreshLayout);
 
-		mFeed = RSSManager.with(getActivity()).get(Constants.MAIN_FEED);
+		mFeed = RSSManager.with(getActivity()).get(category.getUrl());
 		initFeed();
+	}
+
+	private void initViews(View v) {
+		mPullToRefreshLayout = (PullToRefreshLayout) v.findViewById(R.id.ptr_layout);
+		mGrid = (HeaderGridView) v.findViewById(R.id.feedGrid);
+		noContent = v.findViewById(R.id.noContent);
+	}
+
+	private void retrieveCategory() {
+		Bundle bundle = getArguments();
+		category = bundle.getParcelable(KEY_CATEGORY);
 	}
 
 	private void initFeed() {
 		if(mFeed != null && mFeed.size() > 0)
 			refreshFeedContent();
 		else
-			RSSManager.with(getActivity()).load(Constants.MAIN_FEED).callback(this).async();
+			RSSManager.with(getActivity()).load(category.getUrl()).callback(this).async();
 	}
 
 	private void refreshFeedContent() {
@@ -92,7 +111,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 					if(preLast != lastItem){ //to avoid multiple calls for last item
 						mPullToRefreshLayout.setRefreshing(true);
 						RSSManager.with(getActivity()).load(
-							Constants.MAIN_FEED).nextPage().callback(FeedFragment.this).async();
+							category.getUrl()).nextPage().callback(FeedFragment.this).async();
 						preLast = lastItem;
 					}
 				}
@@ -104,19 +123,19 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public void onClick(Article article) {
 		Intent intent = new Intent(getActivity(), ArticleActivity.class);
 		intent.putExtra(Constants.KEY_ARTICLE_ID, article.getId());
-		intent.putExtra(Constants.KEY_FEED_URL, Constants.MAIN_FEED);
+		intent.putExtra(Constants.KEY_FEED_URL, category.getUrl());
 		startActivity(intent);
 	}
 
 	@Override
 	public void onRefreshStarted(View view) {
-		RSSManager.with(getActivity()).load(Constants.MAIN_FEED).callback(this).async();
+		RSSManager.with(getActivity()).load(category.getUrl()).callback(this).async();
 	}
 
 	@Override
 	public void postParse(List<Article> articleList) {
 		//mFeed = articleList;
-		mFeed = RSSManager.with(getActivity()).get(Constants.MAIN_FEED);
+		mFeed = RSSManager.with(getActivity()).get(category.getUrl());
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -125,5 +144,14 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			}
 		});
 		// TODO Add manager support for callbacks on UI thread (Builder feature)
+	}
+
+	public static FeedFragment newInstance(Category category)
+	{
+		FeedFragment mFragment = new FeedFragment();
+		Bundle args = new Bundle();
+		args.putParcelable(KEY_CATEGORY, category);
+		mFragment.setArguments(args);
+		return mFragment;
 	}
 }

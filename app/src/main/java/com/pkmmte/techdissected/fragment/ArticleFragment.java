@@ -41,7 +41,7 @@ import com.squareup.picasso.Picasso;
 
 public class ArticleFragment extends Fragment {
 	// Arguments Key
-	protected static final String KEY_ARTICLE = "Article";
+	protected static final String KEY_ARTICLE = "ARTICLE";
 
 	// Article
 	private Article article;
