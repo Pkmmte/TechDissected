@@ -1,4 +1,11 @@
 img {
+	max-width: 300px;
+	width: auto;
+	height: auto;
+}
+
+iframe {
 	max-width: 100%;
+	width: auto;
 	height: auto;
 }

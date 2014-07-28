@@ -52,7 +52,7 @@ public class ArticleFragment extends Fragment {
 	private CustomShareActionProvider mShareActionProvider;
 
 	// WebView params
-	private final String base = null;
+	private final String base = "file:///android_asset/";
 	private final String mime = "text/html";
 	private final String encoding = "utf-8";
 	private final String history = null;
@@ -218,7 +218,7 @@ public class ArticleFragment extends Fragment {
 		txtDate.setText(Utils.getRelativeDate(article.getDate()));
 
 		// Load actual article content async, after the view is drawn
-		webView.loadDataWithBaseURL(base, ("<html><head><style>img {max-width: 300px; width:auto; height: auto;} iframe {max-width: 100%; width:auto; height: auto;} div {max-width: 100%; width:auto; height: auto;}</style></head><body>" + article.getContent() + "</body></head>"), mime, encoding, history);
+		webView.loadDataWithBaseURL(base, getCleanContent(), mime, encoding, history);
 
 		// End here if tags are already loaded (Prevent duplicates)
 		if(tagContainer.getChildCount() > 0)
@@ -283,24 +283,8 @@ public class ArticleFragment extends Fragment {
 			}
 		});
 
-		final String js = "javascript:(function () {" +
-		"var w = \" + 100 + \";" +
-		"for( var i = 0; i < document.images.length; i++ ) {" +
-		"	var img = document.images[i];" +
-		"	if( img.width > w ) {" +
-		"		img.height = Math.round( img.height * ( w/img.width ) );" +
-		"		img.width = w;" +
-		"		img.style.display='block';" +
-		"	};" +
-		"}})();";
-
 		// Catch content clicks and handle them appropriately
 		webView.setWebViewClient(new WebViewClient() {
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				webView.loadUrl(js);
-			}
-
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if (Utils.containsImage(url))
@@ -337,14 +321,11 @@ public class ArticleFragment extends Fragment {
 		mShareActionProvider.setShareIntent(shareIntent);
 	}
 
-	private String getCssStyle() {
+	private String getCleanContent() {
+		if(article == null)
+			return null;
 
-		return  "<style>" +
-				"    img {" +
-				"    max-width: 100%" +// + width + "px;" +
-				"    height: auto;" +
-				"    }" +
-				"</style>";
+		return "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" /></head><body>" + article.getContent() + "</body></head>";
 	}
 
 	public static ArticleFragment newInstance(Article article)
