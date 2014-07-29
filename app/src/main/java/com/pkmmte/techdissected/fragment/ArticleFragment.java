@@ -40,8 +40,9 @@ import com.pkmmte.techdissected.view.PkScrollView;
 import com.squareup.picasso.Picasso;
 
 public class ArticleFragment extends Fragment {
-	// Arguments Key
+	// Arguments Keys
 	protected static final String KEY_ARTICLE = "ARTICLE";
+	protected static final String KEY_CATEGORY_NAME = "CATEGORY NAME";
 
 	// Article
 	private Article article;

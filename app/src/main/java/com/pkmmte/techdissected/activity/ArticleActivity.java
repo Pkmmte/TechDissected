@@ -19,6 +19,8 @@ public class ArticleActivity extends FragmentActivity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_article);
 
+
+	    getActionBar().setTitle(getIntent().getStringExtra(Constants.KEY_CATEGORY_NAME));
 	    Article currentArticle = null;
 	    List<Article> articleList = RSSManager.with(this).get(getIntent().getStringExtra(Constants.KEY_FEED_URL));
 

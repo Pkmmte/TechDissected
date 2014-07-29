@@ -31,6 +31,7 @@ public class RSSManager {
 	private final OkHttpClient httpClient = new OkHttpClient();
 	private final String httpCacheDir = "/okhttp";
 	private final int httpCacheSize = 1024 * 1024;
+	private final int httpCacheMaxAge = 30 * 60;
 
 	// Reusable XML Parser
 	private RSSParser rssParser = new RSSParser(this);
@@ -78,10 +79,13 @@ public class RSSManager {
 		return new RequestCreator(this, url);
 	}
 
-	protected void load(String url, String search, int page) {
+	protected void load(String url, String search, boolean skipCache, int page) {
+		long time = System.currentTimeMillis();
+
 		if(search != null)
 			url += "?s=" + search;
 		String requestUrl = url;
+		int maxCacheAge = skipCache ? 0 : httpCacheMaxAge;
 
 		//
 		pageTracker.put(requestUrl, page);
@@ -89,18 +93,18 @@ public class RSSManager {
 			requestUrl += "?paged=" + String.valueOf(page);
 
 		Request request = new Request.Builder()
-			//.addHeader(OkHeaders.op;)
+			.addHeader("Cache-Control", "public, max-age=" + maxCacheAge)
 			.url(requestUrl)
 			.build();
 
 		String xmlString = null;
 
 		try {
-			// 1. get a http response
+			log("Making a request to " + requestUrl + (skipCache ? " [SKIP-CACHE]" : " [MAX-AGE " + maxCacheAge + "]"));
 			Response response = httpClient.newCall(request).execute();
 
-			// 2. construct a string from the response
 			xmlString = response.body().string();
+			log("Request took " + (System.currentTimeMillis() - time) + "ms");
 		}
 		catch (Exception e) {
 			e.printStackTrace();

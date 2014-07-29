@@ -2,6 +2,7 @@ package com.pkmmte.techdissected.activity;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -75,42 +76,10 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-
-		MenuItem searchItem = menu.findItem(R.id.action_search);
-		SearchView searchView = (SearchView) searchItem.getActionView();
-		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				RSSManager.with(MainActivity.this).load(Constants.MAIN_FEED).search(query).async();
-				Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				return false;
-			}
-		});
-
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
+		if (mDrawerToggle.onOptionsItemSelected(item))
 			return true;
-		}
-		if(id == android.R.id.home) {
-			finish();
-			return true;
-		}
+
 		return super.onOptionsItemSelected(item);
 	}
 

@@ -24,6 +24,11 @@ public class RequestCreator {
 		return this;
 	}
 
+	public RequestCreator skipCache() {
+		this.data.skipCache(true);
+		return this;
+	}
+
 	public RequestCreator page(int page) {
 		this.data.page(page);
 		return this;
@@ -31,11 +36,11 @@ public class RequestCreator {
 
 	public RequestCreator nextPage() {
 		Request request = data.build();
-		String url = request.getUrl();
-		int page = request.getPage();
+		String url = request.url;
+		int page = request.page;
 
-		if(request.getSearchTerm() != null)
-			url += "?s=" + request.getSearchTerm();
+		if(request.search != null)
+			url += "?s=" + request.search;
 
 		Map<String, Integer> pageTracker = rssManager.getPageTracker();
 		if(pageTracker.containsKey(url))
@@ -52,19 +57,19 @@ public class RequestCreator {
 
 	public List<Article> get() {
 		final Request request = data.build();
-		rssManager.load(request.getUrl(), request.getSearchTerm(), request.getPage());
-		return rssManager.get(request.getUrl());
+		rssManager.load(request.url, request.search, request.skipCache, request.page);
+		return rssManager.get(request.url);
 	}
 
 	public void async() {
 		final Request request = data.build();
-		rssManager.setCallback(request.getCallback());
+		rssManager.setCallback(request.callback);
 
 		// TODO Create thread handler class to keep track of all these
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				rssManager.load(request.getUrl(), request.getSearchTerm(), request.getPage());
+				rssManager.load(request.url, request.search, request.skipCache, request.page);
 				return null;
 			}
 		}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

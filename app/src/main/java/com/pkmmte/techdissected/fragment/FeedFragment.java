@@ -1,21 +1,28 @@
 package com.pkmmte.techdissected.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.SearchView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.activity.ArticleActivity;
+import com.pkmmte.techdissected.activity.SearchActivity;
 import com.pkmmte.techdissected.adapter.FeedAdapter;
 import com.pkmmte.techdissected.model.Article;
 import com.pkmmte.techdissected.model.Category;
 import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.RSSManager;
+import com.pkmmte.techdissected.view.CustomShareActionProvider;
 import com.pkmmte.techdissected.view.HeaderGridView;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +31,9 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, OnRefreshListener, RSSManager.Callback {
-	// Arguments Key
-	protected static final String KEY_CATEGORY = "CATEGORY";
-
-	// Feed Category
+	// Passed Arguments
 	private Category category;
+	private String search;
 
 	// Handler to modify views from background threads
 	private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -44,10 +49,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		initViews(view);
-		mAdapter = new FeedAdapter(getActivity());
-		mGrid.setAdapter(mAdapter);
 		return view;
 	}
 
@@ -55,7 +59,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public void onStart() {
 		super.onStart();
 
-		retrieveCategory();
+		retrieveArguments();
 
 		//
 		ActionBarPullToRefresh.from(getActivity())
@@ -63,8 +67,49 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			.listener(this)
 			.setup(mPullToRefreshLayout);
 
-		mFeed = RSSManager.with(getActivity()).get(category.getUrl());
+		// TODO
+		//mFeed = RSSManager.with(getActivity()).get(category.getUrl());
 		initFeed();
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		menu.clear();
+		inflater.inflate(R.menu.main, menu);
+
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		SearchView searchView = (SearchView) searchItem.getActionView();
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				Intent intent = new Intent(getActivity(), SearchActivity.class);
+				intent.putExtra(SearchActivity.KEY_SEARCH, query);
+				startActivity(intent);
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				return false;
+			}
+		});
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.action_refresh:
+				refreshFeed();
+				return true;
+			case R.id.action_browser:
+				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private void initViews(View v) {
@@ -73,24 +118,29 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		noContent = v.findViewById(R.id.noContent);
 	}
 
-	private void retrieveCategory() {
+	private void retrieveArguments() {
 		Bundle bundle = getArguments();
-		category = bundle.getParcelable(KEY_CATEGORY);
+		category = bundle.getParcelable(Constants.KEY_CATEGORY);
+		search = bundle.getString(SearchActivity.KEY_SEARCH);
 	}
 
 	private void initFeed() {
 		if(mFeed != null && mFeed.size() > 0)
 			refreshFeedContent();
-		else
-			RSSManager.with(getActivity()).load(category.getUrl()).callback(this).async();
+		else {
+			mPullToRefreshLayout.setRefreshing(true);
+			RSSManager.with(getActivity()).load(category.getUrl()).search(search).callback(this).async();
+		}
 	}
 
 	private void refreshFeedContent() {
 		noContent.setVisibility(View.GONE);
 		mGrid.setVisibility(View.VISIBLE);
 
-		if(mAdapter == null)
+		if(mAdapter == null) {
 			mAdapter = new FeedAdapter(getActivity(), mFeed);
+			mGrid.setAdapter(mAdapter);
+		}
 		else
 			mAdapter.updateFeed(mFeed);
 
@@ -110,8 +160,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				if(lastItem == totalItemCount - 1) {
 					if(preLast != lastItem){ //to avoid multiple calls for last item
 						mPullToRefreshLayout.setRefreshing(true);
-						RSSManager.with(getActivity()).load(
-							category.getUrl()).nextPage().callback(FeedFragment.this).async();
+						RSSManager.with(getActivity()).load(category.getUrl()).search(search).nextPage().callback(FeedFragment.this).async();
 						preLast = lastItem;
 					}
 				}
@@ -119,23 +168,32 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		});
 	}
 
+	private void refreshFeed() {
+		RSSManager.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
+	}
+
 	@Override
 	public void onClick(Article article) {
 		Intent intent = new Intent(getActivity(), ArticleActivity.class);
 		intent.putExtra(Constants.KEY_ARTICLE_ID, article.getId());
-		intent.putExtra(Constants.KEY_FEED_URL, category.getUrl());
+		intent.putExtra(Constants.KEY_CATEGORY_NAME, category.getName());
+		intent.putExtra(Constants.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + search);
 		startActivity(intent);
 	}
 
 	@Override
 	public void onRefreshStarted(View view) {
-		RSSManager.with(getActivity()).load(category.getUrl()).callback(this).async();
+		refreshFeed();
 	}
 
 	@Override
 	public void postParse(List<Article> articleList) {
 		//mFeed = articleList;
-		mFeed = RSSManager.with(getActivity()).get(category.getUrl());
+		// TODO
+		if(search == null)
+			mFeed = RSSManager.with(getActivity()).get(category.getUrl());
+		else
+			mFeed = RSSManager.with(getActivity()).get(category.getUrl() + "?s=" + search);
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -146,11 +204,20 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		// TODO Add manager support for callbacks on UI thread (Builder feature)
 	}
 
-	public static FeedFragment newInstance(Category category)
-	{
+	public static FeedFragment newInstance(Category category) {
 		FeedFragment mFragment = new FeedFragment();
 		Bundle args = new Bundle();
-		args.putParcelable(KEY_CATEGORY, category);
+		args.putParcelable(Constants.KEY_CATEGORY,
+		                   category == null ? Constants.DEFAULT_CATEGORY : category);
+		mFragment.setArguments(args);
+		return mFragment;
+	}
+
+	public static FeedFragment newInstance(Category category, String search) {
+		FeedFragment mFragment = new FeedFragment();
+		Bundle args = new Bundle();
+		args.putParcelable(Constants.KEY_CATEGORY, category == null ? Constants.DEFAULT_CATEGORY : category);
+		args.putString(Constants.KEY_SEARCH, search);
 		mFragment.setArguments(args);
 		return mFragment;
 	}

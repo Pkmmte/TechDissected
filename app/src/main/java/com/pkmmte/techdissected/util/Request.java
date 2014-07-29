@@ -3,12 +3,14 @@ package com.pkmmte.techdissected.util;
 public class Request {
 	public final String url;
 	public final String search;
+	public final boolean skipCache;
 	public final int page;
 	public final RSSManager.Callback callback;
 
-	public Request(String url, String search, int page, RSSManager.Callback callback) {
+	public Request(String url, String search, int page, boolean skipCache, RSSManager.Callback callback) {
 		this.url = url;
 		this.search = search;
+		this.skipCache = skipCache;
 		this.page = page;
 		this.callback = callback;
 	}
@@ -17,34 +19,21 @@ public class Request {
 		this.url = builder.url;
 		this.search = builder.search;
 		this.page = builder.page;
+		this.skipCache = builder.skipCache;
 		this.callback = builder.callback;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public String getSearchTerm() {
-		return search;
-	}
-
-	public int getPage() {
-		return page;
-	}
-
-	public RSSManager.Callback getCallback() {
-		return callback;
 	}
 
 	public static final class Builder {
 		private String url;
 		private String search;
+		private boolean skipCache;
 		private int page;
 		private RSSManager.Callback callback;
 
 		public Builder(String url) {
 			this.url = url;
 			this.search = null;
+			this.skipCache = false;
 			this.page = 1;
 			this.callback = null;
 		}
@@ -56,6 +45,11 @@ public class Request {
 
 		public Builder search(String search) {
 			this.search = search;
+			return this;
+		}
+
+		public Builder skipCache(boolean skipCache) {
+			this.skipCache = skipCache;
 			return this;
 		}
 
