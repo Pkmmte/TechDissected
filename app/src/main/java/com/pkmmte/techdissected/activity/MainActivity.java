@@ -9,9 +9,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
@@ -56,17 +58,23 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState)
-	{
+	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		mDrawerToggle.syncState();
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig)
-	{
+	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if(currentCategory != null)
+			currentCategory.toggleActionItems(menu, mDrawerLayout.isDrawerOpen(mDrawerList));
+
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -84,8 +92,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		actionBar.setSubtitle(actionBarSubtitle);
 	}
 
-	private void initViews()
-	{
+	private void initViews() {
 		mDrawerLayout = (PkDrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.drawer_list);
 	}
@@ -117,7 +124,20 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		// Set list adapter
 		mDrawerList.setAdapter(mDrawerAdapter);
 
+		// Set OnClick Listeners
 		mDrawerList.setOnItemClickListener(this);
+		((Button) headerView.findViewById(R.id.btnFavorites)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO
+			}
+		});
+		((Button) headerView.findViewById(R.id.btnSettings)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO
+			}
+		});
 	}
 
 	protected void selectCategory(int position) {

@@ -137,8 +137,7 @@ public class ArticleFragment extends Fragment {
 		}
 	}
 
-	public void toggleActionItems(Menu menu, boolean drawerOpen)
-	{
+	public void toggleActionItems(Menu menu, boolean drawerOpen) {
 		menu.findItem(R.id.action_share).setVisible(!drawerOpen);
 		menu.findItem(R.id.action_favorite).setVisible(!drawerOpen);
 		menu.findItem(R.id.action_browser).setVisible(!drawerOpen);

@@ -17,11 +17,11 @@ import java.util.Map;
 
 public class PkRSS {
 	// Global singleton instance
-	private static PkRSS pkRss = null;
+	private static PkRSS singleton = null;
 
 	// For issue tracking purposes
 	private volatile boolean loggingEnabled;
-	protected static final String TAG = "RSSManager";
+	protected static final String TAG = "PkRSS";
 
 	// Context is always useful for some reason.
 	private final Context mContext;
@@ -30,7 +30,7 @@ public class PkRSS {
 	private final OkHttpClient httpClient = new OkHttpClient();
 	private final String httpCacheDir = "/okhttp";
 	private final int httpCacheSize = 1024 * 1024;
-	private final int httpCacheMaxAge = 30 * 60;
+	private final int httpCacheMaxAge = 60 * 60;
 
 	// Reusable XML Parser
 	private RSSParser rssParser = new RSSParser(this);
@@ -45,9 +45,9 @@ public class PkRSS {
 	private Callback mCallback;
 
 	public static PkRSS with(Context context) {
-		if(pkRss == null)
-			pkRss = new PkRSS(context.getApplicationContext());
-		return pkRss;
+		if(singleton == null)
+			singleton = new PkRSS(context.getApplicationContext());
+		return singleton;
 	}
 
 	protected PkRSS(Context context) {
@@ -79,17 +79,27 @@ public class PkRSS {
 	}
 
 	protected void load(String url, String search, boolean skipCache, int page) {
+		// Can't load empty URLs, do nothing
+		if(url == null || url.isEmpty()) {
+			log("Invalid URL!", Log.ERROR);
+			return;
+		}
+
+		// Start tracking load time
 		long time = System.currentTimeMillis();
 
+		// Append search query if available
 		if(search != null)
 			url += "?s=" + search;
+
+		// Create a copy for pagination & handle cache
 		String requestUrl = url;
 		int maxCacheAge = skipCache ? 0 : httpCacheMaxAge;
 
 		//
 		pageTracker.put(requestUrl, page);
 		if(page > 1)
-			requestUrl += "?paged=" + String.valueOf(page);
+			requestUrl += (search == null ? "?paged=" : "&paged=") + String.valueOf(page);
 
 		Request request = new Request.Builder()
 			.addHeader("Cache-Control", "public, max-age=" + maxCacheAge)
@@ -112,11 +122,8 @@ public class PkRSS {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		// 3. construct an InputSource from the string
 		InputStream inputStream = new ByteArrayInputStream(xmlString.getBytes());
 
-		// 4. start parsing with SAXParser and handler object
-		// ( both must have been created before )
 		List<Article> newArticles = rssParser.parse(inputStream);
 		insert(url, newArticles);
 
@@ -130,6 +137,13 @@ public class PkRSS {
 
 	public List<Article> get(String url) {
 		return articleMap.get(url);
+	}
+
+	public List<Article> get(String url, String search) {
+		if(search == null)
+			return articleMap.get(url);
+
+		return articleMap.get(url + "?s=" + search);
 	}
 
 	public Article get(int id) {

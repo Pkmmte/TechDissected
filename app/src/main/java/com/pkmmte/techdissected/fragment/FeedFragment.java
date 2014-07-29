@@ -48,7 +48,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		setHasOptionsMenu(true);
+		retrieveArguments();
+		if(search == null)
+			setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		initViews(view);
 		return view;
@@ -58,7 +60,6 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public void onStart() {
 		super.onStart();
 
-		retrieveArguments();
 
 		//
 		ActionBarPullToRefresh.from(getActivity())
@@ -77,8 +78,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		menu.clear();
 		inflater.inflate(R.menu.main, menu);
 
-		MenuItem searchItem = menu.findItem(R.id.action_search);
-		SearchView searchView = (SearchView) searchItem.getActionView();
+		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
@@ -96,19 +96,23 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
 			case R.id.action_refresh:
 				refreshFeed();
 				return true;
-			case R.id.action_browser:
+			case R.id.action_website:
 				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	public void toggleActionItems(Menu menu, boolean drawerOpen) {
+		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_refresh).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_website).setVisible(!drawerOpen);
 	}
 
 	private void initViews(View v) {
@@ -188,11 +192,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	@Override
 	public void postParse(List<Article> articleList) {
 		//mFeed = articleList;
-		// TODO
-		if(search == null)
-			mFeed = PkRSS.with(getActivity()).get(category.getUrl());
-		else
-			mFeed = PkRSS.with(getActivity()).get(category.getUrl() + "?s=" + search);
+		mFeed = PkRSS.with(getActivity()).get(category.getUrl(), search);
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -204,12 +204,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	public static FeedFragment newInstance(Category category) {
-		FeedFragment mFragment = new FeedFragment();
-		Bundle args = new Bundle();
-		args.putParcelable(Constants.KEY_CATEGORY,
-		                   category == null ? Constants.DEFAULT_CATEGORY : category);
-		mFragment.setArguments(args);
-		return mFragment;
+		return newInstance(category, null);
 	}
 
 	public static FeedFragment newInstance(Category category, String search) {
