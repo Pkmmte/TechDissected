@@ -5,9 +5,9 @@ public class Request {
 	public final String search;
 	public final boolean skipCache;
 	public final int page;
-	public final RSSManager.Callback callback;
+	public final PkRSS.Callback callback;
 
-	public Request(String url, String search, int page, boolean skipCache, RSSManager.Callback callback) {
+	public Request(String url, String search, int page, boolean skipCache, PkRSS.Callback callback) {
 		this.url = url;
 		this.search = search;
 		this.skipCache = skipCache;
@@ -28,7 +28,7 @@ public class Request {
 		private String search;
 		private boolean skipCache;
 		private int page;
-		private RSSManager.Callback callback;
+		private PkRSS.Callback callback;
 
 		public Builder(String url) {
 			this.url = url;
@@ -58,7 +58,7 @@ public class Request {
 			return this;
 		}
 
-		public Builder callback(RSSManager.Callback callback) {
+		public Builder callback(PkRSS.Callback callback) {
 			this.callback = callback;
 			return this;
 		}

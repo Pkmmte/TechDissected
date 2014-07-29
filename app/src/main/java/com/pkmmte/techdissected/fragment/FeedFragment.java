@@ -21,8 +21,7 @@ import com.pkmmte.techdissected.adapter.FeedAdapter;
 import com.pkmmte.techdissected.model.Article;
 import com.pkmmte.techdissected.model.Category;
 import com.pkmmte.techdissected.util.Constants;
-import com.pkmmte.techdissected.util.RSSManager;
-import com.pkmmte.techdissected.view.CustomShareActionProvider;
+import com.pkmmte.techdissected.util.PkRSS;
 import com.pkmmte.techdissected.view.HeaderGridView;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, OnRefreshListener, RSSManager.Callback {
+public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, OnRefreshListener, PkRSS.Callback {
 	// Passed Arguments
 	private Category category;
 	private String search;
@@ -129,7 +128,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			refreshFeedContent();
 		else {
 			mPullToRefreshLayout.setRefreshing(true);
-			RSSManager.with(getActivity()).load(category.getUrl()).search(search).callback(this).async();
+			PkRSS.with(getActivity()).load(category.getUrl()).search(search).callback(this).async();
 		}
 	}
 
@@ -160,7 +159,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				if(lastItem == totalItemCount - 1) {
 					if(preLast != lastItem){ //to avoid multiple calls for last item
 						mPullToRefreshLayout.setRefreshing(true);
-						RSSManager.with(getActivity()).load(category.getUrl()).search(search).nextPage().callback(FeedFragment.this).async();
+						PkRSS.with(getActivity()).load(category.getUrl()).search(search).nextPage().callback(FeedFragment.this).async();
 						preLast = lastItem;
 					}
 				}
@@ -169,7 +168,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	private void refreshFeed() {
-		RSSManager.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
+		PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 	}
 
 	@Override
@@ -191,9 +190,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		//mFeed = articleList;
 		// TODO
 		if(search == null)
-			mFeed = RSSManager.with(getActivity()).get(category.getUrl());
+			mFeed = PkRSS.with(getActivity()).get(category.getUrl());
 		else
-			mFeed = RSSManager.with(getActivity()).get(category.getUrl() + "?s=" + search);
+			mFeed = PkRSS.with(getActivity()).get(category.getUrl() + "?s=" + search);
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {

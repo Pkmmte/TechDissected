@@ -7,7 +7,6 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.internal.http.OkHeaders;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -16,9 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RSSManager {
+public class PkRSS {
 	// Global singleton instance
-	private static RSSManager rssManager = null;
+	private static PkRSS pkRss = null;
 
 	// For issue tracking purposes
 	private volatile boolean loggingEnabled;
@@ -45,13 +44,13 @@ public class RSSManager {
 	//
 	private Callback mCallback;
 
-	public static  RSSManager with(Context context) {
-		if(rssManager == null)
-			rssManager = new RSSManager(context.getApplicationContext());
-		return rssManager;
+	public static PkRSS with(Context context) {
+		if(pkRss == null)
+			pkRss = new PkRSS(context.getApplicationContext());
+		return pkRss;
 	}
 
-	protected RSSManager(Context context) {
+	protected PkRSS(Context context) {
 		this.mContext = context;
 		try {
 			File cacheDir = new File(context.getCacheDir().getAbsolutePath() + httpCacheDir);
@@ -99,9 +98,13 @@ public class RSSManager {
 
 		String xmlString = null;
 
+
 		try {
 			log("Making a request to " + requestUrl + (skipCache ? " [SKIP-CACHE]" : " [MAX-AGE " + maxCacheAge + "]"));
 			Response response = httpClient.newCall(request).execute();
+
+			if(response.cacheResponse() != null)
+				log("Response retrieved from cache");
 
 			xmlString = response.body().string();
 			log("Request took " + (System.currentTimeMillis() - time) + "ms");

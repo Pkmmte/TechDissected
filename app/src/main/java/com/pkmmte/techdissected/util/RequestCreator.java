@@ -1,9 +1,7 @@
 package com.pkmmte.techdissected.util;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import com.pkmmte.techdissected.model.Article;
-import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Map;
 
@@ -11,11 +9,11 @@ import java.util.Map;
 // TODO ... handle them in threads appropriately.
 // TODO Also, make a builder for the RSSManager to set configuration such as parallel/serial threading.
 public class RequestCreator {
-	private final RSSManager rssManager;
+	private final PkRSS pkRss;
 	private final Request.Builder data;
 
-	protected RequestCreator(RSSManager rssManager, String url) {
-		this.rssManager = rssManager;
+	protected RequestCreator(PkRSS pkRss, String url) {
+		this.pkRss = pkRss;
 		this.data = new Request.Builder(url);
 	}
 
@@ -42,7 +40,7 @@ public class RequestCreator {
 		if(request.search != null)
 			url += "?s=" + request.search;
 
-		Map<String, Integer> pageTracker = rssManager.getPageTracker();
+		Map<String, Integer> pageTracker = pkRss.getPageTracker();
 		if(pageTracker.containsKey(url))
 			page = pageTracker.get(url);
 
@@ -50,26 +48,26 @@ public class RequestCreator {
 		return this;
 	}
 
-	public RequestCreator callback(RSSManager.Callback callback) {
+	public RequestCreator callback(PkRSS.Callback callback) {
 		this.data.callback(callback);
 		return this;
 	}
 
 	public List<Article> get() {
 		final Request request = data.build();
-		rssManager.load(request.url, request.search, request.skipCache, request.page);
-		return rssManager.get(request.url);
+		pkRss.load(request.url, request.search, request.skipCache, request.page);
+		return pkRss.get(request.url);
 	}
 
 	public void async() {
 		final Request request = data.build();
-		rssManager.setCallback(request.callback);
+		pkRss.setCallback(request.callback);
 
 		// TODO Create thread handler class to keep track of all these
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				rssManager.load(request.url, request.search, request.skipCache, request.page);
+				pkRss.load(request.url, request.search, request.skipCache, request.page);
 				return null;
 			}
 		}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

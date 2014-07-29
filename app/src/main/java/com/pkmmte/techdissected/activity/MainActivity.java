@@ -2,29 +2,23 @@ package com.pkmmte.techdissected.activity;
 
 import android.app.ActionBar;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.techdissected.model.Category;
 import com.pkmmte.techdissected.util.Constants;
-import com.pkmmte.techdissected.util.RSSManager;
+import com.pkmmte.techdissected.util.PkRSS;
 import com.pkmmte.techdissected.view.PkDrawerLayout;
 
 public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
@@ -48,7 +42,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		setContentView(R.layout.activity_main);
 
 		// [DEBUG] Enable logging for debugging purposes
-		RSSManager.with(this).setLoggingEnabled(true);
+		PkRSS.with(this).setLoggingEnabled(true);
 
 		// Initialize basics
 		initActionBar();

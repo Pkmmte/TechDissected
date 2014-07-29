@@ -19,13 +19,13 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 class RSSParser {
 	private final String TAG = "RSSParser";
-	private final RSSManager rssManager;
+	private final PkRSS pkRss;
 	private List<Article> articleList = new ArrayList<Article>();
 	private SimpleDateFormat dateFormat;
 	private XmlPullParser xmlParser;
 
-	protected RSSParser(RSSManager rssManager) {
-		this.rssManager = rssManager;
+	protected RSSParser(PkRSS pkRss) {
+		this.pkRss = pkRss;
 		dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.getDefault());
 		dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
 		initParser();
@@ -60,7 +60,7 @@ class RSSParser {
 							if(article.getImage() != null)
 								article.setContent(article.getContent().replaceFirst("<img.+?>", ""));
 
-							rssManager.log(TAG, article.toShortString(), Log.INFO);
+							pkRss.log(TAG, article.toShortString(), Log.INFO);
 							// Add article object to list
 							articleList.add(article);
 						}
@@ -78,7 +78,7 @@ class RSSParser {
 			e.printStackTrace();
 		}
 
-		rssManager.log(TAG, "Parsing took " + (System.currentTimeMillis() - time) + "ms");
+		pkRss.log(TAG, "Parsing took " + (System.currentTimeMillis() - time) + "ms");
 
 		return articleList;
 	}
@@ -150,7 +150,7 @@ class RSSParser {
 			}
 		}
 		catch (Exception e) {
-			rssManager.log(TAG, "Error pulling image link from description!\n" + e.getMessage(), Log.WARN);
+			pkRss.log(TAG, "Error pulling image link from description!\n" + e.getMessage(), Log.WARN);
 		}
 
 		return "";
