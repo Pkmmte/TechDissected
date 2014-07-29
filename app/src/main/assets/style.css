@@ -1,3 +1,31 @@
+h2 {
+	color: #2a2a2a;
+}
+
+h5 {
+	color: #2a2a2a;
+}
+
+p {
+	color: #2f2f2f;
+}
+
+a:link {
+	color: #5677fc;
+}
+
+a:visited {
+	color: #9575cd;
+}
+
+a:active {
+	color: #2a36b1;
+}
+
+a:hover {
+	color: #2a36b1;
+}
+
 img {
 	max-width: 300px;
 	width: auto;
@@ -8,4 +36,12 @@ iframe {
 	max-width: 100%;
 	width: auto;
 	height: auto;
+}
+
+blockquote {
+	margin: 0px;
+	padding: 16px;
+	background-color: #e7e7e7;
+	border-left: 4px solid #cbcbcb;
+	text-indent: 24px;
 }

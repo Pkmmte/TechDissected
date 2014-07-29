@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
+import com.pkmmte.techdissected.fragment.FavoritesFragment;
 import com.pkmmte.techdissected.fragment.FeedFragment;
+import com.pkmmte.techdissected.fragment.SettingsFragment;
 import com.pkmmte.techdissected.model.Category;
 import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.PkRSS;
@@ -71,8 +73,10 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if(currentCategory != null)
-			currentCategory.toggleActionItems(menu, mDrawerLayout.isDrawerOpen(mDrawerList));
+		try {
+			if(currentCategory != null)
+				currentCategory.toggleActionItems(menu, mDrawerLayout.isDrawerOpen(mDrawerList));
+		} catch (Exception e) {}
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -129,13 +133,19 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		((Button) headerView.findViewById(R.id.btnFavorites)).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO
+				fragmentManager.beginTransaction().replace(R.id.feedContainer, new FavoritesFragment()).commit();
+
+				actionBarSubtitle = "Favorites";
+				mDrawerAdapter.setCurrentPage(-1);
 			}
 		});
 		((Button) headerView.findViewById(R.id.btnSettings)).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO
+				fragmentManager.beginTransaction().replace(R.id.feedContainer, new SettingsFragment()).commit();
+
+				actionBarSubtitle = "Settings";
+				mDrawerAdapter.setCurrentPage(-1);
 			}
 		});
 	}
