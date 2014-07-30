@@ -1,5 +1,6 @@
 package com.pkmmte.techdissected.activity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -29,6 +30,7 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 
 	// Views
 	private PullToRefreshLayout mPullToRefreshLayout;
+	private View noContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +53,16 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 	}
 
 	private void initViews() {
+		noContent = findViewById(R.id.noContent);
 		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
 	}
 
 	private void showContent() {
 		if(articleUrl != null && !articleUrl.isEmpty()) {
+			if(currentArticle == null)
+				loadArticle();
+			else
+				fragmentManager.beginTransaction().replace(R.id.articleContent, ArticleFragment.newInstance(currentArticle)).commit();
 			return;
 		}
 
@@ -73,9 +80,31 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 			}
 		}
 
-		mPullToRefreshLayout.setRefreshing(true);
 		// Show current article
 		fragmentManager.beginTransaction().replace(R.id.articleContent, ArticleFragment.newInstance(currentArticle)).commit();
+	}
+
+	private void loadArticle() {
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected void onPreExecute() {
+				noContent.setVisibility(View.VISIBLE);
+				mPullToRefreshLayout.setRefreshing(true);
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				currentArticle = PkRSS.with(ArticleActivity.this).load(articleUrl).individual().getFirst();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void p) {
+				noContent.setVisibility(View.GONE);
+				mPullToRefreshLayout.setRefreshComplete();
+				fragmentManager.beginTransaction().replace(R.id.articleContent, ArticleFragment.newInstance(currentArticle)).commit();
+			}
+		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	@Override

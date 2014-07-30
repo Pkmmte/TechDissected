@@ -22,6 +22,11 @@ public class RequestCreator {
 		return this;
 	}
 
+	public RequestCreator individual() {
+		this.data.individual(true);
+		return this;
+	}
+
 	public RequestCreator skipCache() {
 		this.data.skipCache(true);
 		return this;
@@ -55,8 +60,12 @@ public class RequestCreator {
 
 	public List<Article> get() {
 		final Request request = data.build();
-		pkRss.load(request.url, request.search, request.skipCache, request.page);
-		return pkRss.get(request.url);
+		pkRss.load(request.url, request.search, request.individual, request.skipCache, request.page);
+		return pkRss.get(request.individual ? request.url + "feed/?withoutcomments=1" : request.url, request.search);
+	}
+
+	public Article getFirst() {
+		return get().get(0);
 	}
 
 	public void async() {
@@ -67,7 +76,7 @@ public class RequestCreator {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				pkRss.load(request.url, request.search, request.skipCache, request.page);
+				pkRss.load(request.url, request.search, request.individual, request.skipCache, request.page);
 				return null;
 			}
 		}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

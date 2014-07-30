@@ -78,7 +78,7 @@ public class PkRSS {
 		return new RequestCreator(this, url);
 	}
 
-	protected void load(String url, String search, boolean skipCache, int page) {
+	protected void load(String url, String search, boolean individual, boolean skipCache, int page) {
 		// Can't load empty URLs, do nothing
 		if(url == null || url.isEmpty()) {
 			log("Invalid URL!", Log.ERROR);
@@ -88,8 +88,9 @@ public class PkRSS {
 		// Start tracking load time
 		long time = System.currentTimeMillis();
 
-		// Append search query if available
-		if(search != null)
+		if(individual) // Append feed URL if individual article
+			url += "feed/?withoutcomments=1";
+		else if(search != null) // Append search query if available and not individual
 			url += "?s=" + search;
 
 		// Create a copy for pagination & handle cache
@@ -98,7 +99,7 @@ public class PkRSS {
 
 		//
 		pageTracker.put(requestUrl, page);
-		if(page > 1)
+		if(page > 1 && !individual)
 			requestUrl += (search == null ? "?paged=" : "&paged=") + String.valueOf(page);
 
 		Request request = new Request.Builder()
@@ -107,7 +108,6 @@ public class PkRSS {
 			.build();
 
 		String xmlString = null;
-
 
 		try {
 			log("Making a request to " + requestUrl + (skipCache ? " [SKIP-CACHE]" : " [MAX-AGE " + maxCacheAge + "]"));
@@ -120,8 +120,10 @@ public class PkRSS {
 			log("Request took " + (System.currentTimeMillis() - time) + "ms");
 		}
 		catch (Exception e) {
+			log("Error executing/reading http request!", Log.ERROR);
 			e.printStackTrace();
 		}
+
 		InputStream inputStream = new ByteArrayInputStream(xmlString.getBytes());
 
 		List<Article> newArticles = rssParser.parse(inputStream);
@@ -158,8 +160,8 @@ public class PkRSS {
 			}
 		}
 
+		log("Could not find Article with id of " + id, Log.WARN);
 		log("get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
-
 		return null;
 	}
 

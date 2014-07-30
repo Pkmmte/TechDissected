@@ -42,6 +42,8 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	private FragmentManager fragmentManager;
 	private FeedFragment currentCategory;
 
+	private boolean contentLoaded = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,20 +56,26 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		initActionBar();
 		initViews();
 		initNavDrawer();
+		fragmentManager = getSupportFragmentManager();
 
 		if(handleIntent())
 			return;
 
-		// Get FragmentManager, select default category, and refresh subtitle
-		fragmentManager = getSupportFragmentManager();
+		// Select default category
 		selectCategory(0);
-		actionBar.setSubtitle(actionBarSubtitle);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		mDrawerToggle.syncState();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if(!contentLoaded)
+			selectCategory(0);
 	}
 
 	@Override
@@ -135,7 +143,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		// Set OnClick Listeners
 		mDrawerList.setOnItemClickListener(this);
-		((Button) headerView.findViewById(R.id.btnFavorites)).setOnClickListener(new View.OnClickListener() {
+		(headerView.findViewById(R.id.btnFavorites)).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new FavoritesFragment()).commit();
@@ -144,7 +152,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				mDrawerAdapter.setCurrentPage(-1);
 			}
 		});
-		((Button) headerView.findViewById(R.id.btnSettings)).setOnClickListener(new View.OnClickListener() {
+		(headerView.findViewById(R.id.btnSettings)).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new SettingsFragment()).commit();
@@ -156,8 +164,10 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	}
 
 	protected void selectCategory(int position) {
+		contentLoaded = true;
 		Category category = mDrawerAdapter.getItem(position);
 		actionBarSubtitle = category.getName();
+		actionBar.setSubtitle(actionBarSubtitle);
 
 		currentCategory = FeedFragment.newInstance(category);
 		fragmentManager.beginTransaction().replace(R.id.feedContainer, currentCategory).commit();
