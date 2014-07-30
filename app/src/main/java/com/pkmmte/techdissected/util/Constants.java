@@ -13,6 +13,7 @@ public class Constants {
 	public static final String KEY_SEARCH = "SEARCH TERM";
 
 	public static final String KEY_ARTICLE_ID = "ARTICLE ID";
+	public static final String KEY_ARTICLE_URL = "ARTICLE URL";
 	public static final String KEY_CATEGORY_NAME = "CATEGORY NAME";
 	public static final String KEY_FEED_URL = "FEED URL";
 

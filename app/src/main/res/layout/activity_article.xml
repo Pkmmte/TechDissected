@@ -1,4 +1,11 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+  android:id="@+id/ptr_layout"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:id="@+id/articleContent"
-  android:layout_height="match_parent" />
+  android:layout_height="match_parent" >
+
+  <FrameLayout
+    android:id="@+id/articleContent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

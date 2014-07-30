@@ -130,7 +130,9 @@ public class ArticleFragment extends Fragment {
 				//
 				return true;
 			case R.id.action_browser:
-				//
+				if(article != null && article.getSource() != null)
+					startActivity(new Intent(Intent.ACTION_VIEW).setData(article.getSource()));
+
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -314,10 +316,13 @@ public class ArticleFragment extends Fragment {
 		if(article == null || article.getSource() == null)
 			return;
 
+		// Build share content text
+		String shareText = article.getTitle() + "\n\n" + article.getSource().toString();
+
 		// Create and set the share intent
 		Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
 		shareIntent.setType("text/plain");
-		shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, article.getSource().toString());
+		shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
 		mShareActionProvider.setShareIntent(shareIntent);
 	}
 

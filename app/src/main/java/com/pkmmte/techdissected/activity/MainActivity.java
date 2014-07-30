@@ -2,6 +2,7 @@ package com.pkmmte.techdissected.activity;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
 import com.pkmmte.techdissected.fragment.FavoritesFragment;
@@ -52,6 +54,9 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		initActionBar();
 		initViews();
 		initNavDrawer();
+
+		if(handleIntent())
+			return;
 
 		// Get FragmentManager, select default category, and refresh subtitle
 		fragmentManager = getSupportFragmentManager();
@@ -159,6 +164,33 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		mDrawerAdapter.setCurrentPage(position);
 		mDrawerLayout.closeDrawers();
+	}
+
+	protected boolean handleIntent() {
+		// Get the launch intent
+		final Intent launchIntent = getIntent();
+
+		// Return false if intent is invalid
+		if(launchIntent == null || launchIntent.getAction() == null)
+			return false;
+
+		// Handle intent appropriately
+		if (launchIntent.getAction().equals(Intent.ACTION_VIEW)) {
+			// Create ArticleActivity intent containing the received URL String
+			Intent intent = new Intent(this, ArticleActivity.class);
+			intent.putExtra(Constants.KEY_ARTICLE_URL, launchIntent.getDataString());
+			Toast.makeText(this, "Loaded from data: \n" + launchIntent.getDataString(), Toast.LENGTH_SHORT).show();
+
+			// Clear launch intent action & start article activity
+			setIntent(launchIntent.setAction(null));
+			startActivity(intent);
+
+			// Return true to indicate we handled it
+			return true;
+		}
+
+		// Nothing was done, return false
+		return false;
 	}
 
 	@Override
