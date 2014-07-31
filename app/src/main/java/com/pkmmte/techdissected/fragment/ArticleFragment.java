@@ -122,7 +122,7 @@ public class ArticleFragment extends Fragment {
 				getActivity().finish();
 				return true;
 			case R.id.action_favorite:
-				// TODO
+				article.saveFavorite(!article.isFavorite());
 				return true;
 			case R.id.action_refresh:
 				// TODO

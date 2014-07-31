@@ -100,10 +100,8 @@ class RSSParser {
 				article.setContent(xmlParser.getText().replaceAll("[<](/)?div[^>]*[>]", ""));
 			else if (tag.equalsIgnoreCase("wfw:commentRss"))
 				article.setComments(xmlParser.getText());
-			else if (tag.equalsIgnoreCase("category")) {
+			else if (tag.equalsIgnoreCase("category"))
 				article.setNewTag(xmlParser.getText());
-				article.setCategory(xmlParser.getText());
-			}
 			else if (tag.equalsIgnoreCase("dc:creator"))
 				article.setAuthor(xmlParser.getText());
 			else if (tag.equalsIgnoreCase("pubDate")) {

@@ -98,6 +98,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
+				mPullToRefreshLayout.setRefreshing(true);
 				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 				return true;
 			case R.id.action_website:

@@ -64,7 +64,10 @@ public class PkRSS {
 	private final List<Article> favoriteList = new ArrayList<Article>(); // TODO
 
 	// Persistent SparseArray for checking an article's read state
-	private final SparseBooleanArray readList = new SparseBooleanArray(); // TODO
+	private final SparseBooleanArray readList = new SparseBooleanArray();
+
+	// Database storing all articles marked as favorite
+	private final FavoriteDatabase favoriteDatabase; // TODO
 
 	public static PkRSS with(Context context) {
 		if(singleton == null)
@@ -89,6 +92,7 @@ public class PkRSS {
 		catch (Exception e) {
 			Log.e(TAG, "Error configuring OkHttp client! \n" + e.getMessage());
 		}
+		favoriteDatabase = new FavoriteDatabase(context);
 	}
 
 	public void setLoggingEnabled(boolean enabled) {
@@ -208,9 +212,27 @@ public class PkRSS {
 		return readList.get(id, false);
 	}
 
-	// TODO
-	public void saveFavorite() {
+	// TODO TODO TODO
+	public boolean saveFavorite(int id) {
+		return saveFavorite(get(id), true);
+	}
 
+	public boolean saveFavorite(int id, boolean favorite) {
+		return saveFavorite(get(id), favorite);
+	}
+
+	public boolean saveFavorite(Article article) {
+		return saveFavorite(article, true);
+	}
+
+	public boolean saveFavorite(Article article, boolean favorite) {
+		long time = System.currentTimeMillis();
+		log("Adding article " + article.getId() + " to favorites...");
+		if(favorite)
+			favoriteDatabase.addArticle(article);
+
+		log("Saving article " + article.getId() + " to favorites took " + (System.currentTimeMillis() - time) + "ms");
+		return true;
 	}
 
 	// TODO

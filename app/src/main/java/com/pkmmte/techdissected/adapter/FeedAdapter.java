@@ -23,14 +23,12 @@ import java.util.List;
 public class FeedAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<Article> mFeed;
-	private Handler mHander;
 	private ColorMatrixColorFilter mFilter;
 	private OnArticleClickListener mListener;
 
 	public FeedAdapter(Context context) {
 		this.mContext = context;
 		this.mFeed = new ArrayList<Article>();
-		this.mHander = new Handler(Looper.getMainLooper());
 		ColorMatrix grayscaleFilter = new ColorMatrix();
 		grayscaleFilter.setSaturation(0);
 		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
@@ -38,7 +36,6 @@ public class FeedAdapter extends BaseAdapter {
 	public FeedAdapter(Context context, List<Article> feed) {
 		this.mContext = context;
 		this.mFeed = feed;
-		this.mHander = new Handler(Looper.getMainLooper());
 		ColorMatrix grayscaleFilter = new ColorMatrix();
 		grayscaleFilter.setSaturation(0);
 		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
@@ -94,7 +91,7 @@ public class FeedAdapter extends BaseAdapter {
 
 		Picasso.with(mContext).load(mArticle.getImage()).placeholder(R.drawable.placeholder).into(holder.imgPreview);
 
-		holder.btnCategory.setText(mArticle.getCategory());
+		holder.btnCategory.setText(mArticle.getTags().get(0));
 		holder.txtTitle.setText(mArticle.getTitle());
 		holder.txtDescription.setText(mArticle.getDescription());
 		holder.txtAuthor.setText("By " + mArticle.getAuthor());

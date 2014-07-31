@@ -14,7 +14,6 @@ public class Article implements Parcelable {
 	private String description;
 	private String content;
 	private String comments;
-	private String category;
 	private String author;
 	private long date;
 	private int id;
@@ -27,13 +26,12 @@ public class Article implements Parcelable {
 		this.description = null;
 		this.content = null;
 		this.comments = null;
-		this.category = null;
 		this.author = null;
 		this.date = 0;
 		this.id = -1;
 	}
 
-	public Article(List<String> tags, Uri source, Uri image, String title, String description, String content, String comments, String category, String author, long date, int id) {
+	public Article(List<String> tags, Uri source, Uri image, String title, String description, String content, String comments, String author, long date, int id) {
 		this.tags = tags;
 		this.source = source;
 		this.image = image;
@@ -41,7 +39,6 @@ public class Article implements Parcelable {
 		this.description = description;
 		this.content = content;
 		this.comments = comments;
-		this.category = category;
 		this.author = author;
 		this.date = date;
 		this.id = id;
@@ -107,14 +104,6 @@ public class Article implements Parcelable {
 		this.comments = comments;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
 	public String getAuthor() {
 		return author;
 	}
@@ -155,6 +144,22 @@ public class Article implements Parcelable {
 		return true;
 	}
 
+	public boolean isFavorite() {
+		// TODO
+		return false;
+	}
+
+	public boolean saveFavorite() {
+		return saveFavorite(true);
+	}
+
+	public boolean saveFavorite(boolean favorite) {
+		if(PkRSS.getInstance() == null)
+			return false;
+
+		return PkRSS.getInstance().saveFavorite(this, favorite);
+	}
+
 	public String toShortString() {
 		return "Article{" +
 			"tags=" + tags +
@@ -162,7 +167,6 @@ public class Article implements Parcelable {
 			", image=" + image +
 			", title='" + title + '\'' +
 			", comments='" + comments + '\'' +
-			", category='" + category + '\'' +
 			", author='" + author + '\'' +
 			", date=" + date +
 			", id=" + id +
@@ -179,7 +183,6 @@ public class Article implements Parcelable {
 			", description='" + description + '\'' +
 			", content='" + content + '\'' +
 			", comments='" + comments + '\'' +
-			", category='" + category + '\'' +
 			", author='" + author + '\'' +
 			", date=" + date +
 			", id=" + id +
@@ -196,8 +199,6 @@ public class Article implements Parcelable {
 		if (date != article.date) return false;
 		if (id != article.id) return false;
 		if (author != null ? !author.equals(article.author) : article.author != null) return false;
-		if (category != null ? !category.equals(article.category) : article.category != null)
-			return false;
 		if (comments != null ? !comments.equals(article.comments) : article.comments != null)
 			return false;
 		if (content != null ? !content.equals(article.content) : article.content != null)
@@ -223,7 +224,6 @@ public class Article implements Parcelable {
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (content != null ? content.hashCode() : 0);
 		result = 31 * result + (comments != null ? comments.hashCode() : 0);
-		result = 31 * result + (category != null ? category.hashCode() : 0);
 		result = 31 * result + (author != null ? author.hashCode() : 0);
 		result = 31 * result + (int) (date ^ (date >>> 32));
 		result = 31 * result + id;
@@ -242,7 +242,6 @@ public class Article implements Parcelable {
 		title = in.readString();
 		description = in.readString();
 		content = in.readString();
-		category = in.readString();
 		author = in.readString();
 		date = in.readLong();
 		id = in.readInt();
@@ -266,7 +265,6 @@ public class Article implements Parcelable {
 		dest.writeString(title);
 		dest.writeString(description);
 		dest.writeString(content);
-		dest.writeString(category);
 		dest.writeString(author);
 		dest.writeLong(date);
 		dest.writeInt(id);
