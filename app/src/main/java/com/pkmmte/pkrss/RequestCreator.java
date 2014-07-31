@@ -1,7 +1,6 @@
-package com.pkmmte.techdissected.util;
+package com.pkmmte.pkrss;
 
 import android.os.AsyncTask;
-import com.pkmmte.techdissected.model.Article;
 import java.util.List;
 import java.util.Map;
 

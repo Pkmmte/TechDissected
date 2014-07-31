@@ -1,13 +1,10 @@
-package com.pkmmte.techdissected.model;
+package com.pkmmte.pkrss;
 
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.pkmmte.techdissected.util.PkRSS;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Article implements Parcelable {
 	private List<String> tags;

@@ -1,6 +1,5 @@
-package com.pkmmte.techdissected.util;
+package com.pkmmte.pkrss;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Request {

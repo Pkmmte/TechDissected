@@ -1,9 +1,8 @@
-package com.pkmmte.techdissected.util;
+package com.pkmmte.pkrss;
 
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
-import com.pkmmte.techdissected.model.Article;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;

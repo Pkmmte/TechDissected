@@ -1,4 +1,4 @@
-package com.pkmmte.techdissected.model;
+package com.pkmmte.pkrss;
 
 import android.os.Parcel;
 import android.os.Parcelable;

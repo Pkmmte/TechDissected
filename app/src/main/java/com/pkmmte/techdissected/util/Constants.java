@@ -1,7 +1,6 @@
 package com.pkmmte.techdissected.util;
 
-import com.pkmmte.techdissected.model.Category;
-import java.util.ArrayList;
+import com.pkmmte.pkrss.Category;
 import java.util.List;
 
 public class Constants {

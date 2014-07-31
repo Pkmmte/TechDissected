@@ -1,19 +1,16 @@
 package com.pkmmte.techdissected.activity;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
-import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.fragment.FeedFragment;
-import com.pkmmte.techdissected.model.Category;
-import com.pkmmte.techdissected.util.Constants;
-import com.pkmmte.techdissected.util.PkRSS;
+import com.pkmmte.pkrss.Category;
+import com.pkmmte.pkrss.PkRSS;
 
 public class SearchActivity extends FragmentActivity {
 	private Category category;

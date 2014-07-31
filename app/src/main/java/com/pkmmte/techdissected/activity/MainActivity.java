@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.pkmmte.techdissected.R;
@@ -22,9 +21,9 @@ import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
 import com.pkmmte.techdissected.fragment.FavoritesFragment;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.techdissected.fragment.SettingsFragment;
-import com.pkmmte.techdissected.model.Category;
+import com.pkmmte.pkrss.Category;
 import com.pkmmte.techdissected.util.Constants;
-import com.pkmmte.techdissected.util.PkRSS;
+import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.view.PkDrawerLayout;
 
 public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {

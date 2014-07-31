@@ -1,11 +1,10 @@
-package com.pkmmte.techdissected.util;
+package com.pkmmte.pkrss;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import com.pkmmte.techdissected.model.Article;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -18,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import okio.Timeout;
 
 public class PkRSS {
 	// General public constant keys

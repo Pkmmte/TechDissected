@@ -2,14 +2,13 @@ package com.pkmmte.techdissected.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.pkmmte.techdissected.R;
-import com.pkmmte.techdissected.model.Category;
+import com.pkmmte.pkrss.Category;
 import java.util.ArrayList;
 import java.util.List;
 
