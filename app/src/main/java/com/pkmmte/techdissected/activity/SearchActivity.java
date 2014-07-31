@@ -13,25 +13,24 @@ import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.techdissected.model.Category;
 import com.pkmmte.techdissected.util.Constants;
+import com.pkmmte.techdissected.util.PkRSS;
 
 public class SearchActivity extends FragmentActivity {
-	public static final String KEY_SEARCH = "SEARCH TERM";
-
 	private Category category;
 	private String search;
 
 	private ActionBar actionBar;
+	private FragmentManager fragmentManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 
-		category = getIntent().getParcelableExtra(Constants.KEY_CATEGORY);
-		search = getIntent().getStringExtra(KEY_SEARCH);
+		retrieveArguments();
 		initActionBar();
 
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.searchContent, FeedFragment.newInstance(category, search)).commit();
 	}
 
@@ -44,7 +43,9 @@ public class SearchActivity extends FragmentActivity {
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				// TODO
+				search = query;
+				actionBar.setSubtitle(search);
+				fragmentManager.beginTransaction().replace(R.id.searchContent, FeedFragment.newInstance(category, search)).commit();
 				return false;
 			}
 
@@ -66,6 +67,11 @@ public class SearchActivity extends FragmentActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void retrieveArguments() {
+		category = getIntent().getParcelableExtra(PkRSS.KEY_CATEGORY);
+		search = getIntent().getStringExtra(PkRSS.KEY_SEARCH);
 	}
 
 	private void initActionBar() {

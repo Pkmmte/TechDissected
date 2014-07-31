@@ -15,6 +15,7 @@ public class Article implements Parcelable {
 	private String title;
 	private String description;
 	private String content;
+	private String comments;
 	private String category;
 	private String author;
 	private long date;
@@ -27,19 +28,21 @@ public class Article implements Parcelable {
 		this.title = null;
 		this.description = null;
 		this.content = null;
+		this.comments = null;
 		this.category = null;
 		this.author = null;
 		this.date = 0;
 		long id = -1;
 	}
 
-	public Article(List<String> tags, Uri source, Uri image, String title, String description, String content, String category, String author, long date, int id) {
+	public Article(List<String> tags, Uri source, Uri image, String title, String description, String content, String comments, String category, String author, long date, int id) {
 		this.tags = tags;
 		this.source = source;
 		this.image = image;
 		this.title = title;
 		this.description = description;
 		this.content = content;
+		this.comments = comments;
 		this.category = category;
 		this.author = author;
 		this.date = date;
@@ -98,6 +101,14 @@ public class Article implements Parcelable {
 		this.content = content;
 	}
 
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
 	public String getCategory() {
 		return category;
 	}
@@ -136,6 +147,7 @@ public class Article implements Parcelable {
 			", source=" + source +
 			", image=" + image +
 			", title='" + title + '\'' +
+			", comments='" + comments + '\'' +
 			", category='" + category + '\'' +
 			", author='" + author + '\'' +
 			", date=" + date +
@@ -152,6 +164,7 @@ public class Article implements Parcelable {
 			", title='" + title + '\'' +
 			", description='" + description + '\'' +
 			", content='" + content + '\'' +
+			", comments='" + comments + '\'' +
 			", category='" + category + '\'' +
 			", author='" + author + '\'' +
 			", date=" + date +
@@ -169,9 +182,10 @@ public class Article implements Parcelable {
 		if (date != article.date) return false;
 		if (id != article.id) return false;
 		if (author != null ? !author.equals(article.author) : article.author != null) return false;
-		if (category != null ? !category.equals(article.category) : article.category != null) {
+		if (category != null ? !category.equals(article.category) : article.category != null)
 			return false;
-		}
+		if (comments != null ? !comments.equals(article.comments) : article.comments != null)
+			return false;
 		if (content != null ? !content.equals(article.content) : article.content != null)
 			return false;
 		if (description != null ? !description.equals(article.description)
@@ -194,6 +208,7 @@ public class Article implements Parcelable {
 		result = 31 * result + (title != null ? title.hashCode() : 0);
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (content != null ? content.hashCode() : 0);
+		result = 31 * result + (comments != null ? comments.hashCode() : 0);
 		result = 31 * result + (category != null ? category.hashCode() : 0);
 		result = 31 * result + (author != null ? author.hashCode() : 0);
 		result = 31 * result + (int) (date ^ (date >>> 32));

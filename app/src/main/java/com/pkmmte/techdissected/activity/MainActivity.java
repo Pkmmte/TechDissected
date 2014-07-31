@@ -188,7 +188,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		if (launchIntent.getAction().equals(Intent.ACTION_VIEW)) {
 			// Create ArticleActivity intent containing the received URL String
 			Intent intent = new Intent(this, ArticleActivity.class);
-			intent.putExtra(Constants.KEY_ARTICLE_URL, launchIntent.getDataString());
+			intent.putExtra(PkRSS.KEY_ARTICLE_URL, launchIntent.getDataString());
 			Toast.makeText(this, "Loaded from data: \n" + launchIntent.getDataString(), Toast.LENGTH_SHORT).show();
 
 			// Clear launch intent action & start article activity

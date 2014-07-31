@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.GridView;
 import android.widget.SearchView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.activity.ArticleActivity;
@@ -22,7 +23,6 @@ import com.pkmmte.techdissected.model.Article;
 import com.pkmmte.techdissected.model.Category;
 import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.PkRSS;
-import com.pkmmte.techdissected.view.HeaderGridView;
 import java.util.ArrayList;
 import java.util.List;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -43,7 +43,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	// Views
 	private PullToRefreshLayout mPullToRefreshLayout;
-	private HeaderGridView mGrid;
+	private GridView mGrid;
 	private View noContent;
 
 	@Override
@@ -83,7 +83,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				Intent intent = new Intent(getActivity(), SearchActivity.class);
-				intent.putExtra(SearchActivity.KEY_SEARCH, query);
+				intent.putExtra(PkRSS.KEY_SEARCH, query);
 				startActivity(intent);
 				return false;
 			}
@@ -117,14 +117,14 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	private void initViews(View v) {
 		mPullToRefreshLayout = (PullToRefreshLayout) v.findViewById(R.id.ptr_layout);
-		mGrid = (HeaderGridView) v.findViewById(R.id.feedGrid);
+		mGrid = (GridView) v.findViewById(R.id.feedGrid);
 		noContent = v.findViewById(R.id.noContent);
 	}
 
 	private void retrieveArguments() {
 		Bundle bundle = getArguments();
-		category = bundle.getParcelable(Constants.KEY_CATEGORY);
-		search = bundle.getString(SearchActivity.KEY_SEARCH);
+		category = bundle.getParcelable(PkRSS.KEY_CATEGORY);
+		search = bundle.getString(PkRSS.KEY_SEARCH);
 	}
 
 	private void initFeed() {
@@ -178,9 +178,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	@Override
 	public void onClick(Article article) {
 		Intent intent = new Intent(getActivity(), ArticleActivity.class);
-		intent.putExtra(Constants.KEY_ARTICLE_ID, article.getId());
-		intent.putExtra(Constants.KEY_CATEGORY_NAME, category.getName());
-		intent.putExtra(Constants.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + search);
+		intent.putExtra(PkRSS.KEY_ARTICLE_ID, article.getId());
+		intent.putExtra(PkRSS.KEY_CATEGORY_NAME, category.getName());
+		intent.putExtra(PkRSS.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + search);
 		startActivity(intent);
 	}
 
@@ -210,8 +210,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public static FeedFragment newInstance(Category category, String search) {
 		FeedFragment mFragment = new FeedFragment();
 		Bundle args = new Bundle();
-		args.putParcelable(Constants.KEY_CATEGORY, category == null ? Constants.DEFAULT_CATEGORY : category);
-		args.putString(Constants.KEY_SEARCH, search);
+		args.putParcelable(PkRSS.KEY_CATEGORY, category == null ? Constants.DEFAULT_CATEGORY : category);
+		args.putString(PkRSS.KEY_SEARCH, search);
 		mFragment.setArguments(args);
 		return mFragment;
 	}

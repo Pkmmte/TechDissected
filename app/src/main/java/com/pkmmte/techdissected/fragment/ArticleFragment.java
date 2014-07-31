@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.model.Article;
+import com.pkmmte.techdissected.util.PkRSS;
 import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.CustomShareActionProvider;
 import com.pkmmte.techdissected.view.FlowLayout;
@@ -40,10 +41,6 @@ import com.pkmmte.techdissected.view.PkScrollView;
 import com.squareup.picasso.Picasso;
 
 public class ArticleFragment extends Fragment {
-	// Arguments Keys
-	protected static final String KEY_ARTICLE = "ARTICLE";
-	protected static final String KEY_CATEGORY_NAME = "CATEGORY NAME";
-
 	// Article
 	private Article article;
 
@@ -190,7 +187,7 @@ public class ArticleFragment extends Fragment {
 
 	private void retrieveContent() {
 		Bundle bundle = getArguments();
-		article = bundle.getParcelable(KEY_ARTICLE);
+		article = bundle.getParcelable(PkRSS.KEY_ARTICLE);
 	}
 
 	private void showContent() {
@@ -291,8 +288,7 @@ public class ArticleFragment extends Fragment {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if (Utils.containsImage(url))
 					Utils.getImageDialog(getActivity(), Uri.parse(url)).show();
-				else
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+				else startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 
 				return true;
 			}
@@ -337,7 +333,7 @@ public class ArticleFragment extends Fragment {
 	{
 		ArticleFragment mFragment = new ArticleFragment();
 		Bundle args = new Bundle();
-		args.putParcelable(KEY_ARTICLE, article);
+		args.putParcelable(PkRSS.KEY_ARTICLE, article);
 		mFragment.setArguments(args);
 		return mFragment;
 	}

@@ -1,6 +1,7 @@
 package com.pkmmte.techdissected.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import com.pkmmte.techdissected.model.Article;
 import com.squareup.okhttp.Cache;
@@ -14,8 +15,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import okio.Timeout;
 
 public class PkRSS {
+	// Static constants
+	public static final String KEY_ARTICLE = "ARTICLE";
+	public static final String KEY_ARTICLE_ID = "ARTICLE ID";
+	public static final String KEY_ARTICLE_URL = "ARTICLE URL";
+	public static final String KEY_FEED_URL = "FEED URL";
+	public static final String KEY_CATEGORY_NAME = "CATEGORY NAME";
+	public static final String KEY_CATEGORY = "CATEGORY";
+	public static final String KEY_SEARCH = "SEARCH TERM";
+
 	// Global singleton instance
 	private static PkRSS singleton = null;
 
@@ -31,6 +43,8 @@ public class PkRSS {
 	private final String httpCacheDir = "/okhttp";
 	private final int httpCacheSize = 1024 * 1024;
 	private final int httpCacheMaxAge = 60 * 60;
+	private final long httpConnectTimeout = 15;
+	private final long httpReadTimeout = 30;
 
 	// Reusable XML Parser
 	private RSSParser rssParser = new RSSParser(this);
@@ -55,10 +69,11 @@ public class PkRSS {
 		try {
 			File cacheDir = new File(context.getCacheDir().getAbsolutePath() + httpCacheDir);
 			this.httpClient.setCache(new Cache(cacheDir, httpCacheSize));
+			this.httpClient.setConnectTimeout(httpConnectTimeout, TimeUnit.SECONDS);
+			this.httpClient.setReadTimeout(httpReadTimeout, TimeUnit.SECONDS);
 		}
 		catch (Exception e) {
-			Log.e(TAG, "Error setting OkHttp client cache!");
-			e.printStackTrace();
+			Log.e(TAG, "Error configuring OkHttp client! \n" + e.getMessage());
 		}
 	}
 
@@ -91,7 +106,7 @@ public class PkRSS {
 		if(individual) // Append feed URL if individual article
 			url += "feed/?withoutcomments=1";
 		else if(search != null) // Append search query if available and not individual
-			url += "?s=" + search;
+			url += "?s=" + Uri.encode(search);
 
 		// Create a copy for pagination & handle cache
 		String requestUrl = url;
@@ -145,7 +160,7 @@ public class PkRSS {
 		if(search == null)
 			return articleMap.get(url);
 
-		return articleMap.get(url + "?s=" + search);
+		return articleMap.get(url + "?s=" + Uri.encode(search));
 	}
 
 	public Article get(int id) {

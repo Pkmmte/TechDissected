@@ -46,10 +46,10 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 
 	private void retrieveArguments() {
 		Bundle args = getIntent().getExtras();
-		categoryName = args.getString(Constants.KEY_CATEGORY_NAME, null);
-		feedUrl = args.getString(Constants.KEY_FEED_URL, null);
-		articleUrl = args.getString(Constants.KEY_ARTICLE_URL, null);
-		articleId = args.getInt(Constants.KEY_ARTICLE_ID, -1);
+		categoryName = args.getString(PkRSS.KEY_CATEGORY_NAME, null);
+		feedUrl = args.getString(PkRSS.KEY_FEED_URL, null);
+		articleUrl = args.getString(PkRSS.KEY_ARTICLE_URL, null);
+		articleId = args.getInt(PkRSS.KEY_ARTICLE_ID, -1);
 	}
 
 	private void initViews() {
