@@ -71,6 +71,9 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 		// Get list of articles
 		List<Article> articleList = PkRSS.with(this).get(feedUrl);
 
+		if(articleList == null || articleList.size() < 1)
+			return;
+
 		// Find article based on passed ID
 		for(Article article : articleList) {
 			if(article.getId() == articleId) {

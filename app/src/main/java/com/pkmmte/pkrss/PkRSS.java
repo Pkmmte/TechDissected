@@ -3,6 +3,7 @@ package com.pkmmte.pkrss;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import com.squareup.okhttp.Cache;
@@ -27,6 +28,7 @@ public class PkRSS {
 	public static final String KEY_CATEGORY_NAME = "CATEGORY NAME";
 	public static final String KEY_CATEGORY = "CATEGORY";
 	public static final String KEY_SEARCH = "SEARCH TERM";
+	public static final String KEY_READ_ARRAY = "READ ARRAY";
 
 	// Global singleton instance
 	private static PkRSS singleton = null;
@@ -50,19 +52,19 @@ public class PkRSS {
 	private final long httpReadTimeout = 30;
 
 	// Reusable XML Parser
-	private RSSParser rssParser = new RSSParser(this);
+	private final RSSParser rssParser = new RSSParser(this);
 
 	// List of stored articles
-	private Map<String, List<Article>> articleMap = new HashMap<String, List<Article>>();
+	private final Map<String, List<Article>> articleMap = new HashMap<String, List<Article>>();
 
 	// Keep track of pages already loaded on specific feeds
-	private Map<String, Integer> pageTracker = new HashMap<String, Integer>();
+	private final Map<String, Integer> pageTracker = new HashMap<String, Integer>();
 
 	// Persistent list of articles saved as favorites
-	private List<Article> favoriteList = new ArrayList<Article>(); // TODO
+	private final List<Article> favoriteList = new ArrayList<Article>(); // TODO
 
 	// Persistent SparseArray for checking an article's read state
-	private SparseBooleanArray readList = new SparseBooleanArray(); // TODO
+	private final SparseBooleanArray readList = new SparseBooleanArray(); // TODO
 
 	public static PkRSS with(Context context) {
 		if(singleton == null)
@@ -77,6 +79,7 @@ public class PkRSS {
 	protected PkRSS(Context context) {
 		this.mContext = context;
 		this.mPrefs = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+		getRead();
 		try {
 			File cacheDir = new File(context.getCacheDir().getAbsolutePath() + httpCacheDir);
 			this.httpClient.setCache(new Cache(cacheDir, httpCacheSize));
@@ -198,6 +201,7 @@ public class PkRSS {
 
 	public void markRead(int id, boolean read) {
 		readList.put(id, read);
+		writeRead();
 	}
 
 	public boolean isRead(int id) {
@@ -226,6 +230,52 @@ public class PkRSS {
 		articleList.addAll(newArticles);
 
 		log("New size for " + url + " is " + articleList.size());
+	}
+
+	private void getRead() {
+		// Execute on background thread as we don't know how large this is
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... params) {
+				int size = mPrefs.getInt("READ_ARRAY_SIZE", 0);
+				boolean value;
+				if(size < 1)
+					return null;
+
+				for(int i = 0, key; i < size; i++) {
+					key = mPrefs.getInt("READ_ARRAY_KEY_" + i, 0);
+					value = mPrefs.getBoolean("READ_ARRAY_VALUE_" + i, false);
+
+					readList.put(key, value);
+				}
+				return null;
+			}
+		}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+	}
+
+	private void writeRead() {
+		// Execute on background thread as we don't know how large this is
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... params) {
+				// Get editor & basic variables
+				SharedPreferences.Editor editor = mPrefs.edit();
+				int size = readList.size();
+				boolean value;
+
+				editor.putInt("READ_ARRAY_SIZE", size);
+				for(int i = 0, key; i < size; i++) {
+					key = readList.keyAt(i);
+					value = readList.get(key);
+
+					editor.putInt("READ_ARRAY_KEY_" + i, key);
+					editor.putBoolean("READ_ARRAY_VALUE_" + i, value);
+				}
+				editor.commit();
+
+				return null;
+			}
+		}.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 	}
 
 	protected void log(String message) {

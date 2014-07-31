@@ -1,6 +1,8 @@
 package com.pkmmte.techdissected.adapter;
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -22,17 +24,24 @@ public class FeedAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<Article> mFeed;
 	private Handler mHander;
+	private ColorMatrixColorFilter mFilter;
 	private OnArticleClickListener mListener;
 
 	public FeedAdapter(Context context) {
 		this.mContext = context;
 		this.mFeed = new ArrayList<Article>();
 		this.mHander = new Handler(Looper.getMainLooper());
+		ColorMatrix grayscaleFilter = new ColorMatrix();
+		grayscaleFilter.setSaturation(0);
+		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
 	}
 	public FeedAdapter(Context context, List<Article> feed) {
 		this.mContext = context;
 		this.mFeed = feed;
 		this.mHander = new Handler(Looper.getMainLooper());
+		ColorMatrix grayscaleFilter = new ColorMatrix();
+		grayscaleFilter.setSaturation(0);
+		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
 	}
 
 	public void updateFeed(List<Article> feed) {
@@ -99,8 +108,10 @@ public class FeedAdapter extends BaseAdapter {
 			}
 		});
 
-		// TODO TEST REMOVE
-		holder.txtTitle.setText((PkRSS.with(mContext).isRead(mArticle.getId()) ? "[READ]" : "[UNREAD]") + mArticle.getTitle());
+		if(mArticle.isRead())
+			holder.imgPreview.setColorFilter(mFilter);
+		else
+			holder.imgPreview.clearColorFilter();
 
 		return convertView;
 	}

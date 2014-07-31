@@ -19,9 +19,21 @@
     android:showAsAction="ifRoom|withText"
     android:title="Favorite" />
   <item
-    android:id="@+id/action_browser"
+    android:id="@+id/action_refresh"
     android:menuCategory="system"
     android:orderInCategory="102"
+    android:showAsAction="never"
+    android:title="Refresh" />
+  <item
+    android:id="@+id/action_unread"
+    android:menuCategory="system"
+    android:orderInCategory="103"
+    android:showAsAction="never"
+    android:title="Mark Unread" />
+  <item
+    android:id="@+id/action_browser"
+    android:menuCategory="system"
+    android:orderInCategory="104"
     android:showAsAction="never"
     android:title="View in Browser" />
 </menu>

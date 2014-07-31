@@ -88,7 +88,8 @@ public class ArticleFragment extends Fragment {
 		showContent();
 
 		// Mark article as read
-		PkRSS.with(getActivity()).markRead(article.getId(), true);
+		if(article != null)
+			article.markRead();
 
 		// Hacky fix for supporting FAB with sticky header
 		mScroll.setExtraTopOffset(getResources().getDimensionPixelSize(R.dimen.action_height));
@@ -121,7 +122,22 @@ public class ArticleFragment extends Fragment {
 				getActivity().finish();
 				return true;
 			case R.id.action_favorite:
-				//
+				// TODO
+				return true;
+			case R.id.action_refresh:
+				// TODO
+				return true;
+			case R.id.action_unread:
+				if(article == null) {
+					Toast.makeText(getActivity(), "Error loading article!", Toast.LENGTH_SHORT).show();
+					return true;
+				}
+
+				if(article.markRead(false))
+					item.setVisible(false);
+				else
+					Toast.makeText(getActivity(), "Unable to mark article as read. Please try again.", Toast.LENGTH_SHORT).show();
+
 				return true;
 			case R.id.action_browser:
 				if(article != null && article.getSource() != null)

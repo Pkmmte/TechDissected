@@ -140,11 +140,19 @@ public class Article implements Parcelable {
 	}
 
 	public boolean isRead() {
-		// TODO
-		if(PkRSS.with(null) == null)
+		return PkRSS.getInstance() == null ? false : PkRSS.getInstance().isRead(id);
+	}
+
+	public boolean markRead() {
+		return markRead(true);
+	}
+
+	public boolean markRead(boolean read) {
+		if(PkRSS.getInstance() == null)
 			return false;
-		else
-			return PkRSS.with(null).isRead(id);
+
+		PkRSS.getInstance().markRead(id, read);
+		return true;
 	}
 
 	public String toShortString() {
