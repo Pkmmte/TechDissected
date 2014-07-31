@@ -55,9 +55,6 @@ public class PkRSS {
 	// Keep track of pages already loaded on specific feeds
 	private Map<String, Integer> pageTracker = new HashMap<String, Integer>();
 
-	//
-	private Callback mCallback;
-
 	public static PkRSS with(Context context) {
 		if(singleton == null)
 			singleton = new PkRSS(context.getApplicationContext());
@@ -77,10 +74,6 @@ public class PkRSS {
 		}
 	}
 
-	public void setCallback(Callback callback) {
-		mCallback = callback;
-	}
-
 	public void setLoggingEnabled(boolean enabled) {
 		loggingEnabled = enabled;
 	}
@@ -93,7 +86,7 @@ public class PkRSS {
 		return new RequestCreator(this, url);
 	}
 
-	protected void load(String url, String search, boolean individual, boolean skipCache, int page) {
+	protected void load(String url, String search, boolean individual, boolean skipCache, int page, Callback callback) {
 		// Can't load empty URLs, do nothing
 		if(url == null || url.isEmpty()) {
 			log("Invalid URL!", Log.ERROR);
@@ -144,8 +137,8 @@ public class PkRSS {
 		List<Article> newArticles = rssParser.parse(inputStream);
 		insert(url, newArticles);
 
-		if(mCallback != null)
-			mCallback.postParse(newArticles);
+		if(callback != null)
+			callback.postParse(newArticles);
 	}
 
 	public Map<String, List<Article>> get() {

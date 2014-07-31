@@ -1,6 +1,12 @@
 package com.pkmmte.techdissected.util;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+
 public class Request {
+	private static final AtomicLong ID_GENERATOR = new AtomicLong(System.currentTimeMillis() * 100000);
+
+	public final String tag;
 	public final String url;
 	public final String search;
 	public final boolean individual;
@@ -9,6 +15,7 @@ public class Request {
 	public final PkRSS.Callback callback;
 
 	public Request(String url, String search, boolean individual, boolean skipCache, int page, PkRSS.Callback callback) {
+		this.tag = String.valueOf(ID_GENERATOR.incrementAndGet());
 		this.url = url;
 		this.search = search;
 		this.individual = individual;
@@ -18,6 +25,7 @@ public class Request {
 	}
 
 	public Request(Builder builder) {
+		this.tag = builder.tag == null ? String.valueOf(ID_GENERATOR.incrementAndGet()) : builder.tag;
 		this.url = builder.url;
 		this.search = builder.search;
 		this.individual = builder.individual;
@@ -27,6 +35,7 @@ public class Request {
 	}
 
 	public static final class Builder {
+		private String tag;
 		private String url;
 		private String search;
 		private boolean individual;
@@ -35,12 +44,18 @@ public class Request {
 		private PkRSS.Callback callback;
 
 		public Builder(String url) {
+			this.tag = null;
 			this.url = url;
 			this.search = null;
 			this.individual = false;
 			this.skipCache = false;
 			this.page = 1;
 			this.callback = null;
+		}
+
+		public Builder tag(String tag) {
+			this.tag = tag;
+			return this;
 		}
 
 		public Builder url(String url) {
