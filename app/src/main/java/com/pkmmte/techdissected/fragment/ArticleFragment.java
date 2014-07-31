@@ -93,6 +93,9 @@ public class ArticleFragment extends Fragment {
 		// Show article content, if available
 		showContent();
 
+		// Mark article as read
+		PkRSS.with(getActivity()).markRead(article.getId(), true);
+
 		// Hacky fix for supporting FAB with sticky header
 		mScroll.setExtraTopOffset(getResources().getDimensionPixelSize(R.dimen.action_height));
 

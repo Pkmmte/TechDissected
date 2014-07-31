@@ -67,8 +67,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			.listener(this)
 			.setup(mPullToRefreshLayout);
 
-		// TODO
-		//mFeed = RSSManager.with(getActivity()).get(category.getUrl());
+		//
 		initFeed();
 	}
 
@@ -99,7 +98,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
-				refreshFeed();
+				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 				return true;
 			case R.id.action_website:
 				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
@@ -171,27 +170,22 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		});
 	}
 
-	private void refreshFeed() {
-		PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
-	}
-
 	@Override
 	public void onClick(Article article) {
 		Intent intent = new Intent(getActivity(), ArticleActivity.class);
 		intent.putExtra(PkRSS.KEY_ARTICLE_ID, article.getId());
 		intent.putExtra(PkRSS.KEY_CATEGORY_NAME, category.getName());
-		intent.putExtra(PkRSS.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + search);
+		intent.putExtra(PkRSS.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + Uri.encode(search));
 		startActivity(intent);
 	}
 
 	@Override
 	public void onRefreshStarted(View view) {
-		refreshFeed();
+		PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 	}
 
 	@Override
-	public void postParse(List<Article> articleList) {
-		//mFeed = articleList;
+	public void postParse(List<Article> newArticles) {
 		mFeed = PkRSS.with(getActivity()).get(category.getUrl(), search);
 		mHandler.post(new Runnable() {
 			@Override

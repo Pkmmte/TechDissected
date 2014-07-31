@@ -1,8 +1,10 @@
 package com.pkmmte.techdissected.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import com.pkmmte.techdissected.model.Article;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import okio.Timeout;
 
 public class PkRSS {
-	// Static constants
+	// General public constant keys
 	public static final String KEY_ARTICLE = "ARTICLE";
 	public static final String KEY_ARTICLE_ID = "ARTICLE ID";
 	public static final String KEY_ARTICLE_URL = "ARTICLE URL";
@@ -38,6 +40,9 @@ public class PkRSS {
 	// Context is always useful for some reason.
 	private final Context mContext;
 
+	// For storing & reading read data
+	private final SharedPreferences mPrefs;
+
 	// Our handy client for getting XML feed data
 	private final OkHttpClient httpClient = new OkHttpClient();
 	private final String httpCacheDir = "/okhttp";
@@ -55,14 +60,25 @@ public class PkRSS {
 	// Keep track of pages already loaded on specific feeds
 	private Map<String, Integer> pageTracker = new HashMap<String, Integer>();
 
+	// Persistent list of articles saved as favorites
+	private List<Article> favoriteList = new ArrayList<Article>(); // TODO
+
+	// Persistent SparseArray for checking an article's read state
+	private SparseBooleanArray readList = new SparseBooleanArray(); // TODO
+
 	public static PkRSS with(Context context) {
 		if(singleton == null)
 			singleton = new PkRSS(context.getApplicationContext());
 		return singleton;
 	}
 
+	protected static PkRSS getInstance() {
+		return singleton;
+	}
+
 	protected PkRSS(Context context) {
 		this.mContext = context;
+		this.mPrefs = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
 		try {
 			File cacheDir = new File(context.getCacheDir().getAbsolutePath() + httpCacheDir);
 			this.httpClient.setCache(new Cache(cacheDir, httpCacheSize));
@@ -105,26 +121,32 @@ public class PkRSS {
 		String requestUrl = url;
 		int maxCacheAge = skipCache ? 0 : httpCacheMaxAge;
 
-		//
+		// Put the page index into the request's HashMap
 		pageTracker.put(requestUrl, page);
+
+		// Unless the request is individual or page index is invalid, build proper URL page parameters
 		if(page > 1 && !individual)
 			requestUrl += (search == null ? "?paged=" : "&paged=") + String.valueOf(page);
 
+		// Build the OkHttp request
 		Request request = new Request.Builder()
 			.addHeader("Cache-Control", "public, max-age=" + maxCacheAge)
 			.url(requestUrl)
 			.build();
 
-		String xmlString = null;
+		// Empty response string placeholder
+		String responseStr = null;
 
 		try {
+			// Execute the built request and log its data
 			log("Making a request to " + requestUrl + (skipCache ? " [SKIP-CACHE]" : " [MAX-AGE " + maxCacheAge + "]"));
 			Response response = httpClient.newCall(request).execute();
 
 			if(response.cacheResponse() != null)
 				log("Response retrieved from cache");
 
-			xmlString = response.body().string();
+			// Convert response body to a string
+			responseStr = response.body().string();
 			log("Request took " + (System.currentTimeMillis() - time) + "ms");
 		}
 		catch (Exception e) {
@@ -132,11 +154,14 @@ public class PkRSS {
 			e.printStackTrace();
 		}
 
-		InputStream inputStream = new ByteArrayInputStream(xmlString.getBytes());
+		// Create InputStream from response
+		InputStream inputStream = new ByteArrayInputStream(responseStr.getBytes());
 
+		// Parse articles from response and inset into global list
 		List<Article> newArticles = rssParser.parse(inputStream);
 		insert(url, newArticles);
 
+		// Call the callback, if available
 		if(callback != null)
 			callback.postParse(newArticles);
 	}
@@ -168,9 +193,27 @@ public class PkRSS {
 			}
 		}
 
-		log("Could not find Article with id of " + id, Log.WARN);
+		log("Could not find Article with id " + id, Log.WARN);
 		log("get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
 		return null;
+	}
+
+	public void markRead(int id, boolean read) {
+		readList.put(id, read);
+	}
+
+	public boolean isRead(int id) {
+		return readList.get(id, false);
+	}
+
+	// TODO
+	public void saveFavorite() {
+
+	}
+
+	// TODO
+	public boolean containsFavorite(int id) {
+		return false;
 	}
 
 	protected Map<String, Integer> getPageTracker() {
@@ -220,7 +263,6 @@ public class PkRSS {
 				Log.e(tag, message);
 				break;
 			case Log.ASSERT:
-			//	break;
 			default:
 				Log.wtf(tag, message);
 				break;

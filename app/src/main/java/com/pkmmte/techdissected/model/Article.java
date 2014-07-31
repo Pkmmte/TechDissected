@@ -3,6 +3,7 @@ package com.pkmmte.techdissected.model;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.pkmmte.techdissected.util.PkRSS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public class Article implements Parcelable {
 		this.category = null;
 		this.author = null;
 		this.date = 0;
-		long id = -1;
+		this.id = -1;
 	}
 
 	public Article(List<String> tags, Uri source, Uri image, String title, String description, String content, String comments, String category, String author, long date, int id) {
@@ -139,6 +140,14 @@ public class Article implements Parcelable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public boolean isRead() {
+		// TODO
+		if(PkRSS.with(null) == null)
+			return false;
+		else
+			return PkRSS.with(null).isRead(id);
 	}
 
 	public String toShortString() {

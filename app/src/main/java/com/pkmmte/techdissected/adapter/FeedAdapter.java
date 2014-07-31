@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.model.Article;
+import com.pkmmte.techdissected.util.PkRSS;
 import com.pkmmte.techdissected.util.Utils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -98,28 +99,8 @@ public class FeedAdapter extends BaseAdapter {
 			}
 		});
 
-		/*final ViewHolder fHolder = holder;
-		Timer timer = new Timer("Article " + String.valueOf(mArticle.getId()));
-		timer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				mHander.post(new Runnable() {
-					@Override
-					public void run() {
-						Log.e("TAZ", "[" + fHolder.currentTag + "] Updating timer..." + mArticle.getId());
-						// Reset tag index if at max
-						if(fHolder.currentTag >= mArticle.getTags().size())
-							fHolder.currentTag = 0;
-
-						//
-						fHolder.btnCategory.setText(mArticle.getTags().get(fHolder.currentTag));
-
-						//
-						fHolder.currentTag++;
-					}
-				});
-			}
-		}, 0, 4000);*/
+		// TODO TEST REMOVE
+		holder.txtTitle.setText((PkRSS.with(mContext).isRead(mArticle.getId()) ? "[READ]" : "[UNREAD]") + mArticle.getTitle());
 
 		return convertView;
 	}
