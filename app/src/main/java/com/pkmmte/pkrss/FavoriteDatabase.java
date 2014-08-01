@@ -66,7 +66,7 @@ class FavoriteDatabase extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 
-	public void addArticle(Article article) {
+	public void add(Article article) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		// Insert
@@ -86,7 +86,7 @@ class FavoriteDatabase extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	public Article getArticle(int id) {
+	public Article get(int id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_ARTICLES, new String[] { KEY_TAGS, KEY_SOURCE, KEY_IMAGE, KEY_TITLE, KEY_DESCRIPTION, KEY_CONTENT, KEY_COMMENTS, KEY_AUTHOR, KEY_DATE, KEY_ID }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);
@@ -107,7 +107,7 @@ class FavoriteDatabase extends SQLiteOpenHelper {
 		return article;
 	}
 
-	public List<Article> getAllArticles() {
+	public List<Article> getAll() {
 		List<Article> articleList = new ArrayList<Article>();
 		String selectQuery = "SELECT  * FROM " + TABLE_ARTICLES;
 
@@ -133,19 +133,19 @@ class FavoriteDatabase extends SQLiteOpenHelper {
 		return exists;
 	}
 
-	public void deleteArticle(Article article) {
+	public void delete(Article article) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_ARTICLES, KEY_ID + " = ?", new String[] { String.valueOf(article.getId()) });
 		db.close();
 	}
 
-	public void deleteAllArticles() {
+	public void deleteAll() {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_ARTICLES, null, null);
 		db.close();
 	}
 
-	public int getArticleCount() {
+	public int getCount() {
 		int count = 0;
 		String countQuery = "SELECT  * FROM " + TABLE_ARTICLES;
 		SQLiteDatabase db = this.getReadableDatabase();

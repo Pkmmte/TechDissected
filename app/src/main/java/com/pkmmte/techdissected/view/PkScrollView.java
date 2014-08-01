@@ -2,7 +2,6 @@ package com.pkmmte.techdissected.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 public class PkScrollView extends StickyScrollView {
 	private PkScrollViewListener mScrollListener = null;

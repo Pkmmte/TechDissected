@@ -28,7 +28,7 @@
     android:menuCategory="system"
     android:orderInCategory="103"
     android:showAsAction="never"
-    android:title="Remove All Favorites" />
+    android:title="Reset Favorites" />
   <item
     android:id="@+id/action_website"
     android:menuCategory="system"

@@ -61,9 +61,6 @@ public class PkRSS {
 	// Keep track of pages already loaded on specific feeds
 	private final Map<String, Integer> pageTracker = new HashMap<String, Integer>();
 
-	// Persistent list of articles saved as favorites
-	private final List<Article> favoriteList = new ArrayList<Article>(); // TODO
-
 	// Persistent SparseArray for checking an article's read state
 	private final SparseBooleanArray readList = new SparseBooleanArray();
 
@@ -210,7 +207,7 @@ public class PkRSS {
 		}
 
 		// If none was found, try searching in the favorites database
-		for(Article article : favoriteDatabase.getAllArticles()) {
+		for(Article article : favoriteDatabase.getAll()) {
 			if(article.getId() == id) {
 				log("get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
 				return article;
@@ -223,7 +220,25 @@ public class PkRSS {
 	}
 
 	public List<Article> getFavorites() {
-		return favoriteDatabase == null ? null : favoriteDatabase.getAllArticles();
+		return favoriteDatabase == null ? null : favoriteDatabase.getAll();
+	}
+
+	public void markAllRead(boolean read) {
+		long time = System.currentTimeMillis();
+
+		// Look for an article with this id in the Article HashMap
+		for(List<Article> articleList : articleMap.values()) {
+			for(Article article : articleList)
+				readList.put(article.getId(), read);
+		}
+
+		// If none was found, try searching in the favorites database
+		for(Article article : favoriteDatabase.getAll()) {
+			readList.put(article.getId(), read);
+		}
+
+		writeRead();
+		log("markAllRead(" + String.valueOf(read) + ") took " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	public void markRead(int id, boolean read) {
@@ -252,12 +267,19 @@ public class PkRSS {
 		long time = System.currentTimeMillis();
 		log("Adding article " + article.getId() + " to favorites...");
 		if(favorite)
-			favoriteDatabase.addArticle(article);
+			favoriteDatabase.add(article);
 		else
-			favoriteDatabase.deleteArticle(article);
+			favoriteDatabase.delete(article);
 
 		log("Saving article " + article.getId() + " to favorites took " + (System.currentTimeMillis() - time) + "ms");
 		return true;
+	}
+
+	public void deleteAllFavorites() {
+		long time = System.currentTimeMillis();
+		log("Deleting all favorites...");
+		favoriteDatabase.deleteAll();
+		log("Deleting all favorites took " + (System.currentTimeMillis() - time) + "ms");
 	}
 
 	public boolean containsFavorite(int id) {

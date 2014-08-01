@@ -1,12 +1,11 @@
 package com.pkmmte.techdissected.view;
 
-import com.pkmmte.techdissected.R;
-import java.lang.reflect.Method;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ShareActionProvider;
+import com.pkmmte.techdissected.R;
+import java.lang.reflect.Method;
 
 public class CustomShareActionProvider extends ShareActionProvider
 {

@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
-import com.pkmmte.techdissected.R;
-import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.pkrss.Category;
 import com.pkmmte.pkrss.PkRSS;
+import com.pkmmte.techdissected.R;
+import com.pkmmte.techdissected.fragment.FeedFragment;
 
 public class SearchActivity extends FragmentActivity {
 	private Category category;

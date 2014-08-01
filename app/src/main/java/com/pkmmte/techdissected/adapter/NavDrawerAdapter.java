@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.pkmmte.techdissected.R;
 import com.pkmmte.pkrss.Category;
+import com.pkmmte.techdissected.R;
 import java.util.ArrayList;
 import java.util.List;
 

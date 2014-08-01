@@ -1,5 +1,7 @@
 package com.pkmmte.techdissected.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,14 +17,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.SearchView;
+import com.pkmmte.pkrss.Article;
+import com.pkmmte.pkrss.Category;
+import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.activity.ArticleActivity;
 import com.pkmmte.techdissected.activity.SearchActivity;
 import com.pkmmte.techdissected.adapter.FeedAdapter;
-import com.pkmmte.pkrss.Article;
-import com.pkmmte.pkrss.Category;
 import com.pkmmte.techdissected.util.Constants;
-import com.pkmmte.pkrss.PkRSS;
 import java.util.ArrayList;
 import java.util.List;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -102,10 +104,20 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 				return true;
 			case R.id.action_read:
-				// TODO
+				PkRSS.with(getActivity()).markAllRead(true);
+				mAdapter.notifyDataSetChanged();
 				return true;
 			case R.id.action_unfavorite:
-				// TODO
+				new AlertDialog.Builder(getActivity())
+					.setTitle("Confirm Delete")
+					.setMessage("Do you really want to delete all articles marked as favorite?")
+					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int whichButton) {
+							PkRSS.with(getActivity()).deleteAllFavorites();
+							mAdapter.notifyDataSetChanged();
+						}})
+					.setNegativeButton(android.R.string.no, null).show();
 				return true;
 			case R.id.action_website:
 				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
