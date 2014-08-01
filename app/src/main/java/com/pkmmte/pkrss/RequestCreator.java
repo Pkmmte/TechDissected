@@ -128,7 +128,11 @@ public class RequestCreator {
 	 * @return
 	 */
 	public Article getFirst() {
-		return get().get(0);
+		List<Article> articleList = get();
+		if(articleList == null || articleList.size() < 1)
+			return null;
+
+		return articleList.get(0);
 	}
 
 	/**

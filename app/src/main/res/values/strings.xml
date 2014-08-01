@@ -6,4 +6,23 @@
   <string name="drawer_open">Open Drawer</string>
   <string name="drawer_close">Close Drawer</string>
 
+  <!-- Settings Section -->
+  <string name="cloud_wallpapers">Cloud Wallpapers</string>
+  <string name="cloud_wallpapers_description">Show wallpapers stored on the cloud along with local wallpapers</string>
+  <string name="save_location">Save Location</string>
+  <string name="save_location_description">Storage for saved wallpapers</string>
+  <string name="clear_cache">Clear Cache</string>
+  <string name="clear_cache_description">Delete temporary cached data</string>
+  <string name="toggle_launcher_icon">Toggle Launcher Icon</string>
+  <string name="toggle_launcher_icon_description">Show/Hide this app from the launcher</string>
+  <string name="people">People</string>
+  <string name="people_description">The people who helped make this happen</string>
+  <string name="libraries">Libraries</string>
+  <string name="libraries_description">Third-party libraries used in this application</string>
+  <string name="calculating">Calculating&#8230;</string>
+  <string name="launcher_icon_enabled">Launcher icon enabled! May not take effect until reboot.</string>
+  <string name="launcher_icon_disabled">Launcher icon disabled. May not take effect until reboot.</string>
+  <string name="cache_success">Successfully cleared cache!</string>
+  <string name="cache_fail">Failed to clear cache&#8230;</string>
+
 </resources>

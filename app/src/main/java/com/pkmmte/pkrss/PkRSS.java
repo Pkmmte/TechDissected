@@ -12,6 +12,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -226,6 +227,15 @@ public class PkRSS {
 	public void markAllRead(boolean read) {
 		long time = System.currentTimeMillis();
 
+		// Just clear the array and return, if marking as unread
+		if(!read) {
+			readList.clear();
+			writeRead();
+			log("markAllRead(" + String.valueOf(read) + ") took " + (System.currentTimeMillis()
+				- time) + "ms");
+			return;
+		}
+
 		// Look for an article with this id in the Article HashMap
 		for(List<Article> articleList : articleMap.values()) {
 			for(Article article : articleList)
@@ -287,6 +297,26 @@ public class PkRSS {
 			return false;
 
 		return favoriteDatabase.contains(id);
+	}
+
+	public boolean clearCache() {
+		try {
+			httpClient.getCache().delete();
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public boolean clearData() {
+		try {
+			httpClient.getCache().delete();
+			deleteAllFavorites();
+			markAllRead(false);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 	protected Map<String, Integer> getPageTracker() {

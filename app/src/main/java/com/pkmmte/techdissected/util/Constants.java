@@ -4,6 +4,8 @@ import com.pkmmte.pkrss.Category;
 import java.util.List;
 
 public class Constants {
+	public static final String PREFS_NAME = "TechDissected";
+
 	public static final String WEBSITE_URL = "http://techdissected.com";
 	public static final String CATEGORY_URL = WEBSITE_URL + "/category";
 	public static final String MAIN_FEED = WEBSITE_URL + "/feed";

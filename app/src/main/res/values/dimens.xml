@@ -8,4 +8,12 @@
   <!-- Navigation Drawer -->
   <dimen name="nav_drawer_width">280dp</dimen>
 
+  <!-- Settings Section -->
+  <dimen name="settings_header">16sp</dimen>
+  <dimen name="settings_title">16sp</dimen>
+  <dimen name="settings_description">14sp</dimen>
+  <dimen name="settings_spacing">8dp</dimen>
+  <dimen name="settings_spacing_small">4dp</dimen>
+  <dimen name="settings_spacing_horizontal">16dp</dimen>
+
 </resources>

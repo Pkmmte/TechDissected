@@ -130,6 +130,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public void toggleActionItems(Menu menu, boolean drawerOpen) {
 		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		menu.findItem(R.id.action_refresh).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_read).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_unfavorite).setVisible(!drawerOpen);
 		menu.findItem(R.id.action_website).setVisible(!drawerOpen);
 	}
 

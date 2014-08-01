@@ -16,4 +16,9 @@
   <color name="transparent">#00000000</color>
   <color name="white">#FFFFFFFF</color>
   <color name="white_transparent_ex">#33FFFFFF</color>
+
+  <!-- Settings Section -->
+  <color name="settings_header">#FF008F7B</color>
+  <color name="settings_divider">#FFEDEDED</color>
+
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/txtHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:paddingBottom="@dimen/settings_spacing_small"
+    android:paddingLeft="@dimen/settings_spacing_horizontal"
+    android:paddingRight="@dimen/settings_spacing_horizontal"
+    android:paddingTop="@dimen/settings_spacing"
+    android:textColor="@color/settings_header"
+    android:textSize="@dimen/settings_header"
+    android:textStyle="bold" />

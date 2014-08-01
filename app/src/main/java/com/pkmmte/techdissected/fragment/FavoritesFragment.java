@@ -55,55 +55,18 @@ public class FavoritesFragment extends Fragment implements FeedAdapter.OnArticle
 
 		//
 		mFeed = PkRSS.with(getActivity()).getFavorites();
-		mGrid.setVisibility(View.VISIBLE);
-		noContent.setVisibility(View.GONE);
-		mAdapter = new FeedAdapter(getActivity(), mFeed);
-		mAdapter.setOnClickListener(this);
-		mGrid.setAdapter(mAdapter);
-	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-	{
-		menu.clear();
-		inflater.inflate(R.menu.feed, menu);
-
-		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				Intent intent = new Intent(getActivity(), SearchActivity.class);
-				intent.putExtra(PkRSS.KEY_SEARCH, query);
-				startActivity(intent);
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				return false;
-			}
-		});
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_refresh:
-				mPullToRefreshLayout.setRefreshComplete();
-				mFeed = PkRSS.with(getActivity()).getFavorites();
-				return true;
-			case R.id.action_website:
-				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		if(mFeed.size() > 0) {
+			mGrid.setVisibility(View.VISIBLE);
+			noContent.setVisibility(View.GONE);
+			mAdapter = new FeedAdapter(getActivity(), mFeed);
+			mAdapter.setOnClickListener(this);
+			mGrid.setAdapter(mAdapter);
 		}
-	}
-
-	public void toggleActionItems(Menu menu, boolean drawerOpen) {
-		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_refresh).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_website).setVisible(!drawerOpen);
+		else {
+			noContent.setVisibility(View.VISIBLE);
+			mGrid.setVisibility(View.GONE);
+		}
 	}
 
 	private void initViews(View v) {
