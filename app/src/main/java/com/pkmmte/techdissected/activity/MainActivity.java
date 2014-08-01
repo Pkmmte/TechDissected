@@ -149,6 +149,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 				actionBarSubtitle = "Favorites";
 				mDrawerAdapter.setCurrentPage(-1);
+				mDrawerLayout.closeDrawers();
 			}
 		});
 		(headerView.findViewById(R.id.btnSettings)).setOnClickListener(new View.OnClickListener() {
@@ -158,6 +159,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 				actionBarSubtitle = "Settings";
 				mDrawerAdapter.setCurrentPage(-1);
+				mDrawerLayout.closeDrawers();
 			}
 		});
 	}

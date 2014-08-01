@@ -75,7 +75,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		menu.clear();
-		inflater.inflate(R.menu.main, menu);
+		inflater.inflate(R.menu.feed, menu);
 
 		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -100,6 +100,12 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			case R.id.action_refresh:
 				mPullToRefreshLayout.setRefreshing(true);
 				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
+				return true;
+			case R.id.action_read:
+				// TODO
+				return true;
+			case R.id.action_unfavorite:
+				// TODO
 				return true;
 			case R.id.action_website:
 				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
@@ -178,6 +184,11 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		intent.putExtra(PkRSS.KEY_CATEGORY_NAME, category.getName());
 		intent.putExtra(PkRSS.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + Uri.encode(search));
 		startActivity(intent);
+	}
+
+	@Override
+	public void onAddFavorite(Article article, boolean favorite) {
+		//
 	}
 
 	@Override

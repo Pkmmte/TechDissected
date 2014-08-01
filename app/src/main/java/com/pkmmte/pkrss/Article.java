@@ -145,8 +145,7 @@ public class Article implements Parcelable {
 	}
 
 	public boolean isFavorite() {
-		// TODO
-		return false;
+		return PkRSS.getInstance() == null ? false : PkRSS.getInstance().containsFavorite(id);
 	}
 
 	public boolean saveFavorite() {

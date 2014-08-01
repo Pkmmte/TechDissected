@@ -2,7 +2,7 @@ package com.pkmmte.pkrss;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Request {
+public final class Request {
 	private static final AtomicLong ID_GENERATOR = new AtomicLong(System.currentTimeMillis() * 100000);
 
 	public final String tag;

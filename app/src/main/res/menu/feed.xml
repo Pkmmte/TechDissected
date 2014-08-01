@@ -18,9 +18,21 @@
     android:showAsAction="never"
     android:title="Refresh" />
   <item
-    android:id="@+id/action_website"
+    android:id="@+id/action_read"
     android:menuCategory="system"
     android:orderInCategory="102"
+    android:showAsAction="never"
+    android:title="Mark All Read" />
+  <item
+    android:id="@+id/action_unfavorite"
+    android:menuCategory="system"
+    android:orderInCategory="103"
+    android:showAsAction="never"
+    android:title="Remove All Favorites" />
+  <item
+    android:id="@+id/action_website"
+    android:menuCategory="system"
+    android:orderInCategory="104"
     android:showAsAction="never"
     android:title="Visit Website" />
 </menu>

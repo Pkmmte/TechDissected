@@ -42,6 +42,7 @@ public class ArticleFragment extends Fragment {
 	private ActionBar actionBar;
 	private Drawable actionBarDrawable;
 	private CustomShareActionProvider mShareActionProvider;
+	private MenuItem menuFavorite;
 
 	// WebView params
 	private final String base = "file:///android_asset/";
@@ -91,7 +92,11 @@ public class ArticleFragment extends Fragment {
 		if(article != null)
 			article.markRead();
 
-		// Hacky fix for supporting FAB with sticky header
+		//
+		if(article != null && menuFavorite != null)
+			menuFavorite.setIcon(article.isFavorite() ? R.drawable.ic_action_favorite_full : R.drawable.ic_action_favorite_empty);
+
+		// Hacky custom fix for supporting FAB with sticky header
 		mScroll.setExtraTopOffset(getResources().getDimensionPixelSize(R.dimen.action_height));
 
 		// Scroll listener for parallax/fading effect
@@ -109,8 +114,12 @@ public class ArticleFragment extends Fragment {
 	{
 		menu.clear();
 		inflater.inflate(R.menu.article, menu);
+		menuFavorite = menu.findItem(R.id.action_favorite);
 		mShareActionProvider = (CustomShareActionProvider) menu.findItem(R.id.action_share).getActionProvider();
 		setupShare();
+
+		if(article != null)
+			menuFavorite.setIcon(article.isFavorite() ? R.drawable.ic_action_favorite_full : R.drawable.ic_action_favorite_empty);
 	}
 
 	@Override
@@ -120,9 +129,18 @@ public class ArticleFragment extends Fragment {
 		{
 			case android.R.id.home:
 				getActivity().finish();
+
 				return true;
 			case R.id.action_favorite:
-				article.saveFavorite(!article.isFavorite());
+				if(article == null) {
+					Toast.makeText(getActivity(), "Error loading article!", Toast.LENGTH_SHORT).show();
+					return true;
+				}
+
+				boolean favorite = !article.isFavorite();
+				if (article.saveFavorite(favorite))
+					item.setIcon(favorite ? R.drawable.ic_action_favorite_full : R.drawable.ic_action_favorite_empty);
+
 				return true;
 			case R.id.action_refresh:
 				// TODO

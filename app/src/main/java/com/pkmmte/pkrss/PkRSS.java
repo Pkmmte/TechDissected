@@ -29,6 +29,7 @@ public class PkRSS {
 	public static final String KEY_CATEGORY = "CATEGORY";
 	public static final String KEY_SEARCH = "SEARCH TERM";
 	public static final String KEY_READ_ARRAY = "READ ARRAY";
+	public static final String KEY_FAVORITES = "FAVORITES";
 
 	// Global singleton instance
 	private static PkRSS singleton = null;
@@ -114,6 +115,12 @@ public class PkRSS {
 			return;
 		}
 
+		// Don't load if URL is the favorites key
+		if(url.equals(KEY_FAVORITES)) {
+			log("Favorites URL detected, skipping load...");
+			return;
+		}
+
 		// Start tracking load time
 		long time = System.currentTimeMillis();
 
@@ -176,6 +183,9 @@ public class PkRSS {
 	}
 
 	public List<Article> get(String url) {
+		if(url.equals(KEY_FAVORITES))
+			return getFavorites();
+
 		return articleMap.get(url);
 	}
 
@@ -189,6 +199,7 @@ public class PkRSS {
 	public Article get(int id) {
 		long time = System.currentTimeMillis();
 
+		// Look for an article with this id in the Article HashMap
 		for(List<Article> articleList : articleMap.values()) {
 			for(Article article : articleList) {
 				if(article.getId() == id) {
@@ -198,9 +209,21 @@ public class PkRSS {
 			}
 		}
 
+		// If none was found, try searching in the favorites database
+		for(Article article : favoriteDatabase.getAllArticles()) {
+			if(article.getId() == id) {
+				log("get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
+				return article;
+			}
+		}
+
 		log("Could not find Article with id " + id, Log.WARN);
 		log("get(" + id + ") took " + (System.currentTimeMillis() - time) + "ms");
 		return null;
+	}
+
+	public List<Article> getFavorites() {
+		return favoriteDatabase == null ? null : favoriteDatabase.getAllArticles();
 	}
 
 	public void markRead(int id, boolean read) {
@@ -230,14 +253,18 @@ public class PkRSS {
 		log("Adding article " + article.getId() + " to favorites...");
 		if(favorite)
 			favoriteDatabase.addArticle(article);
+		else
+			favoriteDatabase.deleteArticle(article);
 
 		log("Saving article " + article.getId() + " to favorites took " + (System.currentTimeMillis() - time) + "ms");
 		return true;
 	}
 
-	// TODO
 	public boolean containsFavorite(int id) {
-		return false;
+		if(favoriteDatabase == null)
+			return false;
+
+		return favoriteDatabase.contains(id);
 	}
 
 	protected Map<String, Integer> getPageTracker() {

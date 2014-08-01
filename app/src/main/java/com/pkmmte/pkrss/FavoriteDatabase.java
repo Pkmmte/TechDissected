@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FavoriteDatabase extends SQLiteOpenHelper {
+class FavoriteDatabase extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "db.pkrss.favorites";
 	private static final String TABLE_ARTICLES = "articles";
 
-	private static final String KEY_ID = "ID";
 	private static final String KEY_TAGS = "TAGS";
 	private static final String KEY_SOURCE = "SOURCE";
 	private static final String KEY_IMAGE = "IMAGE";
@@ -26,6 +25,7 @@ public class FavoriteDatabase extends SQLiteOpenHelper {
 	private static final String KEY_COMMENTS = "COMMENTS";
 	private static final String KEY_AUTHOR = "AUTHOR";
 	private static final String KEY_DATE = "DATE";
+	private static final String KEY_ID = "ID";
 
 	public FavoriteDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -122,6 +122,15 @@ public class FavoriteDatabase extends SQLiteOpenHelper {
 		db.close();
 
 		return articleList;
+	}
+
+	public boolean contains(int id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.query(TABLE_ARTICLES, new String[] { KEY_TAGS, KEY_SOURCE, KEY_IMAGE, KEY_TITLE, KEY_DESCRIPTION, KEY_CONTENT, KEY_COMMENTS, KEY_AUTHOR, KEY_DATE, KEY_ID }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);
+
+		boolean exists = cursor.moveToFirst();
+		db.close();
+		return exists;
 	}
 
 	public void deleteArticle(Article article) {

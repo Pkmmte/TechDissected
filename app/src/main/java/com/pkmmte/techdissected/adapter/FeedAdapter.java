@@ -3,18 +3,16 @@ package com.pkmmte.techdissected.adapter;
 import android.content.Context;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.pkrss.Article;
-import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.util.Utils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -77,7 +75,8 @@ public class FeedAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.mCard = convertView.findViewById(R.id.card);
 			holder.imgPreview = (ImageView) convertView.findViewById(R.id.imgPreview);
-			holder.btnCategory = (Button) convertView.findViewById(R.id.btnCategory);
+			holder.btnFavorite = (ImageButton) convertView.findViewById(R.id.imgFavorite);
+			holder.btnTag = (Button) convertView.findViewById(R.id.btnTag);
 			holder.txtTitle = (TextView) convertView.findViewById(R.id.txtTitle);
 			holder.txtDescription = (TextView) convertView.findViewById(R.id.txtDescription);
 			holder.txtAuthor = (TextView) convertView.findViewById(R.id.txtAuthor);
@@ -91,7 +90,7 @@ public class FeedAdapter extends BaseAdapter {
 
 		Picasso.with(mContext).load(mArticle.getImage()).placeholder(R.drawable.placeholder).into(holder.imgPreview);
 
-		holder.btnCategory.setText(mArticle.getTags().get(0));
+		holder.btnTag.setText(mArticle.getTags().get(0));
 		holder.txtTitle.setText(mArticle.getTitle());
 		holder.txtDescription.setText(mArticle.getDescription());
 		holder.txtAuthor.setText("By " + mArticle.getAuthor());
@@ -104,23 +103,39 @@ public class FeedAdapter extends BaseAdapter {
 					mListener.onClick(mArticle);
 			}
 		});
+		holder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				boolean favorite = !mArticle.isFavorite();
+				mArticle.saveFavorite(favorite);
+
+				if(mListener != null)
+					mListener.onAddFavorite(mArticle, favorite);
+
+				notifyDataSetChanged();
+			}
+		});
 
 		if(mArticle.isRead())
 			holder.imgPreview.setColorFilter(mFilter);
 		else
 			holder.imgPreview.clearColorFilter();
 
+		holder.btnFavorite.setImageResource(mArticle.isFavorite() ? R.drawable.ic_favorite_full : R.drawable.ic_favorite_empty);
+
 		return convertView;
 	}
 
 	public interface OnArticleClickListener {
 		public void onClick(Article article);
+		public void onAddFavorite(Article article, boolean favorite);
 	}
 
 	private class ViewHolder {
 		public View mCard;
 		public ImageView imgPreview;
-		public Button btnCategory;
+		public ImageButton btnFavorite;
+		public Button btnTag;
 		public TextView txtTitle;
 		public TextView txtDescription;
 		public TextView txtAuthor;
