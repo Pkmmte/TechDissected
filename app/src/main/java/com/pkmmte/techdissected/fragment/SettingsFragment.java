@@ -19,17 +19,14 @@ import com.pkmmte.techdissected.util.Utils;
 public class SettingsFragment extends ListFragment
 {
 	// ID Keys
-	private final int WALLPAPERS_CLOUD = 0;
-	private final int WALLPAPERS_STORAGE = 1;
-	private final int MISC_CACHE = 2;
-	private final int MISC_ICON = 3;
-	private final int CREDITS_PEOPLE = 4;
-	private final int CREDITS_LIBRARIES = 5;
+	private final int STORAGE_CACHE = 0;
+	private final int READ_GRAYSCALE = 1;
+	private final int CREDITS_LIBRARIES = 2;
+	private final int CREDITS_DEV = 3;
+	private final int CREDITS_PKRSS = 4;
 
 	// App Preferences
 	private SharedPreferences mPrefs;
-	private final String KEY_WALLPAPERS_CLOUD = "Wallpapers Cloud";
-	private final String KEY_LAUNCHER_ICON = "Launcher Icon";
 
 	// List Adapter
 	private SettingsAdapter mAdapter;
@@ -58,7 +55,7 @@ public class SettingsFragment extends ListFragment
 		getListView().setDividerHeight(0);
 
 		// Apply custom selector
-		//getListView().setSelector(R.drawable.selector_transparent_lgray);
+		getListView().setSelector(R.drawable.selector_transparent_lgray);
 		getListView().setDrawSelectorOnTop(false);
 
 		// Calculate overall cache size asynchronously
@@ -69,51 +66,43 @@ public class SettingsFragment extends ListFragment
 	{
 		mAdapter = new SettingsAdapter(getActivity());
 
-		mAdapter.addHeader("wallpapers");
-		mAdapter.addItem(new SettingsItem.Builder()
-			                 .type(SettingsAdapter.TYPE_CHECKBOX)
-			                 .title(getString(R.string.cloud_wallpapers))
-			                 .description(getString(R.string.cloud_wallpapers_description))
-			                 .selected(mPrefs.getBoolean(KEY_WALLPAPERS_CLOUD, true))
-			                 .id(WALLPAPERS_CLOUD)
-			                 .build());
-		mAdapter.addDivider();
-		mAdapter.addItem(new SettingsItem.Builder()
-			                 .type(SettingsAdapter.TYPE_TEXT)
-			                 .title(getString(R.string.save_location))
-			                 .description(getString(R.string.save_location_description))
-			                 .id(WALLPAPERS_STORAGE)
-			                 .build());
-
-		mAdapter.addHeader("miscellaneous");
+		mAdapter.addHeader("Storage");
 		mAdapter.addItem(new SettingsItem.Builder()
 			                 .type(SettingsAdapter.TYPE_TEXT)
 			                 .title(getString(R.string.clear_cache))
 			                 .description(getString(R.string.clear_cache_description))
-			                 .id(MISC_CACHE)
-			                 .build());
-		mAdapter.addDivider();
-		mAdapter.addItem(new SettingsItem.Builder()
-			                 .type(SettingsAdapter.TYPE_CHECKBOX)
-			                 .title(getString(R.string.toggle_launcher_icon))
-			                 .description(getString(R.string.toggle_launcher_icon_description))
-			                 .selected(mPrefs.getBoolean(KEY_LAUNCHER_ICON, true))
-			                 .id(MISC_ICON)
+			                 .id(STORAGE_CACHE)
 			                 .build());
 
-		mAdapter.addHeader("credits");
+		mAdapter.addHeader("Reading");
 		mAdapter.addItem(new SettingsItem.Builder()
-			                 .type(SettingsAdapter.TYPE_TEXT)
-			                 .title(getString(R.string.people))
-			                 .description(getString(R.string.people_description))
-			                 .id(CREDITS_PEOPLE)
+			                 .type(SettingsAdapter.TYPE_CHECKBOX)
+			                 .title("Grayscale Read")
+			                 .description("Mark articles as read by grayscaling their preview images")
+			                 .selected(mPrefs.getBoolean(Constants.PREF_READ, true))
+			                 .id(READ_GRAYSCALE)
 			                 .build());
-		mAdapter.addDivider();
+
+		mAdapter.addHeader("Credits");
 		mAdapter.addItem(new SettingsItem.Builder()
 			                 .type(SettingsAdapter.TYPE_TEXT)
 			                 .title(getString(R.string.libraries))
-			                 .description(getString(R.string.libraries_description))
+			                 .description("Libraries used in this app")
 			                 .id(CREDITS_LIBRARIES)
+			                 .build());
+		mAdapter.addDivider();
+		mAdapter.addItem(new SettingsItem.Builder()
+			                 .type(SettingsAdapter.TYPE_TEXT)
+			                 .title("About Dev")
+			                 .description("Developer who made this app")
+			                 .id(CREDITS_DEV)
+			                 .build());
+		mAdapter.addDivider();
+		mAdapter.addItem(new SettingsItem.Builder()
+			                 .type(SettingsAdapter.TYPE_TEXT)
+			                 .title("Powered by PkRSS")
+			                 .description("PkRSS is an easy-to-use Android library for managing RSS feeds efficiently")
+			                 .id(CREDITS_DEV)
 			                 .build());
 	}
 
@@ -123,22 +112,29 @@ public class SettingsFragment extends ListFragment
 		SettingsItem mSetting = mAdapter.getItem(position);
 
 		switch(mSetting.getID()) {
-			case WALLPAPERS_CLOUD:
-				// TODO
+			case STORAGE_CACHE:
+				boolean success = Utils.clearCache(getActivity());
+				Toast.makeText(getActivity(), success ? getString(R.string.cache_success) : getString(R.string.cache_fail), Toast.LENGTH_SHORT).show();
+				calculateCacheAsync();
 				break;
-			case WALLPAPERS_STORAGE:
-				// TODO
+			case READ_GRAYSCALE:
+				// Update preference
+				boolean grayscaleRead = mPrefs.getBoolean(Constants.PREF_READ, true);
+				Editor mEditor = mPrefs.edit();
+				mEditor.putBoolean(Constants.PREF_READ, !grayscaleRead);
+				mEditor.commit();
+
+				// Update setting in list
+				mAdapter.getSetting(READ_GRAYSCALE).setSelected(!grayscaleRead);
+				mAdapter.notifyDataSetChanged();
 				break;
-			case MISC_CACHE:
-				// TODO
-				break;
-			case MISC_ICON:
-				// TODO
-				break;
-			case CREDITS_PEOPLE:
+			case CREDITS_DEV:
 				// TODO
 				break;
 			case CREDITS_LIBRARIES:
+				// TODO
+				break;
+			case CREDITS_PKRSS:
 				// TODO
 				break;
 		}
@@ -151,7 +147,7 @@ public class SettingsFragment extends ListFragment
 
 			@Override
 			protected void onPreExecute() {
-				mAdapter.getSetting(MISC_CACHE).setDescription(getString(R.string.clear_cache_description) + "\n" + getString(R.string.calculating));
+				mAdapter.getSetting(STORAGE_CACHE).setDescription(getString(R.string.clear_cache_description) + "\n" + getString(R.string.calculating));
 				mAdapter.notifyDataSetChanged();
 			}
 
@@ -165,7 +161,7 @@ public class SettingsFragment extends ListFragment
 			@Override
 			protected void onPostExecute(Void result) {
 				try {
-					mAdapter.getSetting(MISC_CACHE).setDescription(getString(R.string.clear_cache_description) + "\n" + cacheSize);
+					mAdapter.getSetting(STORAGE_CACHE).setDescription(getString(R.string.clear_cache_description) + "\n" + cacheSize);
 					mAdapter.notifyDataSetChanged();
 				}
 				catch(Exception e) {

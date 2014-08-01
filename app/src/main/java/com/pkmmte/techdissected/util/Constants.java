@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Constants {
 	public static final String PREFS_NAME = "TechDissected";
+	public static final String PREF_READ = "MARK READ";
 
 	public static final String WEBSITE_URL = "http://techdissected.com";
 	public static final String CATEGORY_URL = WEBSITE_URL + "/category";

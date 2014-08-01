@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pkmmte.pkrss.Article;
 import com.pkmmte.techdissected.R;
+import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.Utils;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class FeedAdapter extends BaseAdapter {
 	private List<Article> mFeed;
 	private ColorMatrixColorFilter mFilter;
 	private OnArticleClickListener mListener;
+	private boolean grayscaleRead;
 
 	public FeedAdapter(Context context) {
 		this.mContext = context;
@@ -30,6 +32,7 @@ public class FeedAdapter extends BaseAdapter {
 		ColorMatrix grayscaleFilter = new ColorMatrix();
 		grayscaleFilter.setSaturation(0);
 		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
+		this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, true);
 	}
 	public FeedAdapter(Context context, List<Article> feed) {
 		this.mContext = context;
@@ -37,6 +40,7 @@ public class FeedAdapter extends BaseAdapter {
 		ColorMatrix grayscaleFilter = new ColorMatrix();
 		grayscaleFilter.setSaturation(0);
 		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
+		this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, true);
 	}
 
 	public void updateFeed(List<Article> feed) {
@@ -116,7 +120,7 @@ public class FeedAdapter extends BaseAdapter {
 			}
 		});
 
-		if(mArticle.isRead())
+		if(grayscaleRead && mArticle.isRead())
 			holder.imgPreview.setColorFilter(mFilter);
 		else
 			holder.imgPreview.clearColorFilter();
