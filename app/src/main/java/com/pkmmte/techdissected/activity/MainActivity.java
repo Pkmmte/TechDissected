@@ -137,6 +137,10 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		View headerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.drawer_header, mDrawerList, false);
 		mDrawerList.addHeaderView(headerView, null, false);
 
+		// Add footer
+		View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.drawer_footer, mDrawerList, false);
+		mDrawerList.addFooterView(footerView, null, false);
+
 		// Set list adapter
 		mDrawerList.setAdapter(mDrawerAdapter);
 

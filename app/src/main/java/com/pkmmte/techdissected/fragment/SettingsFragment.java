@@ -97,13 +97,6 @@ public class SettingsFragment extends ListFragment
 			                 .description("Developer who made this app")
 			                 .id(CREDITS_DEV)
 			                 .build());
-		mAdapter.addDivider();
-		mAdapter.addItem(new SettingsItem.Builder()
-			                 .type(SettingsAdapter.TYPE_TEXT)
-			                 .title("Powered by PkRSS")
-			                 .description("PkRSS is an easy-to-use Android library for managing RSS feeds efficiently")
-			                 .id(CREDITS_DEV)
-			                 .build());
 	}
 
 	@Override

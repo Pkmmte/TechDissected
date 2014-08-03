@@ -18,7 +18,9 @@
     android:divider="#FF2f4154"
     android:dividerHeight="1dp"
     android:drawSelectorOnTop="false"
+    android:footerDividersEnabled="false"
     android:headerDividersEnabled="false"
-    android:listSelector="@drawable/selector_preview_overlay" />
+    android:listSelector="@drawable/selector_preview_overlay"
+    android:scrollbars="none" />
 
 </com.pkmmte.techdissected.view.PkDrawerLayout>
