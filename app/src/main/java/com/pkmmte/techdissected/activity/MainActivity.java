@@ -4,11 +4,13 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,9 @@ import com.pkmmte.techdissected.fragment.FavoritesFragment;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.techdissected.fragment.SettingsFragment;
 import com.pkmmte.techdissected.util.Constants;
+import com.pkmmte.techdissected.util.IabHelper;
+import com.pkmmte.techdissected.util.IabResult;
+import com.pkmmte.techdissected.util.Purchase;
 import com.pkmmte.techdissected.view.PkDrawerLayout;
 
 public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
@@ -41,6 +46,11 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	private FragmentManager fragmentManager;
 	private FeedFragment currentCategory;
 
+	// Donation Helper Class & View
+	private IabHelper mHelper;
+	private View btnDonate;
+
+	//
 	private boolean contentLoaded = false;
 
 	@Override
@@ -62,6 +72,13 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		// Select default category
 		selectCategory(0);
+
+		// Set up donate function, if possible
+		try {
+			setupDonate();
+		} catch (Exception e) {
+			btnDonate.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
@@ -75,6 +92,18 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		super.onStart();
 		if(!contentLoaded)
 			selectCategory(0);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		// Unbind IAP service, if possible
+		try {
+			if (mHelper != null)
+				mHelper.dispose();
+			mHelper = null;
+		} catch (Exception e) { }
 	}
 
 	@Override
@@ -146,18 +175,40 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		// Set OnClick Listeners
 		mDrawerList.setOnItemClickListener(this);
-		(headerView.findViewById(R.id.btnFavorites)).setOnClickListener(new View.OnClickListener() {
+		btnDonate = headerView.findViewById(R.id.btnDonate);
+		btnDonate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fragmentManager.beginTransaction().replace(R.id.feedContainer,
-				                                           new FavoritesFragment()).commit();
+				try {
+					mHelper.launchPurchaseFlow(MainActivity.this, "donate", 10001, new IabHelper.OnIabPurchaseFinishedListener() {
+						                           public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+							                           if (result.isFailure()) {
+								                           Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
+								                           return;
+							                           }
+							                           else if (purchase.getSku().equals("donate")) {
+								                           mHelper.consumeAsync(purchase, null);
+							                           }
+						                           }
+					                           }, "bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ");
+				} catch (Exception e) {
+					Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		headerView.findViewById(R.id.btnFavorites).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				fragmentManager.beginTransaction()
+					.replace(R.id.feedContainer, new FavoritesFragment())
+					.commit();
 
 				actionBarSubtitle = "Favorites";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
 			}
 		});
-		(headerView.findViewById(R.id.btnSettings)).setOnClickListener(new View.OnClickListener() {
+		headerView.findViewById(R.id.btnSettings).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new SettingsFragment()).commit();
@@ -165,6 +216,12 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				actionBarSubtitle = "Settings";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
+			}
+		});
+		footerView.findViewById(R.id.btnPKRSS).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.PKRSS_URL)));
 			}
 		});
 	}
@@ -180,6 +237,19 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		mDrawerAdapter.setCurrentPage(position);
 		mDrawerLayout.closeDrawers();
+	}
+
+	private void setupDonate() {
+		mHelper = new IabHelper(this.getApplicationContext(), getString(R.string.public_license_key));
+		mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+			public void onIabSetupFinished(IabResult result) {
+				if (!result.isSuccess()) {
+					// Oh noes, there was a problem.
+					Log.d("TAG", "Problem setting up In-app Billing: " + result);
+				}
+				Log.d("TAG", "Hooray, IAB is fully set up!");
+			}
+		});
 	}
 
 	protected boolean handleIntent() {

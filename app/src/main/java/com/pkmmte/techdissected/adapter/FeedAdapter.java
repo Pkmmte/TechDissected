@@ -125,7 +125,7 @@ public class FeedAdapter extends BaseAdapter {
 		else
 			holder.imgPreview.clearColorFilter();
 
-		holder.btnFavorite.setImageResource(mArticle.isFavorite() ? R.drawable.ic_favorite_full : R.drawable.ic_favorite_empty);
+		holder.btnFavorite.setImageResource(mArticle.isFavorite() ? R.drawable.selector_favorite_full : R.drawable.selector_favorite_empty);
 
 		return convertView;
 	}

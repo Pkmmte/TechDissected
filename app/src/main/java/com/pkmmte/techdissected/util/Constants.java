@@ -10,6 +10,7 @@ public class Constants {
 	public static final String WEBSITE_URL = "http://techdissected.com";
 	public static final String CATEGORY_URL = WEBSITE_URL + "/category";
 	public static final String MAIN_FEED = WEBSITE_URL + "/feed";
+	public static final String PKRSS_URL = "https://github.com/Pkmmte/PkRSS";
 
 	public static final List<Category> CATEGORIES = new Category.ListBuilder()
 													.add("All Posts", MAIN_FEED)
