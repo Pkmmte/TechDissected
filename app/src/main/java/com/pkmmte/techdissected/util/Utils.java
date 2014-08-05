@@ -3,14 +3,23 @@ package com.pkmmte.techdissected.util;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ListView;
 import com.pkmmte.techdissected.R;
+import com.pkmmte.techdissected.adapter.CreditsLibraryAdapter;
+import com.pkmmte.techdissected.model.CreditsLibraryItem;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import java.io.File;
@@ -125,6 +134,38 @@ public class Utils {
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 
+	/**
+	 * This method converts dp unit to equivalent pixels, depending on device density.
+	 *
+	 * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+	 * @param context Context to get resources and device specific display metrics
+	 * @return A float value to represent px equivalent to dp depending on device density
+	 */
+	public static float convertDpToPixel(float dp, Context context)
+	{
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float px = dp * (metrics.densityDpi / 160f);
+
+		return px;
+	}
+
+	/**
+	 * This method converts device specific pixels to density independent pixels.
+	 *
+	 * @param px A value in px (pixels) unit. Which we need to convert into db
+	 * @param context Context to get resources and device specific display metrics
+	 * @return A float value to represent dp equivalent to px value
+	 */
+	public static float convertPixelsToDp(float px, Context context)
+	{
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float dp = px / (metrics.densityDpi / 160f);
+
+		return dp;
+	}
+
 	public static Dialog getImageDialog(final Context context, final Uri uri) {
 		final Dialog mDialog = new Dialog(context, R.style.Dialog_Fullscreen);
 		final ImageView imageView = new ImageView(context);
@@ -165,5 +206,126 @@ public class Utils {
 			}
 		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		return mDialog;
+	}
+
+	public static Dialog getAboutDialog(final Context context)
+	{
+		// Create dialog base
+		final Dialog mDialog = new Dialog(context);
+		mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		mDialog.setContentView(R.layout.dialog_dev);
+		mDialog.setCanceledOnTouchOutside(true);
+		mDialog.setCancelable(true);
+
+		mDialog.findViewById(R.id.imgAvatar).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				context.startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.DEV_URL)));
+			}
+		});
+
+		// Return the dialog object
+		return mDialog;
+	}
+
+	public static Dialog getCreditsLibraryDialog(final Context context)
+	{
+		// Create & configure ListView
+		ListView mList = new ListView(context);
+		mList.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		mList.setSelector(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
+		mList.setClickable(true);
+		mList.setDivider(null);
+		mList.setDividerHeight(0);
+		mList.setHorizontalScrollBarEnabled(false);
+		mList.setVerticalScrollBarEnabled(false);
+		mList.setPadding(0, (int) Utils.convertDpToPixel(24, context), 0, (int) Utils.convertDpToPixel(24, context));
+		mList.setClipToPadding(false);
+
+		// Create dialog base
+		final Dialog mDialog = new Dialog(context, R.style.Dialog_Transparent);
+		mDialog.setContentView(mList);
+		mDialog.setCanceledOnTouchOutside(true);
+		mDialog.setCancelable(true);
+
+		// Add items
+		final CreditsLibraryAdapter mAdapter = new CreditsLibraryAdapter(context);
+		mAdapter.addItem(new CreditsLibraryItem.Builder()
+			                 .avatar(resToUri(context, R.drawable.credits_chrisbanes))
+			                 .link(Uri.parse("https://github.com/chrisbanes/ActionBar-PullToRefresh"))
+			                 .title("ActionBar-PullToRefresh")
+			                 .author("Chris Banes")
+			                 .license(getApacheLicense("Copyright 2013 Chris Banes\n\n"))
+			                 .build());
+		mAdapter.addItem(new CreditsLibraryItem.Builder()
+			                 .avatar(resToUri(context, R.drawable.credits_chrisbanes))
+			                 .link(Uri.parse("https://github.com/chrisbanes/PhotoView"))
+			                 .title("PhotoView")
+			                 .author("Chris Banes")
+			                 .license(getApacheLicense("Copyright 2011, 2012 Chris Banes\n\n"))
+			                 .build());
+		mAdapter.addItem(new CreditsLibraryItem.Builder()
+			                 .avatar(resToUri(context, R.drawable.credits_pkmmte))
+			                 .link(Uri.parse("https://github.com/Pkmmte/PkRSS"))
+			                 .title("PkRSS")
+			                 .author("Pkmmte")
+			                 .license(getApacheLicense("Copyright 2014 Pkmmte Xeleon.\n\n"))
+			                 .build());
+		mAdapter.addItem(new CreditsLibraryItem.Builder()
+			                 .avatar(resToUri(context, R.drawable.credits_square))
+			                 .link(Uri.parse("https://github.com/square/picasso"))
+			                 .title("Picasso")
+			                 .author("Square")
+			                 .license(getApacheLicense("Copyright 2013 Square, Inc.\n\n"))
+			                 .build());
+		mAdapter.addItem(new CreditsLibraryItem.Builder()
+			                 .avatar(resToUri(context, R.drawable.credits_emilsjolander))
+			                 .link(Uri.parse("https://github.com/emilsjolander/StickyScrollViewItems"))
+			                 .title("StickyScrollViewItems")
+			                 .author("emilsjolander")
+			                 .license(getApacheLicense())
+			                 .build());
+
+
+		mList.setAdapter(mAdapter);
+
+		mAdapter.setOnAvatarClickListener(new CreditsLibraryAdapter.onAvatarClickListener() {
+			@Override
+			public void onClick(Uri link) {
+				context.startActivity(new Intent(Intent.ACTION_VIEW).setData(link));
+			}
+		});
+
+		// Return the dialog object
+		return mDialog;
+	}
+
+	public static Uri resToUri(Context context, int resId)
+	{
+		return Uri.parse("android.resource://" + context.getPackageName() + "/" + resId);
+	}
+
+	public static String getApacheLicense()
+	{
+		return getApacheLicense(null);
+	}
+
+	public static String getApacheLicense(String header)
+	{
+		StringBuilder builder = new StringBuilder();
+
+		if(header != null)
+			builder.append(header);
+		builder.append("Licensed under the Apache License, Version 2.0 (the \"License\");");
+		builder.append("you may not use this file except in compliance with the License.");
+		builder.append("You may obtain a copy of the License at\n\n");
+		builder.append("   http://www.apache.org/licenses/LICENSE-2.0\n\n");
+		builder.append("Unless required by applicable law or agreed to in writing, software");
+		builder.append("distributed under the License is distributed on an \"AS IS\" BASIS,");
+		builder.append("WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.");
+		builder.append("See the License for the specific language governing permissions and");
+		builder.append("limitations under the License.");
+
+		return builder.toString();
 	}
 }

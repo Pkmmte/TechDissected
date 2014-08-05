@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pkmmte.techdissected.R;
-import com.pkmmte.techdissected.util.SettingsItem;
+import com.pkmmte.techdissected.model.SettingsItem;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/Card"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/selector_card_bg"
+  android:clickable="true" >
+
+  <com.pkmmte.techdissected.view.CircularImageView
+    android:id="@+id/imgAvatar"
+    android:layout_width="56dp"
+    android:layout_height="56dp"
+    android:layout_alignParentLeft="true"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:clickable="true"
+    app:selector="true"
+    app:selector_color="#4433b5e5"
+    app:selector_stroke_color="#880099CC"
+    app:selector_stroke_width="2dp" />
+
+  <LinearLayout
+    android:id="@+id/authorInfo"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_toRightOf="@+id/imgAvatar"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_marginBottom="4dp"
+      android:layout_marginTop="4dp"
+      android:layout_weight="1"
+      android:orientation="vertical" >
+
+      <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-condensed"
+        android:maxLines="1"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp" />
+
+      <TextView
+        android:id="@+id/txtAuthor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:maxLines="1"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp" />
+    </LinearLayout>
+
+    <ImageView
+      android:id="@+id/btnExpCol"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:padding="8dp" />
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/txtLicense"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/authorInfo"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_toRightOf="@+id/imgAvatar"
+    android:autoLink="web"
+    android:background="@drawable/license_background"
+    android:padding="4dp"
+    android:textColor="@android:color/black"
+    android:textIsSelectable="true"
+    android:textSize="12sp"
+    android:typeface="monospace"
+    android:visibility="gone" />
+
+</RelativeLayout>

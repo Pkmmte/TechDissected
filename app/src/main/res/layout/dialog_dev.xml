@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:ignore="ContentDescription" >
+
+  <ImageView
+    android:id="@+id/imgBanner"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/about_dialog_banner"
+    android:scaleType="centerCrop"
+    android:src="@drawable/dev_banner" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/imgBanner"
+    android:orientation="vertical" >
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical" >
+
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/about_dialog_tagline_padding"
+        android:paddingBottom="@dimen/about_dialog_spacing_small"
+        android:paddingRight="@dimen/about_dialog_spacing"
+        android:paddingTop="@dimen/about_dialog_spacing_small"
+        android:text="@string/dev_tagline"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/about_dialog_tagline" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/about_dialog_spacing"
+        android:text="@string/dev_bio"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/about_dialog_bio" />
+    </LinearLayout>
+  </ScrollView>
+
+  <com.pkmmte.techdissected.view.CircularImageView
+    android:id="@+id/imgAvatar"
+    android:layout_width="@dimen/about_dialog_avatar"
+    android:layout_height="@dimen/about_dialog_avatar"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/imgBanner"
+    android:layout_marginLeft="@dimen/about_dialog_spacing"
+    android:layout_marginRight="@dimen/about_dialog_spacing"
+    android:layout_marginTop="@dimen/about_dialog_avatar_padding"
+    android:src="@drawable/credits_pkmmte"
+    app:border="true"
+    app:border_color="@color/white"
+    app:border_width="2dp"
+    app:selector="true"
+    app:selector_color="#4433b5e5"
+    app:selector_stroke_color="#880099CC"
+    app:selector_stroke_width="2dp"
+    app:shadow="true" />
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/imgBanner"
+    android:layout_toRightOf="@+id/imgAvatar"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:paddingRight="@dimen/about_dialog_spacing"
+    android:text="@string/dev_name"
+    android:textColor="@color/white"
+    android:textSize="@dimen/about_dialog_name" />
+
+</RelativeLayout>

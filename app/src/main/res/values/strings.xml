@@ -6,6 +6,13 @@
   <string name="drawer_open">Open Drawer</string>
   <string name="drawer_close">Close Drawer</string>
 
+  <!-- Developer Information -->
+  <string name="dev_name">Pkmmte Xeleon</string>
+  <string name="dev_tagline">Android Developer</string>
+    <string name="dev_bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempus posuere magna, et vulputate est pharetra sed.
+	    Vestibulum imperdiet, velit quis euismod hendrerit, tellus lectus tempor enim, sit amet blandit metus ipsum faucibus sem.
+	    \n\nDuis dapibus, sapien blandit posuere volutpat, eros elit molestie risus, nec pulvinar sem sapien nec massa.</string>
+
   <!-- Settings Section -->
   <string name="cloud_wallpapers">Cloud Wallpapers</string>
   <string name="cloud_wallpapers_description">Show wallpapers stored on the cloud along with local wallpapers</string>

@@ -16,4 +16,15 @@
   <dimen name="settings_spacing_small">4dp</dimen>
   <dimen name="settings_spacing_horizontal">16dp</dimen>
 
+  <!-- About Dialog -->
+  <dimen name="about_dialog_banner">128dp</dimen>
+  <dimen name="about_dialog_avatar">72dp</dimen>
+  <dimen name="about_dialog_avatar_padding">-36dp</dimen>
+  <dimen name="about_dialog_name">26sp</dimen>
+  <dimen name="about_dialog_tagline">18sp</dimen>
+  <dimen name="about_dialog_bio">14sp</dimen>
+  <dimen name="about_dialog_tagline_padding">96dp</dimen>
+  <dimen name="about_dialog_spacing">12dp</dimen>
+  <dimen name="about_dialog_spacing_small">6dp</dimen>
+
 </resources>

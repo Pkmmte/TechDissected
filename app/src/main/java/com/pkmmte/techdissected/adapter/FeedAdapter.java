@@ -79,8 +79,8 @@ public class FeedAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.mCard = convertView.findViewById(R.id.card);
 			holder.imgPreview = (ImageView) convertView.findViewById(R.id.imgPreview);
-			holder.btnFavorite = (ImageButton) convertView.findViewById(R.id.imgFavorite);
-			holder.btnTag = (Button) convertView.findViewById(R.id.btnTag);
+			holder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgFavorite);
+			holder.txtTag = (TextView) convertView.findViewById(R.id.txtTag);
 			holder.txtTitle = (TextView) convertView.findViewById(R.id.txtTitle);
 			holder.txtDescription = (TextView) convertView.findViewById(R.id.txtDescription);
 			holder.txtAuthor = (TextView) convertView.findViewById(R.id.txtAuthor);
@@ -94,7 +94,7 @@ public class FeedAdapter extends BaseAdapter {
 
 		Picasso.with(mContext).load(mArticle.getImage()).placeholder(R.drawable.placeholder).into(holder.imgPreview);
 
-		holder.btnTag.setText(mArticle.getTags().get(0));
+		holder.txtTag.setText(mArticle.getTags().get(0));
 		holder.txtTitle.setText(mArticle.getTitle());
 		holder.txtDescription.setText(mArticle.getDescription());
 		holder.txtAuthor.setText("By " + mArticle.getAuthor());
@@ -107,7 +107,7 @@ public class FeedAdapter extends BaseAdapter {
 					mListener.onClick(mArticle);
 			}
 		});
-		holder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+		holder.imgFavorite.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				boolean favorite = !mArticle.isFavorite();
@@ -125,7 +125,7 @@ public class FeedAdapter extends BaseAdapter {
 		else
 			holder.imgPreview.clearColorFilter();
 
-		holder.btnFavorite.setImageResource(mArticle.isFavorite() ? R.drawable.selector_favorite_full : R.drawable.selector_favorite_empty);
+		holder.imgFavorite.setImageResource(mArticle.isFavorite() ? R.drawable.selector_favorite_full : R.drawable.selector_favorite_empty);
 
 		return convertView;
 	}
@@ -138,8 +138,8 @@ public class FeedAdapter extends BaseAdapter {
 	private class ViewHolder {
 		public View mCard;
 		public ImageView imgPreview;
-		public ImageButton btnFavorite;
-		public Button btnTag;
+		public ImageView imgFavorite;
+		public TextView txtTag;
 		public TextView txtTitle;
 		public TextView txtDescription;
 		public TextView txtAuthor;

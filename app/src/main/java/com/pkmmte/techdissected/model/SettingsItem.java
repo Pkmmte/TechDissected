@@ -1,4 +1,4 @@
-package com.pkmmte.techdissected.util;
+package com.pkmmte.techdissected.model;
 
 public class SettingsItem {
 	private int ID;

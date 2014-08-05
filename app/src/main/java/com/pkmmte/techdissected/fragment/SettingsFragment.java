@@ -13,8 +13,9 @@ import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.SettingsAdapter;
 import com.pkmmte.techdissected.util.Constants;
-import com.pkmmte.techdissected.util.SettingsItem;
+import com.pkmmte.techdissected.model.SettingsItem;
 import com.pkmmte.techdissected.util.Utils;
+import com.squareup.okhttp.internal.Util;
 
 public class SettingsFragment extends ListFragment
 {
@@ -23,7 +24,6 @@ public class SettingsFragment extends ListFragment
 	private final int READ_GRAYSCALE = 1;
 	private final int CREDITS_LIBRARIES = 2;
 	private final int CREDITS_DEV = 3;
-	private final int CREDITS_PKRSS = 4;
 
 	// App Preferences
 	private SharedPreferences mPrefs;
@@ -94,7 +94,7 @@ public class SettingsFragment extends ListFragment
 		mAdapter.addItem(new SettingsItem.Builder()
 			                 .type(SettingsAdapter.TYPE_TEXT)
 			                 .title("About Dev")
-			                 .description("Developer who made this app")
+			                 .description("The guy responsible for making this app")
 			                 .id(CREDITS_DEV)
 			                 .build());
 	}
@@ -122,13 +122,10 @@ public class SettingsFragment extends ListFragment
 				mAdapter.notifyDataSetChanged();
 				break;
 			case CREDITS_DEV:
-				// TODO
+				Utils.getAboutDialog(getActivity()).show();
 				break;
 			case CREDITS_LIBRARIES:
-				// TODO
-				break;
-			case CREDITS_PKRSS:
-				// TODO
+				Utils.getCreditsLibraryDialog(getActivity()).show();
 				break;
 		}
 	}
