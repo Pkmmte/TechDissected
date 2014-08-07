@@ -3,7 +3,7 @@ package com.pkmmte.techdissected.adapter;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.model.CreditsLibraryItem;
 import com.pkmmte.techdissected.util.RoundTransform;
-import com.pkmmte.techdissected.view.CircularImageView;
+import com.pkmmte.view.CircularImageView;
 import java.util.ArrayList;
 import java.util.List;
 

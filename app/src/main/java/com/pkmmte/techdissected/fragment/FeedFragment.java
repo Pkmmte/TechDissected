@@ -17,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.SearchView;
+import android.widget.Toast;
 import com.pkmmte.pkrss.Article;
+import com.pkmmte.pkrss.Callback;
 import com.pkmmte.pkrss.Category;
 import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
@@ -31,7 +33,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, OnRefreshListener, PkRSS.Callback {
+public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, OnRefreshListener, Callback {
 	// Passed Arguments
 	private Category category;
 	private String search;
@@ -210,8 +212,10 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 	}
 
+	@Override public void OnPreLoad() { }
+
 	@Override
-	public void postParse(List<Article> newArticles) {
+	public void OnLoaded(List<Article> newArticles) {
 		mFeed = PkRSS.with(getActivity()).get(category.getUrl(), search);
 		mHandler.post(new Runnable() {
 			@Override
@@ -220,7 +224,17 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				refreshFeedContent();
 			}
 		});
-		// TODO Add manager support for callbacks on UI thread (Builder feature)
+	}
+
+	@Override
+	public void OnLoadFailed() {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				mPullToRefreshLayout.setRefreshComplete();
+				Toast.makeText(getActivity(), "Error loading feed. Check your internet connection and try again.", Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	public static FeedFragment newInstance(Category category) {
