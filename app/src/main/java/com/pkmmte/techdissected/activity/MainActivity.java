@@ -175,27 +175,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		// Set OnClick Listeners
 		mDrawerList.setOnItemClickListener(this);
-		btnDonate = headerView.findViewById(R.id.btnDonate);
-		btnDonate.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					mHelper.launchPurchaseFlow(MainActivity.this, "donate", 10001, new IabHelper.OnIabPurchaseFinishedListener() {
-						                           public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-							                           if (result.isFailure()) {
-								                           Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
-								                           return;
-							                           }
-							                           else if (purchase.getSku().equals("donate")) {
-								                           mHelper.consumeAsync(purchase, null);
-							                           }
-						                           }
-					                           }, "bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ");
-				} catch (Exception e) {
-					Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
-				}
-			}
-		});
 		headerView.findViewById(R.id.btnFavorites).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -216,6 +195,27 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				actionBarSubtitle = "Settings";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
+			}
+		});
+		btnDonate = footerView.findViewById(R.id.btnDonate);
+		btnDonate.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					mHelper.launchPurchaseFlow(MainActivity.this, "donate", 10001, new IabHelper.OnIabPurchaseFinishedListener() {
+						public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+							if (result.isFailure()) {
+								Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
+								return;
+							}
+							else if (purchase.getSku().equals("donate")) {
+								mHelper.consumeAsync(purchase, null);
+							}
+						}
+					}, "bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ");
+				} catch (Exception e) {
+					Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 		footerView.findViewById(R.id.btnPKRSS).setOnClickListener(new View.OnClickListener() {
