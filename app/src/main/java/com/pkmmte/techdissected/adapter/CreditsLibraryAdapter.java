@@ -1,12 +1,5 @@
 package com.pkmmte.techdissected.adapter;
 
-import com.pkmmte.techdissected.R;
-import com.pkmmte.techdissected.model.CreditsLibraryItem;
-import com.pkmmte.techdissected.util.RoundTransform;
-import com.pkmmte.view.CircularImageView;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -16,8 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.pkmmte.techdissected.R;
+import com.pkmmte.techdissected.model.CreditsLibraryItem;
+import com.pkmmte.techdissected.util.RoundTransform;
+import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreditsLibraryAdapter extends BaseAdapter
 {

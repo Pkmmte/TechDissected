@@ -4,17 +4,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import com.pkmmte.pkrss.Article;
 import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.fragment.ArticleFragment;
+import com.pkmmte.techdissected.view.PkSwipeRefreshLayout;
 import java.util.List;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class ArticleActivity extends FragmentActivity implements OnRefreshListener {
+public class ArticleActivity extends FragmentActivity implements PkSwipeRefreshLayout.OnRefreshListener {
 	// Argument Variables
 	private String categoryName = null;
 	private String feedUrl = null;
@@ -28,7 +27,7 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 	private FragmentManager fragmentManager;
 
 	// Views
-	private PullToRefreshLayout mPullToRefreshLayout;
+	private PkSwipeRefreshLayout mSwipeLayout;
 	private View noContent;
 
     @Override
@@ -38,7 +37,10 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 
 		retrieveArguments();
 	    initViews();
-	    ActionBarPullToRefresh.from(this).listener(this).setup(mPullToRefreshLayout);
+	    mSwipeLayout.setContentPullEnabled(false);
+	    mSwipeLayout.setOnRefreshListener(this);
+	    mSwipeLayout.setColorSchemeResources(R.color.action_swipe_1, R.color.action_swipe_2,
+	                                         R.color.action_swipe_3, R.color.action_swipe_4);
 	    fragmentManager = getSupportFragmentManager();
 	    showContent();
     }
@@ -53,7 +55,7 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 
 	private void initViews() {
 		noContent = findViewById(R.id.noContent);
-		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+		mSwipeLayout = (PkSwipeRefreshLayout) findViewById(R.id.swipeContainer);
 	}
 
 	private void showContent() {
@@ -91,7 +93,7 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 			@Override
 			protected void onPreExecute() {
 				noContent.setVisibility(View.VISIBLE);
-				mPullToRefreshLayout.setRefreshing(true);
+				mSwipeLayout.setRefreshing(true);
 			}
 
 			@Override
@@ -103,14 +105,23 @@ public class ArticleActivity extends FragmentActivity implements OnRefreshListen
 			@Override
 			protected void onPostExecute(Void p) {
 				noContent.setVisibility(View.GONE);
-				mPullToRefreshLayout.setRefreshComplete();
+				mSwipeLayout.setRefreshing(false);
 				fragmentManager.beginTransaction().replace(R.id.articleContent, ArticleFragment.newInstance(currentArticle)).commit();
 			}
 		}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
+	/**
+	 * Proxy method for setting a scroll target from child
+	 * fragments. (Or other things with access to this Activity)
+	 * @param target
+	 */
+	public void setScrollTarget(View target) {
+		mSwipeLayout.setScrollTarget(target);
+	}
+
 	@Override
-	public void onRefreshStarted(View view) {
+	public void onRefresh() {
 
 	}
 }

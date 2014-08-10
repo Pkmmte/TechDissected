@@ -1,8 +1,5 @@
 package com.pkmmte.techdissected.util;
 
-import static com.pkmmte.techdissected.util.Utils.getApacheLicense;
-import static com.pkmmte.techdissected.util.Utils.resToUri;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +19,9 @@ import com.pkmmte.techdissected.model.CreditsLibraryItem;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import uk.co.senab.photoview.PhotoViewAttacher;
+
+import static com.pkmmte.techdissected.util.Utils.getApacheLicense;
+import static com.pkmmte.techdissected.util.Utils.resToUri;
 
 public class Dialogs {
 

@@ -11,6 +11,10 @@
   <!-- Action Bar -->
   <color name="action_background">#FF19232D</color>
   <color name="action_overlay">#7FFB8F4B</color>
+  <color name="action_swipe_1">#FFFF9800</color>
+  <color name="action_swipe_2">#FF259b24</color>
+  <color name="action_swipe_3">#FFe51c23</color>
+  <color name="action_swipe_4">#FF5677fc</color>
 
   <!-- General -->
   <color name="transparent">#00000000</color>

@@ -8,7 +8,6 @@
     <item name="android:actionBarItemBackground">@drawable/selector_action_overlay</item>
     <item name="android:actionBarWidgetTheme">@style/ActionBar.WidgetTheme</item>
     <item name="android:listPopupWindowStyle">@style/ActionBar.PopupMenu</item>
-    <item name="ptrHeaderStyle">@style/PTR.Header</item>
   </style>
 
   <!-- Translucent AB -->

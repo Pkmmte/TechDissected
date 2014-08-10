@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.pkmmte.pkrss.Article;
 import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
+import com.pkmmte.techdissected.activity.ArticleActivity;
 import com.pkmmte.techdissected.util.Dialogs;
 import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.CustomShareActionProvider;
@@ -89,11 +90,14 @@ public class ArticleFragment extends Fragment {
 		// Show article content, if available
 		showContent();
 
+		// Let the SwipeLayout know which is the ScrollView
+		((ArticleActivity) getActivity()).setScrollTarget(mScroll);
+
 		// Mark article as read
 		if(article != null)
 			article.markRead();
 
-		//
+		// Change favorite icon state, if possible
 		if(article != null && menuFavorite != null)
 			menuFavorite.setIcon(article.isFavorite() ? R.drawable.ic_action_favorite_full : R.drawable.ic_action_favorite_empty);
 

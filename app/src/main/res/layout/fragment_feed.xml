@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-  android:id="@+id/ptr_layout"
+<com.pkmmte.techdissected.view.PkSwipeRefreshLayout
+  android:id="@+id/swipeContainer"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/app_background">
 
-  <LinearLayout
-    android:id="@+id/noContent"
+  <FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <ImageView
-      android:layout_width="224dp"
-      android:layout_height="168dp"
-      android:src="@drawable/ted_face_transparent" />
-
-    <TextView
-      android:layout_width="wrap_content"
+    <LinearLayout
+      android:id="@+id/noContent"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:ellipsize="end"
-      android:maxLines="1"
-      android:text="No Articles Available"
-      android:textColor="@color/text_secondary"
-      android:textSize="28sp" />
-  </LinearLayout>
+      android:layout_gravity="center_vertical"
+      android:gravity="center_horizontal"
+      android:orientation="vertical">
 
-  <GridView
-    android:id="@+id/feedGrid"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="true"
-    android:clipToPadding="false"
-    android:listSelector="@color/transparent"
-    android:numColumns="@integer/feed_columns"
-    android:padding="8dp"
-    android:scrollbarStyle="outsideOverlay"
-    android:verticalSpacing="4dp"
-    android:visibility="gone"
-    tools:listitem="@layout/fragment_feed_article" />
+      <ImageView
+        android:layout_width="224dp"
+        android:layout_height="168dp"
+        android:src="@drawable/ted_face_transparent" />
 
-</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="No Articles Available"
+        android:textColor="@color/text_secondary"
+        android:textSize="28sp" />
+    </LinearLayout>
+
+    <GridView
+      android:id="@+id/feedGrid"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clickable="true"
+      android:clipToPadding="false"
+      android:listSelector="@color/transparent"
+      android:numColumns="@integer/feed_columns"
+      android:padding="8dp"
+      android:scrollbarStyle="outsideOverlay"
+      android:verticalSpacing="4dp"
+      android:visibility="gone"
+      tools:listitem="@layout/fragment_feed_article" />
+  </FrameLayout>
+
+</com.pkmmte.techdissected.view.PkSwipeRefreshLayout>

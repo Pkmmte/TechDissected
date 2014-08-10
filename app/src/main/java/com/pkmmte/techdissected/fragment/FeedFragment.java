@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,13 +28,11 @@ import com.pkmmte.techdissected.activity.ArticleActivity;
 import com.pkmmte.techdissected.activity.SearchActivity;
 import com.pkmmte.techdissected.adapter.FeedAdapter;
 import com.pkmmte.techdissected.util.Constants;
+import com.pkmmte.techdissected.view.PkSwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, OnRefreshListener, Callback {
+public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, Callback, PkSwipeRefreshLayout.OnRefreshListener {
 	// Passed Arguments
 	private Category category;
 	private String search;
@@ -46,7 +45,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	private FeedAdapter mAdapter;
 
 	// Views
-	private PullToRefreshLayout mPullToRefreshLayout;
+	private PkSwipeRefreshLayout mSwipeLayout;
 	private GridView mGrid;
 	private View noContent;
 
@@ -64,12 +63,9 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public void onStart() {
 		super.onStart();
 
-
-		//
-		ActionBarPullToRefresh.from(getActivity())
-			.allChildrenArePullable()
-			.listener(this)
-			.setup(mPullToRefreshLayout);
+		mSwipeLayout.setOnRefreshListener(this);
+		mSwipeLayout.setColorSchemeResources(R.color.action_swipe_1, R.color.action_swipe_2,
+		                                     R.color.action_swipe_3, R.color.action_swipe_4);
 
 		//
 		initFeed();
@@ -102,7 +98,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
-				mPullToRefreshLayout.setRefreshing(true);
+				mSwipeLayout.setRefreshing(true);
 				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 				return true;
 			case R.id.action_read:
@@ -138,7 +134,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	private void initViews(View v) {
-		mPullToRefreshLayout = (PullToRefreshLayout) v.findViewById(R.id.ptr_layout);
+		mSwipeLayout = (PkSwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 		mGrid = (GridView) v.findViewById(R.id.feedGrid);
 		noContent = v.findViewById(R.id.noContent);
 	}
@@ -153,7 +149,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		if(mFeed != null && mFeed.size() > 0)
 			refreshFeedContent();
 		else {
-			mPullToRefreshLayout.setRefreshing(true);
+			mSwipeLayout.setRefreshing(true);
 			PkRSS.with(getActivity()).load(category.getUrl()).search(search).callback(this).async();
 		}
 	}
@@ -170,22 +166,28 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			mAdapter.updateFeed(mFeed);
 
 		mAdapter.setOnClickListener(FeedFragment.this);
+		mSwipeLayout.setScrollTarget(mGrid);
 
 		mGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
 			int currentVisibleItemCount = 0;
 			int preLast = 0;
 
-			@Override public void onScrollStateChanged(AbsListView view, int scrollState) {}
+			@Override public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
 
 			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-			{
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				this.currentVisibleItemCount = visibleItemCount;
 				final int lastItem = firstVisibleItem + visibleItemCount;
-				if(lastItem == totalItemCount - 1) {
-					if(preLast != lastItem){ //to avoid multiple calls for last item
-						mPullToRefreshLayout.setRefreshing(true);
-						PkRSS.with(getActivity()).load(category.getUrl()).search(search).nextPage().callback(FeedFragment.this).async();
+				if (lastItem == totalItemCount - 1) {
+					if (preLast != lastItem) { //to avoid multiple calls for last item
+						mSwipeLayout.setRefreshing(true);
+						PkRSS.with(getActivity())
+							.load(category.getUrl())
+							.search(search)
+							.nextPage()
+							.callback(FeedFragment.this)
+							.async();
 						preLast = lastItem;
 					}
 				}
@@ -208,7 +210,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	@Override
-	public void onRefreshStarted(View view) {
+	public void onRefresh() {
 		PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 	}
 
@@ -220,7 +222,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				mPullToRefreshLayout.setRefreshComplete();
+				mSwipeLayout.setRefreshing(false);
 				refreshFeedContent();
 			}
 		});
@@ -231,7 +233,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				mPullToRefreshLayout.setRefreshComplete();
+				mSwipeLayout.setRefreshing(false);
 				Toast.makeText(getActivity(), "Error loading feed. Check your internet connection and try again.", Toast.LENGTH_SHORT).show();
 			}
 		});

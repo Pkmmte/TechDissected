@@ -12,11 +12,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.SettingsAdapter;
-import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.model.SettingsItem;
+import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.Dialogs;
 import com.pkmmte.techdissected.util.Utils;
-import com.squareup.okhttp.internal.Util;
 
 public class SettingsFragment extends ListFragment
 {

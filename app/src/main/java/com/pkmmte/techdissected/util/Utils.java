@@ -1,31 +1,15 @@
 package com.pkmmte.techdissected.util;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.ListView;
-import com.pkmmte.techdissected.R;
-import com.pkmmte.techdissected.adapter.CreditsLibraryAdapter;
-import com.pkmmte.techdissected.model.CreditsLibraryItem;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class Utils {
 	public static CharSequence getRelativeDate(long date) {
