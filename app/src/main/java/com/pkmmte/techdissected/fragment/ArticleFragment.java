@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.pkmmte.pkrss.Article;
 import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
+import com.pkmmte.techdissected.util.Dialogs;
 import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.CustomShareActionProvider;
 import com.pkmmte.techdissected.view.FlowLayout;
@@ -238,7 +239,7 @@ public class ArticleFragment extends Fragment {
 		imgContainer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Utils.getImageDialog(getActivity(), article.getImage()).show();
+				Dialogs.getImageDialog(getActivity(), article.getImage()).show();
 			}
 		});
 
@@ -318,7 +319,7 @@ public class ArticleFragment extends Fragment {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if (Utils.containsImage(url))
-					Utils.getImageDialog(getActivity(), Uri.parse(url)).show();
+					Dialogs.getImageDialog(getActivity(), Uri.parse(url)).show();
 				else startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 
 				return true;
