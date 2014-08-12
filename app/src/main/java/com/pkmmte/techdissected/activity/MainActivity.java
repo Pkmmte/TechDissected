@@ -22,6 +22,7 @@ import com.pkmmte.pkrss.Category;
 import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
+import com.pkmmte.techdissected.fragment.AboutFragment;
 import com.pkmmte.techdissected.fragment.FavoritesFragment;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.techdissected.fragment.SettingsFragment;
@@ -178,9 +179,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		headerView.findViewById(R.id.btnFavorites).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fragmentManager.beginTransaction()
-					.replace(R.id.feedContainer, new FavoritesFragment())
-					.commit();
+				fragmentManager.beginTransaction().replace(R.id.feedContainer, new FavoritesFragment()).commit();
 
 				actionBarSubtitle = "Favorites";
 				mDrawerAdapter.setCurrentPage(-1);
@@ -197,6 +196,16 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				mDrawerLayout.closeDrawers();
 			}
 		});
+		footerView.findViewById(R.id.btnAbout).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				fragmentManager.beginTransaction().replace(R.id.feedContainer, new AboutFragment()).commit();
+
+				actionBarSubtitle = "About";
+				mDrawerAdapter.setCurrentPage(-1);
+				mDrawerLayout.closeDrawers();
+			}
+		});
 		btnDonate = footerView.findViewById(R.id.btnDonate);
 		btnDonate.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -205,16 +214,20 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 					mHelper.launchPurchaseFlow(MainActivity.this, "donate", 10001, new IabHelper.OnIabPurchaseFinishedListener() {
 						public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 							if (result.isFailure()) {
-								Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
+								Toast.makeText(MainActivity.this,
+								               "Error donating... :(",
+								               Toast.LENGTH_LONG).show();
 								return;
 							}
-							else if (purchase.getSku().equals("donate")) {
+							else if (purchase.getSku()
+								.equals("donate")) {
 								mHelper.consumeAsync(purchase, null);
 							}
 						}
 					}, "bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ");
 				} catch (Exception e) {
-					Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG)
+						.show();
 				}
 			}
 		});

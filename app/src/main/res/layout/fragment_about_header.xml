@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal">
+
+    <View
+      android:layout_width="4dp"
+      android:layout_height="match_parent"
+      android:background="@color/brand_orange" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:fontFamily="sans-serif-condensed"
+      android:maxLines="1"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:text="About TechDissected"
+      android:textAllCaps="true"
+      android:textColor="@color/text_primary"
+      android:textSize="24dp" />
+
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/txtDescription"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:text="@string/web_bio"
+    android:textColor="@color/text_primary"
+    android:textSize="14sp" />
+
+  <ImageView
+    android:id="@+id/imgFamily"
+    android:layout_width="256dp"
+    android:layout_height="128dp"
+    android:layout_gravity="center_horizontal"
+    android:src="@drawable/placeholder" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:orientation="vertical">
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:fontFamily="sans-serif-condensed"
+      android:maxLines="1"
+      android:paddingBottom="4dp"
+      android:text="Meet The Team"
+      android:textAllCaps="true"
+      android:textColor="@color/text_primary"
+      android:textSize="24dp" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="2dp"
+      android:background="@color/brand_orange" />
+  </LinearLayout>
+</LinearLayout>

@@ -13,6 +13,15 @@
 	    Vestibulum imperdiet, velit quis euismod hendrerit, tellus lectus tempor enim, sit amet blandit metus ipsum faucibus sem.
 	    \n\nDuis dapibus, sapien blandit posuere volutpat, eros elit molestie risus, nec pulvinar sem sapien nec massa.</string>
 
+  <!-- Website Information -->
+  <string name="web_bio">TechDissected is an online blog dedicated to bringing you the latest news, reviews and discussions on technology around the world.
+    We strive to offer our readers a daily dose of up-to-date information and technological trends from across the globe. Our coverage of web technologies, gadgets, security,
+    enthusiast gaming, hardware, software and consumer electronics serves as an essential resource for both professionals and end users.\n\n
+    We are extremely passionate about providing our reader base with content that is both fresh and well-researched. It is our honest endeavor to provide a wealth of diverse
+    content to help readers make important decisions about technology in their daily lives.\n\n
+    At TechDissected, we work hard everyday in order to gratify your need for news content that is up-to-date and easily accessible.
+    We may make mistakes on the way, for which we seek your forgiveness in advance. We are always open to constructive criticism, and would love to hear from you.</string>
+
   <!-- Settings Section -->
   <string name="cloud_wallpapers">Cloud Wallpapers</string>
   <string name="cloud_wallpapers_description">Show wallpapers stored on the cloud along with local wallpapers</string>

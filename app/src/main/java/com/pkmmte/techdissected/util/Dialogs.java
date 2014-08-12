@@ -110,14 +110,7 @@ public class Dialogs {
 		// Add items
 		final CreditsLibraryAdapter mAdapter = new CreditsLibraryAdapter(context);
 		mAdapter.addItem(new CreditsLibraryItem.Builder()
-			                 .avatar(resToUri(context, R.drawable.credits_chrisbanes))
-			                 .link(Uri.parse("https://github.com/chrisbanes/ActionBar-PullToRefresh"))
-			                 .title("ActionBar-PullToRefresh")
-			                 .author("Chris Banes")
-			                 .license(getApacheLicense("Copyright 2013 Chris Banes\n\n"))
-			                 .build());
-		mAdapter.addItem(new CreditsLibraryItem.Builder()
-			                 .avatar(resToUri(context, R.drawable.credits_chrisbanes))
+			                 .avatar(Uri.parse("http://avatars3.githubusercontent.com/u/227486"))
 			                 .link(Uri.parse("https://github.com/chrisbanes/PhotoView"))
 			                 .title("PhotoView")
 			                 .author("Chris Banes")

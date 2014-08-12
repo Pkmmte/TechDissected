@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.model.CreditsLibraryItem;
 import com.pkmmte.techdissected.util.RoundTransform;
-import com.pkmmte.view.CircularImageView;
+import com.pkmmte.techdissected.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class CreditsLibraryAdapter extends BaseAdapter
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 		final CreditsLibraryItem mLibrary = mLibraries.get(position);
-		ViewHolder holder = null;
+		ViewHolder holder;
 		
 		if (convertView == null) {
 			LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

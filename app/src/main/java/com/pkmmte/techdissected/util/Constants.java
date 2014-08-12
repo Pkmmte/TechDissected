@@ -1,6 +1,8 @@
 package com.pkmmte.techdissected.util;
 
+import android.net.Uri;
 import com.pkmmte.pkrss.Category;
+import com.pkmmte.techdissected.model.Author;
 import java.util.List;
 
 public class Constants {
@@ -28,4 +30,8 @@ public class Constants {
 													.add("Wearables", CATEGORY_URL + "/wearables/feed")
 													.build();
 	public static final Category DEFAULT_CATEGORY = CATEGORIES.get(0);
+
+	public static final List<Author> AUTHORS = new Author.ListBuilder()
+											   .add(Uri.parse(""), Uri.parse("http://1.gravatar.com/avatar/a90d0d6e5f6cfa17851201f1d78937cf.png"), "cliffwade", "Cliff Wade", "Chief Editor/Founder of TeD. I'm an avid Linux user, that's addicted to music, electronics, the internet, computers, Android and everything tech related! Rocking a Moto X and a Moto G, with a Nexus 7 as well. Things that get me through each day: My son, my girlfriend, Nutter Butter cookies and gallons of sweet tea. If it beeps or makes noise, I'm interested. Gadgets and Gizmos are my specialty. If you have any questions just hit me up. Hope you enjoy the site!")
+											   .build();
 }
