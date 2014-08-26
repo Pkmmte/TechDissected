@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +44,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	private FeedAdapter mAdapter;
 
 	// Views
+	private MenuItem refreshItem;
 	private PkSwipeRefreshLayout mSwipeLayout;
 	private GridView mGrid;
 	private View noContent;
@@ -77,6 +77,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		menu.clear();
 		inflater.inflate(R.menu.feed, menu);
 
+		refreshItem = menu.findItem(R.id.action_refresh);
+
 		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
@@ -98,9 +100,8 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
-				mSwipeLayout.setRefreshing(true);
+				setRefreshState(true);
 				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
-				item.setActionView(R.layout.progress);
 				return true;
 			case R.id.action_read:
 				PkRSS.with(getActivity()).markAllRead(true);
@@ -150,9 +151,20 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		if(mFeed != null && mFeed.size() > 0)
 			refreshFeedContent();
 		else {
-			mSwipeLayout.setRefreshing(true);
+			setRefreshState(true);
 			PkRSS.with(getActivity()).load(category.getUrl()).search(search).callback(this).async();
 		}
+	}
+
+	private void setRefreshState(boolean refreshing) {
+		// Toggle action bar progress
+		mSwipeLayout.setRefreshing(refreshing);
+
+		// I would use a ternary operator for this but it causes a NullPointerException for some reason...
+		if(refreshItem != null && refreshing)
+			refreshItem.setActionView(R.layout.refresh);
+		else if(refreshItem != null)
+			refreshItem.setActionView(null);
 	}
 
 	private void refreshFeedContent() {
@@ -182,7 +194,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				final int lastItem = firstVisibleItem + visibleItemCount;
 				if (lastItem == totalItemCount - 1) {
 					if (preLast != lastItem) { //to avoid multiple calls for last item
-						mSwipeLayout.setRefreshing(true);
+						setRefreshState(true);
 						PkRSS.with(getActivity())
 							.load(category.getUrl())
 							.search(search)
@@ -212,6 +224,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	@Override
 	public void onRefresh() {
+		setRefreshState(true);
 		PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
 	}
 
@@ -223,7 +236,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				mSwipeLayout.setRefreshing(false);
+				setRefreshState(false);
 				refreshFeedContent();
 			}
 		});
@@ -234,7 +247,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				mSwipeLayout.setRefreshing(false);
+				setRefreshState(false);
 				Toast.makeText(getActivity(), "Error loading feed. Check your internet connection and try again.", Toast.LENGTH_SHORT).show();
 			}
 		});
