@@ -92,7 +92,12 @@ public class FeedAdapter extends BaseAdapter {
 
 		Picasso.with(mContext).load(mArticle.getImage()).placeholder(R.drawable.placeholder).into(holder.imgPreview);
 
-		holder.txtTag.setText(mArticle.getTags().get(0));
+		if(mArticle.getTags().size() > 0) {
+			holder.txtTag.setVisibility(View.VISIBLE);
+			holder.txtTag.setText(mArticle.getTags().get(0));
+		}
+		else
+			holder.txtTag.setVisibility(View.GONE);
 		holder.txtTitle.setText(mArticle.getTitle());
 		holder.txtDescription.setText(mArticle.getDescription());
 		holder.txtAuthor.setText("By " + mArticle.getAuthor());

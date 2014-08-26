@@ -1,2 +1,5 @@
+# Generated Files
 /build
+
+# Private License Key
 src/main/res/values/licensing.xml

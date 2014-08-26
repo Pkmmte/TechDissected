@@ -5,13 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.model.Author;
-import com.pkmmte.techdissected.model.CreditsLibraryItem;
-import com.pkmmte.techdissected.util.RoundTransform;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -77,8 +73,7 @@ public class AuthorAdapter extends BaseAdapter{
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		Picasso.with(mContext).load(mAuthor.getAvatar()).error(R.drawable.dev_avatar).into(
-			holder.imgAvatar);
+		Picasso.with(mContext).load(mAuthor.getAvatar()).placeholder(R.drawable.dev_avatar).error(R.drawable.dev_avatar).into(holder.imgAvatar);
 		holder.txtName.setText(mAuthor.getName());
 		holder.txtDescription.setText(mAuthor.getDescription());
 

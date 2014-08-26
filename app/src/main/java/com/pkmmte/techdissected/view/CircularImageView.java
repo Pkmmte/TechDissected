@@ -32,6 +32,7 @@ public class CircularImageView extends ImageView {
 	private BitmapShader shader;
 	private Bitmap image;
 	private Paint paint;
+	private Paint paintBackfill;
 	private Paint paintBorder;
 	private Paint paintSelectorBorder;
 	private ColorFilter selectorFilter;
@@ -40,8 +41,7 @@ public class CircularImageView extends ImageView {
 		this(context, null);
 	}
 
-	public CircularImageView(Context context, AttributeSet attrs)
-	{
+	public CircularImageView(Context context, AttributeSet attrs) {
 		this(context, attrs, R.attr.circularImageViewStyle);
 	}
 
@@ -61,10 +61,14 @@ public class CircularImageView extends ImageView {
 		// Initialize paint objects
 		paint = new Paint();
 		paint.setAntiAlias(true);
+		paintBackfill = new Paint();
+		paintBackfill.setAntiAlias(true);
 		paintBorder = new Paint();
 		paintBorder.setAntiAlias(true);
 		paintSelectorBorder = new Paint();
 		paintSelectorBorder.setAntiAlias(true);
+
+		paintBackfill.setColor(context.getResources().getColor(R.color.brand_orange));
 
 		// load the styled attributes and set their properties
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.CircularImageView, defStyle, 0);
@@ -83,8 +87,7 @@ public class CircularImageView extends ImageView {
 		// Set selector properties if enabled
 		if(hasSelector) {
 			int defaultSelectorSize = (int) (2 * context.getResources().getDisplayMetrics().density + 0.5f);
-			setSelectorColor(attributes.getColor(
-				R.styleable.CircularImageView_selector_color, Color.TRANSPARENT));
+			setSelectorColor(attributes.getColor(R.styleable.CircularImageView_selector_color, Color.TRANSPARENT));
 			setSelectorStrokeWidth(attributes.getDimensionPixelOffset(R.styleable.CircularImageView_selector_stroke_width, defaultSelectorSize));
 			setSelectorStrokeColor(attributes.getColor(R.styleable.CircularImageView_selector_stroke_color, Color.BLUE));
 		}
@@ -98,10 +101,27 @@ public class CircularImageView extends ImageView {
 	}
 
 	/**
-	 * Sets the CircularImageView's border width in pixels.
 	 *
+	 * @param backfillColor
+	 */
+	public void setBackfillColor(Integer backfillColor) {
+		if(backfillColor == null)
+			paintBackfill = null;
+		else {
+			if(paintBackfill == null) {
+				paintBackfill = new Paint();
+				paintBackfill.setAntiAlias(true);
+			}
+
+			paintBackfill.setColor(backfillColor);
+		}
+	}
+
+	/**
+	 * Sets the CircularImageView's border width in pixels.
 	 * @param borderWidth
 	 */
+
 	public void setBorderWidth(int borderWidth) {
 		this.borderWidth = borderWidth;
 		this.requestLayout();
@@ -110,7 +130,6 @@ public class CircularImageView extends ImageView {
 
 	/**
 	 * Sets the CircularImageView's basic border color.
-	 *
 	 * @param borderColor
 	 */
 	public void setBorderColor(int borderColor) {
@@ -122,7 +141,6 @@ public class CircularImageView extends ImageView {
 	/**
 	 * Sets the color of the selector to be draw over the
 	 * CircularImageView. Be sure to provide some opacity.
-	 *
 	 * @param selectorColor
 	 */
 	public void setSelectorColor(int selectorColor) {
@@ -133,7 +151,6 @@ public class CircularImageView extends ImageView {
 	/**
 	 * Sets the stroke width to be drawn around the CircularImageView
 	 * during click events when the selector is enabled.
-	 *
 	 * @param selectorStrokeWidth
 	 */
 	public void setSelectorStrokeWidth(int selectorStrokeWidth) {
@@ -193,7 +210,6 @@ public class CircularImageView extends ImageView {
 		// Get the exact X/Y axis of the view
 		int center = canvasSize / 2;
 
-
 		if(hasSelector && isSelected) { // Draw the selector stroke & apply the selector filter, if applicable
 			outerWidth = selectorStrokeWidth;
 			center = (canvasSize - (outerWidth * 2)) / 2;
@@ -210,6 +226,10 @@ public class CircularImageView extends ImageView {
 		}
 		else // Clear the color filter if no selector nor border were drawn
 			paint.setColorFilter(null);
+
+		// Fill up circle base if a color was specified
+		if(paintBackfill != null)
+			canvas.drawCircle(center + outerWidth, center + outerWidth, ((canvasSize - (outerWidth * 2)) / 2) - 4.0f, paintBackfill);
 
 		// Draw the circular image itself
 		canvas.drawCircle(center + outerWidth, center + outerWidth, ((canvasSize - (outerWidth * 2)) / 2) - 4.0f, paint);
@@ -298,7 +318,7 @@ public class CircularImageView extends ImageView {
 	}
 
 	private int measureHeight(int measureSpecHeight) {
-		int result = 0;
+		int result;
 		int specMode = MeasureSpec.getMode(measureSpecHeight);
 		int specSize = MeasureSpec.getSize(measureSpecHeight);
 

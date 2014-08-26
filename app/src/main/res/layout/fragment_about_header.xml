@@ -32,7 +32,6 @@
   </LinearLayout>
 
   <TextView
-    android:id="@+id/txtDescription"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp"
@@ -44,8 +43,54 @@
     android:id="@+id/imgFamily"
     android:layout_width="256dp"
     android:layout_height="128dp"
-    android:layout_gravity="center_horizontal"
-    android:src="@drawable/placeholder" />
+    android:layout_gravity="center_horizontal" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal">
+
+    <View
+      android:layout_width="4dp"
+      android:layout_height="match_parent"
+      android:background="@color/brand_orange" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:fontFamily="sans-serif-condensed"
+      android:maxLines="1"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:text="Stay Connected"
+      android:textAllCaps="true"
+      android:textColor="@color/text_primary"
+      android:textSize="24dp" />
+
+  </LinearLayout>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:text="We are on many social networks around the internet and if you would like to stay connected with us on those various networks, just click the icon(s) below and follow us, circle us or like us. We post various things on the various social networks, so make sure you connect with on us on all of them to keep up with the latest news happening from all of us at TechDissected."
+    android:textColor="@color/text_primary"
+    android:textSize="14sp" />
+
+  <com.pkmmte.techdissected.view.FlowLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.pkmmte.view.CircularImageView
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:background="@drawable/selector_action_overlay"
+      android:clickable="true"
+      android:src="@drawable/ic_launcher" />
+  </com.pkmmte.techdissected.view.FlowLayout>
 
   <LinearLayout
     android:layout_width="match_parent"

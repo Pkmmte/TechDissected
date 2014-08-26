@@ -17,6 +17,14 @@
   <color name="action_swipe_3">#FFe51c23</color>
   <color name="action_swipe_4">#FF5677fc</color>
 
+  <!-- Refresh Colors -->
+  <integer-array name="refresh_colors">
+    <item>@color/action_swipe_1</item>
+    <item>@color/action_swipe_2</item>
+    <item>@color/action_swipe_3</item>
+    <item>@color/action_swipe_4</item>
+  </integer-array>
+
   <!-- General -->
   <color name="transparent">#00000000</color>
   <color name="white">#FFFFFFFF</color>

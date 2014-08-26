@@ -100,6 +100,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			case R.id.action_refresh:
 				mSwipeLayout.setRefreshing(true);
 				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
+				item.setActionView(R.layout.progress);
 				return true;
 			case R.id.action_read:
 				PkRSS.with(getActivity()).markAllRead(true);

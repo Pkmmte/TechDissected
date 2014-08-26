@@ -29,7 +29,7 @@ public class AboutFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		mGrid.setAdapter(new AuthorAdapter(getActivity(), Constants.AUTHORS));
-		Picasso.with(getActivity()).load("http://techdissected.com/wp-content/uploads/2014/02/family-351x117.png").placeholder(R.drawable.placeholder).into(imgFamily);
+		Picasso.with(getActivity()).load("http://techdissected.com/wp-content/uploads/2014/02/family.png").into(imgFamily);
 
 	}
 

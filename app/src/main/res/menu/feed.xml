@@ -13,9 +13,10 @@
     android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
   <item
     android:id="@+id/action_refresh"
+    android:icon="@drawable/ic_action_refresh"
     android:menuCategory="system"
     android:orderInCategory="101"
-    android:showAsAction="never"
+    android:showAsAction="ifRoom|withText"
     android:title="Refresh" />
   <item
     android:id="@+id/action_read"
