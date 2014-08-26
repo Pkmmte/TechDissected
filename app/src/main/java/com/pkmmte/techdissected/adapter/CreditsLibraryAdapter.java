@@ -17,20 +17,16 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreditsLibraryAdapter extends BaseAdapter
-{
+public class CreditsLibraryAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<CreditsLibraryItem> mLibraries;
 	private onAvatarClickListener mListener;
 	
-	public CreditsLibraryAdapter(Context context)
-	{
-		this.mContext = context;
-		this.mLibraries = new ArrayList<CreditsLibraryItem>();
+	public CreditsLibraryAdapter(Context context) {
+		this(context, new ArrayList<CreditsLibraryItem>());
 	}
 	
-	public CreditsLibraryAdapter(Context context, List<CreditsLibraryItem> libraries)
-	{
+	public CreditsLibraryAdapter(Context context, List<CreditsLibraryItem> libraries) {
 		this.mContext = context;
 		this.mLibraries = libraries;
 	}
@@ -64,8 +60,7 @@ public class CreditsLibraryAdapter extends BaseAdapter
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
-	{
+	public View getView(int position, View convertView, ViewGroup parent) {
 		final CreditsLibraryItem mLibrary = mLibraries.get(position);
 		ViewHolder holder;
 		
@@ -115,8 +110,7 @@ public class CreditsLibraryAdapter extends BaseAdapter
 		return convertView;
 	}
 	
-	private class ViewHolder
-	{
+	private class ViewHolder {
 		public RelativeLayout mCard;
 		public CircularImageView imgAvatar;
 		public TextView txtTitle;
@@ -125,8 +119,7 @@ public class CreditsLibraryAdapter extends BaseAdapter
 		public ImageView btnExpCol;
 	}
 	
-	public interface onAvatarClickListener
-	{
+	public interface onAvatarClickListener {
 		void onClick(Uri link);
 	}
 }

@@ -26,8 +26,7 @@ public class SettingsAdapter extends BaseAdapter
 	private LayoutInflater mInflater;
 
 	public SettingsAdapter(Context context) {
-		this.mSettings = new ArrayList<SettingsItem>();
-		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this(context, new ArrayList<SettingsItem>());
 	}
 
 	public SettingsAdapter(Context context, List<SettingsItem> settings) {

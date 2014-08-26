@@ -19,8 +19,7 @@ public class AuthorAdapter extends BaseAdapter{
 
 	public AuthorAdapter(Context context)
 	{
-		this.mContext = context;
-		this.authorList = new ArrayList<Author>();
+		this(context, new ArrayList<Author>());
 	}
 
 	public AuthorAdapter(Context context, List<Author> authors)

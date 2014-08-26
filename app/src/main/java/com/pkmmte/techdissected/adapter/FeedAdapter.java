@@ -25,20 +25,20 @@ public class FeedAdapter extends BaseAdapter {
 	private boolean grayscaleRead;
 
 	public FeedAdapter(Context context) {
-		this.mContext = context;
-		this.mFeed = new ArrayList<Article>();
-		ColorMatrix grayscaleFilter = new ColorMatrix();
-		grayscaleFilter.setSaturation(0);
-		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
-		this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, true);
+		this(context, new ArrayList<Article>());
 	}
+
 	public FeedAdapter(Context context, List<Article> feed) {
 		this.mContext = context;
 		this.mFeed = feed;
 		ColorMatrix grayscaleFilter = new ColorMatrix();
 		grayscaleFilter.setSaturation(0);
 		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
-		this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, true);
+		try {
+			this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, true);
+		} catch (Exception e) {
+			this.grayscaleRead = true;
+		}
 	}
 
 	public void updateFeed(List<Article> feed) {
