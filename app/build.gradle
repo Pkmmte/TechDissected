@@ -61,7 +61,6 @@ repositories {
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   compile(name:'circularimageview', ext:'aar')
-  compile(name:'pkrss', ext:'aar')
   compile("com.android.support:support-v13:20.+")
   //compile group: 'com.pkmmte.view', name: 'circularimageview', version: '1.+'
   //compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.0.0'

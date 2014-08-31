@@ -72,12 +72,13 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-	{
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		menu.clear();
 		inflater.inflate(R.menu.feed, menu);
 
 		refreshItem = menu.findItem(R.id.action_refresh);
+		if(mSwipeLayout.isRefreshing())
+			refreshItem.setActionView(R.layout.refresh);
 
 		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

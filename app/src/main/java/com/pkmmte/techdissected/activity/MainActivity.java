@@ -20,7 +20,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.pkmmte.pkrss.Category;
 import com.pkmmte.pkrss.PkRSS;
-import com.pkmmte.pkrss.parser.AtomParser;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
 import com.pkmmte.techdissected.fragment.AboutFragment;
@@ -52,7 +51,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	private IabHelper mHelper;
 	private View btnDonate;
 
-	//
+	// Loaded status
 	private boolean contentLoaded = false;
 
 	@Override
@@ -134,6 +133,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 	private void initActionBar() {
 		actionBar = getActionBar();
+		//actionBar.setIcon(R.drawable.ic_action_menu);
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setSubtitle(actionBarSubtitle);
@@ -161,6 +161,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		//mDrawerToggle.setDrawerIndicatorEnabled(false);
 
 		mDrawerAdapter = new NavDrawerAdapter(this, Constants.CATEGORIES);
 

@@ -45,7 +45,7 @@
     </LinearLayout>
   </ScrollView>
 
-  <com.pkmmte.techdissected.view.CircularImageView
+  <com.pkmmte.view.CircularImageView
     android:id="@+id/imgAvatar"
     android:layout_width="@dimen/about_dialog_avatar"
     android:layout_height="@dimen/about_dialog_avatar"

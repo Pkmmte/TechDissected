@@ -7,7 +7,7 @@
   android:background="@drawable/selector_card_bg"
   android:clickable="true" >
 
-  <com.pkmmte.techdissected.view.CircularImageView
+  <com.pkmmte.view.CircularImageView
     android:id="@+id/imgAvatar"
     android:layout_width="56dp"
     android:layout_height="56dp"
