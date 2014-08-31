@@ -110,7 +110,7 @@ public class Dialogs {
 		// Add items
 		final CreditsLibraryAdapter mAdapter = new CreditsLibraryAdapter(context);
 		mAdapter.addItem(new CreditsLibraryItem.Builder()
-			                 .avatar(Uri.parse("http://avatars3.githubusercontent.com/u/227486"))
+			                 .avatar(resToUri(context, R.drawable.credits_chrisbanes))
 			                 .link(Uri.parse("https://github.com/chrisbanes/PhotoView"))
 			                 .title("PhotoView")
 			                 .author("Chris Banes")

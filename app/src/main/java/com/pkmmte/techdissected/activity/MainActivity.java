@@ -198,7 +198,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				mDrawerLayout.closeDrawers();
 			}
 		});
-		footerView.findViewById(R.id.btnAbout).setOnClickListener(new View.OnClickListener() {
+		/*footerView.findViewById(R.id.btnAbout).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new AboutFragment()).commit();
@@ -207,7 +207,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
 			}
-		});
+		});*/
 		btnDonate = footerView.findViewById(R.id.btnDonate);
 		btnDonate.setOnClickListener(new View.OnClickListener() {
 			@Override
