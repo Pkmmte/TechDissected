@@ -4,14 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
+import com.pkmmte.pkrss.PkRSS;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.lang.reflect.Field;
 
 public class Utils {
+	public static void buildSingleton(Context context) {
+		new PkRSS.Builder(context).handler(new Handler(Looper.getMainLooper())).buildSingleton();
+	}
+
 	public static CharSequence getRelativeDate(long date) {
 		return DateUtils.getRelativeTimeSpanString(date, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, 0);
 	}

@@ -30,6 +30,7 @@ import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.IabHelper;
 import com.pkmmte.techdissected.util.IabResult;
 import com.pkmmte.techdissected.util.Purchase;
+import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.PkDrawerLayout;
 
 public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
@@ -58,6 +59,9 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Build Custom Singleton
+		Utils.buildSingleton(this);
 
 		// [DEBUG] Enable logging for debugging purposes
 		PkRSS.with(this).setLoggingEnabled(true);
