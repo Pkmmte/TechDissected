@@ -68,6 +68,6 @@ dependencies {
   compile group: 'com.github.chrisbanes.photoview', name: 'library', version: '1.2.3'
   compile group: 'com.squareup.picasso', name: 'picasso', version: '2.3.2'
   //compile group: 'com.pkmmte.pkrss', name: 'pkrss', version: '1.0.+'
-  compile 'com.github.castorflex.smoothprogressbar:library:1.0.0-SNAPSHOT@aar'
+  compile group: 'com.github.castorflex.smoothprogressbar', name: 'library-circular', version: '1.0.0'
   compile 'se.emilsjolander:StickyScrollViewItems:1.1.0@aar'
 }
