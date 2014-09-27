@@ -63,7 +63,7 @@ dependencies {
   //compile(name:'circularimageview', ext:'aar')
   compile("com.android.support:support-v13:20.+")
   compile group: 'com.pkmmte.view', name: 'circularimageview', version: '1.+'
-  compile group: 'com.github.bumptech.glide', name: 'glide', version: '3.3.+'
+  //compile group: 'com.github.bumptech.glide', name: 'glide', version: '3.3.+'
   //compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.0.0'
   //compile group: 'com.squareup.okhttp', name: 'okhttp-urlconnection', version: '2.0.0'
   compile group: 'com.github.chrisbanes.photoview', name: 'library', version: '1.2.3'

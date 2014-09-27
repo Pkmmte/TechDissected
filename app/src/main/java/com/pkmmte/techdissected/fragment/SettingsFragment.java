@@ -79,7 +79,7 @@ public class SettingsFragment extends ListFragment
 			                 .type(SettingsAdapter.TYPE_CHECKBOX)
 			                 .title("Grayscale Read")
 			                 .description("Mark articles as read by grayscaling their preview images")
-			                 .selected(mPrefs.getBoolean(Constants.PREF_READ, true))
+			                 .selected(mPrefs.getBoolean(Constants.PREF_READ, false))
 			                 .id(READ_GRAYSCALE)
 			                 .build());
 
@@ -112,7 +112,7 @@ public class SettingsFragment extends ListFragment
 				break;
 			case READ_GRAYSCALE:
 				// Update preference
-				boolean grayscaleRead = mPrefs.getBoolean(Constants.PREF_READ, true);
+				boolean grayscaleRead = mPrefs.getBoolean(Constants.PREF_READ, false);
 				Editor mEditor = mPrefs.edit();
 				mEditor.putBoolean(Constants.PREF_READ, !grayscaleRead);
 				mEditor.commit();

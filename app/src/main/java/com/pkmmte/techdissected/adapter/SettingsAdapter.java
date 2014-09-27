@@ -12,8 +12,7 @@ import com.pkmmte.techdissected.model.SettingsItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingsAdapter extends BaseAdapter
-{
+public class SettingsAdapter extends BaseAdapter {
 	// View Types
 	public static final int TYPE_HEADER = 0;
 	public static final int TYPE_DIVIDER = 1;

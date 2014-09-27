@@ -35,7 +35,7 @@ public class FeedAdapter extends BaseAdapter {
 		grayscaleFilter.setSaturation(0);
 		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
 		try {
-			this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, true);
+			this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, false);
 		} catch (Exception e) {
 			this.grayscaleRead = true;
 		}
