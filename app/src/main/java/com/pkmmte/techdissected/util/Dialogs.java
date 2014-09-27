@@ -131,11 +131,25 @@ public class Dialogs {
 			                 .license(getApacheLicense("Copyright 2013 Square, Inc.\n\n"))
 			                 .build());
 		mAdapter.addItem(new CreditsLibraryItem.Builder()
+			                 .avatar(resToUri(context, R.drawable.credits_castorflex))
+			                 .link(Uri.parse("https://github.com/castorflex/SmoothProgressBar"))
+			                 .title("SmoothProgressBar")
+			                 .author("castorflex")
+			                 .license(getApacheLicense("Copyright 2014 Antoine Merle"))
+			                 .build());
+		mAdapter.addItem(new CreditsLibraryItem.Builder()
 			                 .avatar(resToUri(context, R.drawable.credits_emilsjolander))
 			                 .link(Uri.parse("https://github.com/emilsjolander/StickyScrollViewItems"))
 			                 .title("StickyScrollViewItems")
 			                 .author("emilsjolander")
 			                 .license(getApacheLicense())
+			                 .build());
+		mAdapter.addItem(new CreditsLibraryItem.Builder()
+			                 .avatar(resToUri(context, R.drawable.credits_jgilfelt))
+			                 .link(Uri.parse("https://github.com/jgilfelt/SystemBarTint"))
+			                 .title("SystemBarTint")
+			                 .author("Jeff Gilfelt")
+			                 .license(getApacheLicense("Copyright 2013 readyState Software Limited\n\n"))
 			                 .build());
 
 

@@ -15,6 +15,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:background="@color/action_background"
+    android:clipToPadding="false"
     android:divider="#FF2f4154"
     android:dividerHeight="1dp"
     android:drawSelectorOnTop="false"

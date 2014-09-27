@@ -1,10 +1,12 @@
 package com.pkmmte.techdissected.activity;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +17,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.pkmmte.pkrss.Category;
@@ -31,11 +37,15 @@ import com.pkmmte.techdissected.util.IabResult;
 import com.pkmmte.techdissected.util.Purchase;
 import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.PkDrawerLayout;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
 	// Action Bar
 	private ActionBar actionBar;
 	private String actionBarSubtitle;
+
+	// SystemBarTintManager & Configuration
+	private SystemBarTintManager mTintManager;
 
 	// Navigation Drawer
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -68,6 +78,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		// Initialize basics
 		initActionBar();
 		initViews();
+		initTranslucent();
 		initNavDrawer();
 		fragmentManager = getSupportFragmentManager();
 
@@ -140,6 +151,36 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setSubtitle(actionBarSubtitle);
+	}
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private void initTranslucent()
+	{
+		// Return if user isn't on a version that supports this feature yet
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
+			return;
+
+		// Set translucency window flags
+		Window window = getWindow();
+		window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+		// Initialize your Tint Manager
+		mTintManager = new SystemBarTintManager(this);
+
+		// Enable status bar tint and set to resource
+		mTintManager.setStatusBarTintEnabled(true);
+		mTintManager.setStatusBarTintColor(getResources().getColor(R.color.action_background));
+
+		// Uncomment this line if you'd like to tint the nav bar as well
+		//tintManager.setNavigationBarTintEnabled(true);
+
+		// Set paddings & margins to main layout so they don't overlap the action/status bar
+		SystemBarTintManager.SystemBarConfig config = mTintManager.getConfig();
+		int actionBarSize = getResources().getDimensionPixelSize(R.dimen.action_height);
+		mDrawerList.setPadding(0, actionBarSize + config.getStatusBarHeight(), 0, config.getPixelInsetBottom());
+		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) findViewById(R.id.feedContainer).getLayoutParams();
+		params.setMargins(0, actionBarSize + config.getStatusBarHeight(), config.getPixelInsetRight(), 0);
 	}
 
 	private void initViews() {
