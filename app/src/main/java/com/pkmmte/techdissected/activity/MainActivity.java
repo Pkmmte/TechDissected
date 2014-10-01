@@ -42,7 +42,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
 	// Action Bar
 	private ActionBar actionBar;
-	private String actionBarSubtitle;
+	private String mTitle;
 
 	// SystemBarTintManager & Configuration
 	private SystemBarTintManager mTintManager;
@@ -147,10 +147,11 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 	private void initActionBar() {
 		actionBar = getActionBar();
-		//actionBar.setIcon(R.drawable.ic_action_menu);
+		actionBar.setLogo(R.drawable.action_icon);
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setSubtitle(actionBarSubtitle);
+		if(mTitle != null)
+			actionBar.setTitle(mTitle);
 	}
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
@@ -191,16 +192,16 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	private void initNavDrawer() {
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer_indicator, R.string.drawer_open, R.string.drawer_close) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.color.transparent, R.string.drawer_open, R.string.drawer_close) {
 			@Override
 			public void onDrawerClosed(View view) {
-				actionBar.setSubtitle(actionBarSubtitle);
+				actionBar.setTitle(mTitle);
 				invalidateOptionsMenu();
 			}
 
 			@Override
 			public void onDrawerOpened(View drawerView) {
-				actionBar.setSubtitle(null);
+				actionBar.setTitle(getString(R.string.app_name));
 				invalidateOptionsMenu();
 			}
 		};
@@ -227,7 +228,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new FavoritesFragment()).commit();
 
-				actionBarSubtitle = "Favorites";
+				mTitle = "Favorites";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
 			}
@@ -237,7 +238,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new SettingsFragment()).commit();
 
-				actionBarSubtitle = "Settings";
+				mTitle = "Settings";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
 			}
@@ -288,8 +289,8 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	protected void selectCategory(int position) {
 		contentLoaded = true;
 		Category category = mDrawerAdapter.getItem(position);
-		actionBarSubtitle = category.getName();
-		actionBar.setSubtitle(actionBarSubtitle);
+		mTitle = category.getName();
+		actionBar.setTitle(mTitle);
 
 		currentCategory = FeedFragment.newInstance(category);
 		fragmentManager.beginTransaction().replace(R.id.feedContainer, currentCategory).commit();
