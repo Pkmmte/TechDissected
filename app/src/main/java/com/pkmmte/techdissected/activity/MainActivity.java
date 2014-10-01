@@ -28,6 +28,7 @@ import com.pkmmte.pkrss.Category;
 import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.adapter.NavDrawerAdapter;
+import com.pkmmte.techdissected.fragment.AboutFragment;
 import com.pkmmte.techdissected.fragment.FavoritesFragment;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.techdissected.fragment.SettingsFragment;
@@ -243,16 +244,16 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				mDrawerLayout.closeDrawers();
 			}
 		});
-		/*footerView.findViewById(R.id.btnAbout).setOnClickListener(new View.OnClickListener() {
+		footerView.findViewById(R.id.btnAbout).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new AboutFragment()).commit();
 
-				actionBarSubtitle = "About";
+				mTitle = "About";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
 			}
-		});*/
+		});
 		btnDonate = footerView.findViewById(R.id.btnDonate);
 		btnDonate.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -336,6 +337,17 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		// Nothing was done, return false
 		return false;
+	}
+
+	/**
+	 * Returns the SystemBarTintManager instance for
+	 * modifying tint or retrieving values inside subclasses.
+	 *
+	 * @return
+	 */
+	public SystemBarTintManager getTintManager()
+	{
+		return mTintManager;
 	}
 
 	@Override

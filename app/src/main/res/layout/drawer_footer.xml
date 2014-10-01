@@ -20,7 +20,7 @@
     android:textAllCaps="true"
     android:textColor="@color/brand_orange"
     android:textSize="18sp" />
-<!--
+
   <Button
     android:id="@+id/btnAbout"
     android:layout_width="match_parent"
@@ -45,7 +45,7 @@
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:background="#FF2f4154" />
--->
+
   <Button
     android:id="@+id/btnDonate"
     android:layout_width="match_parent"
