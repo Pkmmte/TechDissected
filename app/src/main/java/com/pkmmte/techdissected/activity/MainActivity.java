@@ -45,9 +45,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	private ActionBar actionBar;
 	private String mTitle;
 
-	// SystemBarTintManager & Configuration
-	private SystemBarTintManager mTintManager;
-
 	// Navigation Drawer
 	private ActionBarDrawerToggle mDrawerToggle;
 	private PkDrawerLayout mDrawerLayout;
@@ -79,7 +76,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		// Initialize basics
 		initActionBar();
 		initViews();
-		initTranslucent();
 		initNavDrawer();
 		fragmentManager = getSupportFragmentManager();
 
@@ -88,13 +84,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		// Select default category
 		selectCategory(0);
-
-		// Set up donate function, if possible
-		try {
-			setupDonate();
-		} catch (Exception e) {
-			btnDonate.setVisibility(View.GONE);
-		}
 	}
 
 	@Override
@@ -153,36 +142,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		if(mTitle != null)
 			actionBar.setTitle(mTitle);
-	}
-
-	@TargetApi(Build.VERSION_CODES.KITKAT)
-	private void initTranslucent()
-	{
-		// Return if user isn't on a version that supports this feature yet
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-			return;
-
-		// Set translucency window flags
-		Window window = getWindow();
-		window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-		window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-
-		// Initialize your Tint Manager
-		mTintManager = new SystemBarTintManager(this);
-
-		// Enable status bar tint and set to resource
-		mTintManager.setStatusBarTintEnabled(true);
-		mTintManager.setStatusBarTintColor(getResources().getColor(R.color.action_background));
-
-		// Uncomment this line if you'd like to tint the nav bar as well
-		//tintManager.setNavigationBarTintEnabled(true);
-
-		// Set paddings & margins to main layout so they don't overlap the action/status bar
-		SystemBarTintManager.SystemBarConfig config = mTintManager.getConfig();
-		int actionBarSize = getResources().getDimensionPixelSize(R.dimen.action_height);
-		mDrawerList.setPadding(0, actionBarSize + config.getStatusBarHeight(), 0, config.getPixelInsetBottom());
-		ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) findViewById(R.id.feedContainer).getLayoutParams();
-		params.setMargins(0, actionBarSize + config.getStatusBarHeight(), config.getPixelInsetRight(), 0);
 	}
 
 	private void initViews() {
@@ -300,19 +259,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		mDrawerLayout.closeDrawers();
 	}
 
-	private void setupDonate() {
-		mHelper = new IabHelper(this.getApplicationContext(), getString(R.string.public_license_key));
-		mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-			public void onIabSetupFinished(IabResult result) {
-				if (!result.isSuccess()) {
-					// Oh noes, there was a problem.
-					Log.d("TAG", "Problem setting up In-app Billing: " + result);
-				}
-				Log.d("TAG", "Hooray, IAB is fully set up!");
-			}
-		});
-	}
-
 	protected boolean handleIntent() {
 		// Get the launch intent
 		final Intent launchIntent = getIntent();
@@ -337,17 +283,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 		// Nothing was done, return false
 		return false;
-	}
-
-	/**
-	 * Returns the SystemBarTintManager instance for
-	 * modifying tint or retrieving values inside subclasses.
-	 *
-	 * @return
-	 */
-	public SystemBarTintManager getTintManager()
-	{
-		return mTintManager;
 	}
 
 	@Override
