@@ -1,29 +1,22 @@
 package com.pkmmte.techdissected.activity;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+
 import com.pkmmte.pkrss.Category;
 import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
@@ -33,12 +26,8 @@ import com.pkmmte.techdissected.fragment.FavoritesFragment;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 import com.pkmmte.techdissected.fragment.SettingsFragment;
 import com.pkmmte.techdissected.util.Constants;
-import com.pkmmte.techdissected.util.IabHelper;
-import com.pkmmte.techdissected.util.IabResult;
-import com.pkmmte.techdissected.util.Purchase;
 import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.PkDrawerLayout;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
 	// Action Bar
@@ -54,10 +43,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	// Manager & Current Fragment
 	private FragmentManager fragmentManager;
 	private FeedFragment currentCategory;
-
-	// Donation Helper Class & View
-	private IabHelper mHelper;
-	private View btnDonate;
 
 	// Loaded status
 	private boolean contentLoaded = false;
@@ -97,18 +82,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		super.onStart();
 		if(!contentLoaded)
 			selectCategory(0);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		// Unbind IAP service, if possible
-		try {
-			if (mHelper != null)
-				mHelper.dispose();
-			mHelper = null;
-		} catch (Exception e) { }
 	}
 
 	@Override
@@ -211,31 +184,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 				mTitle = "About";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
-			}
-		});
-		btnDonate = footerView.findViewById(R.id.btnDonate);
-		btnDonate.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					mHelper.launchPurchaseFlow(MainActivity.this, "donate", 10001, new IabHelper.OnIabPurchaseFinishedListener() {
-						public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-							if (result.isFailure()) {
-								Toast.makeText(MainActivity.this,
-								               "Error donating... :(",
-								               Toast.LENGTH_LONG).show();
-								return;
-							}
-							else if (purchase.getSku()
-								.equals("donate")) {
-								mHelper.consumeAsync(purchase, null);
-							}
-						}
-					}, "bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ");
-				} catch (Exception e) {
-					Toast.makeText(MainActivity.this, "Error donating... :(", Toast.LENGTH_LONG)
-						.show();
-				}
 			}
 		});
 		footerView.findViewById(R.id.btnPKRSS).setOnClickListener(new View.OnClickListener() {

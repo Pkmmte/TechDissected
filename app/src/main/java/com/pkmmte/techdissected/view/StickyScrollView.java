@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ScrollView;
+
 import com.emilsjolander.components.StickyScrollViewItems.R;
+
 import java.util.ArrayList;
 
 /**

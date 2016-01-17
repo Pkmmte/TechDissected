@@ -223,19 +223,19 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	@Override
-	public void OnPreLoad() {
+	public void onPreload() {
 		setRefreshState(true);
 	}
 
 	@Override
-	public void OnLoaded(List<Article> newArticles) {
+	public void onLoaded(List<Article> newArticles) {
 		mFeed = PkRSS.with(getActivity()).get(category.getUrl(), search);
 		setRefreshState(false);
 		refreshFeedContent();
 	}
 
 	@Override
-	public void OnLoadFailed() {
+	public void onLoadFailed() {
 		setRefreshState(false);
 		Toast.makeText(getActivity(), "Error loading feed. Check your internet connection and try again.", Toast.LENGTH_SHORT).show();
 	}

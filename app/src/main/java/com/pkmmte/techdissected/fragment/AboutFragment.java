@@ -8,11 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pkmmte.techdissected.R;
-import com.pkmmte.techdissected.activity.MainActivity;
 import com.pkmmte.techdissected.adapter.AuthorAdapter;
 import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.view.HeaderGridView;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.picasso.Picasso;
 
 public class AboutFragment extends Fragment {

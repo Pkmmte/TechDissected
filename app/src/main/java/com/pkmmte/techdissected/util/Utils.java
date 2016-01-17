@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
 
 public class Utils {
 	public static void buildSingleton(Context context) {
-		new PkRSS.Builder(context).handler(new Handler(Looper.getMainLooper())).buildSingleton();
+		PkRSS.setSingleton(new PkRSS.Builder(context).handler(new Handler(Looper.getMainLooper())).build());
 	}
 
 	public static CharSequence getRelativeDate(long date) {

@@ -36,15 +36,16 @@ repositories {
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   //compile(name:'circularimageview', ext:'aar')
-  compile("com.android.support:support-v13:20.+")
-  compile group: 'com.pkmmte.view', name: 'circularimageview', version: '1.+'
-  //compile group: 'com.github.bumptech.glide', name: 'glide', version: '3.3.+'
-  //compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.0.0'
-  //compile group: 'com.squareup.okhttp', name: 'okhttp-urlconnection', version: '2.0.0'
-  compile group: 'com.github.chrisbanes.photoview', name: 'library', version: '1.2.3'
-  compile group: 'com.squareup.picasso', name: 'picasso', version: '2.3.2'
-  //compile group: 'com.pkmmte.pkrss', name: 'pkrss', version: '1.0.+'
-  compile group: 'com.github.castorflex.smoothprogressbar', name: 'library-circular', version: '1.0.0'
-  compile group: 'se.emilsjolander', name: 'StickyScrollViewItems', version: '1.1.0'
-  compile group: 'com.readystatesoftware.systembartint', name: 'systembartint', version: '1.0.3'
+
+  compile 'com.android.support:appcompat-v7:23.1.1'
+  compile 'com.android.support:design:23.1.1'
+
+  compile 'com.pkmmte.view:circularimageview:1.1'
+  compile 'com.squareup.okhttp:okhttp:2.5.0'
+  compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
+  compile 'com.github.chrisbanes.photoview:library:1.2.3'
+  compile 'com.squareup.picasso:picasso:2.5.2'
+  compile 'com.pkmmte.pkrss:pkrss:1.2'
+  compile 'com.github.castorflex.smoothprogressbar:library-circular:1.2.0'
+  compile 'se.emilsjolander:StickyScrollViewItems:1.1.0'
 }
