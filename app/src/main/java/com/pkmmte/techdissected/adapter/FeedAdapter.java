@@ -103,7 +103,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
-		final View mCard;
 		final ImageView imgPreview;
 		final ImageView imgFavorite;
 		final TextView txtTag;
@@ -114,7 +113,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
 		public ViewHolder(View itemView) {
 			super(itemView);
-			mCard = itemView.findViewById(R.id.card);
 			imgPreview = (ImageView) itemView.findViewById(R.id.imgPreview);
 			imgFavorite = (ImageView) itemView.findViewById(R.id.imgFavorite);
 			txtTag = (TextView) itemView.findViewById(R.id.txtTag);
