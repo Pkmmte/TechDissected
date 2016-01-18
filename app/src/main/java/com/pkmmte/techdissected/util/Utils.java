@@ -3,6 +3,8 @@ package com.pkmmte.techdissected.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -21,6 +23,12 @@ public class Utils {
 
 	public static CharSequence getRelativeDate(long date) {
 		return DateUtils.getRelativeTimeSpanString(date, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, 0);
+	}
+
+	public static ColorMatrixColorFilter getGrayscaleFilter() {
+		ColorMatrix filter = new ColorMatrix();
+		filter.setSaturation(0);
+		return new ColorMatrixColorFilter(filter);
 	}
 
 	public static boolean containsImage(String encoded) {

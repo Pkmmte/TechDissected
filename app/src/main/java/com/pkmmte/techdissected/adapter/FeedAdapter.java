@@ -1,152 +1,132 @@
 package com.pkmmte.techdissected.adapter;
 
 import android.content.Context;
-import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.pkmmte.pkrss.Article;
 import com.pkmmte.techdissected.R;
-import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.Utils;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeedAdapter extends BaseAdapter {
-	private Context mContext;
-	private List<Article> mFeed;
-	private ColorMatrixColorFilter mFilter;
-	private OnArticleClickListener mListener;
-	private boolean grayscaleRead;
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
+	// Data set
+	private final List<Article> articles = new ArrayList<>();
+	private final ArticleListener listener;
 
-	public FeedAdapter(Context context) {
-		this(context, new ArrayList<Article>());
+	// Read properties
+	private boolean grayscaleEnabled;
+	private ColorMatrixColorFilter grayscaleFilter;
+
+	public FeedAdapter(@Nullable ArticleListener listener) {
+		this.listener = listener;
 	}
 
-	public FeedAdapter(Context context, List<Article> feed) {
-		this.mContext = context;
-		this.mFeed = feed;
-		ColorMatrix grayscaleFilter = new ColorMatrix();
-		grayscaleFilter.setSaturation(0);
-		this.mFilter = new ColorMatrixColorFilter(grayscaleFilter);
-		try {
-			this.grayscaleRead = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).getBoolean(Constants.PREF_READ, false);
-		} catch (Exception e) {
-			this.grayscaleRead = true;
-		}
+	public void setArticles(@NonNull List<Article> articles) {
+		this.articles.clear();
+		this.articles.addAll(articles);
 	}
 
-	public void updateFeed(List<Article> feed) {
-		this.mFeed = feed;
-		this.notifyDataSetChanged();
-	}
-
-	public void setOnClickListener(OnArticleClickListener listener) {
-		this.mListener = listener;
+	public void setGrayscaleEnabled(boolean enabled) {
+		this.grayscaleEnabled = enabled;
+		this.grayscaleFilter = enabled ? Utils.getGrayscaleFilter() : null;
 	}
 
 	@Override
-	public int getCount() {
-		return mFeed.size();
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_feed_article, parent, false));
 	}
 
 	@Override
-	public Article getItem(int position) {
-		return mFeed.get(position);
-	}
+	public void onBindViewHolder(ViewHolder holder, int position) {
+		final Article article = articles.get(position);
+		final Context context = holder.itemView.getContext();
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+		Picasso.with(context)
+				.load(article.getImage())
+				.placeholder(R.drawable.placeholder)
+				.into(holder.imgPreview);
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		final Article mArticle = mFeed.get(position);
-		ViewHolder holder;
-
-		if(convertView == null) {
-			LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = mInflater.inflate(R.layout.fragment_feed_article, parent, false);
-
-			holder = new ViewHolder();
-			holder.mCard = convertView.findViewById(R.id.card);
-			holder.imgPreview = (ImageView) convertView.findViewById(R.id.imgPreview);
-			holder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgFavorite);
-			holder.txtTag = (TextView) convertView.findViewById(R.id.txtTag);
-			holder.txtTitle = (TextView) convertView.findViewById(R.id.txtTitle);
-			holder.txtDescription = (TextView) convertView.findViewById(R.id.txtDescription);
-			holder.txtAuthor = (TextView) convertView.findViewById(R.id.txtAuthor);
-			holder.txtDate= (TextView) convertView.findViewById(R.id.txtDate);
-			holder.currentTag = 0;
-
-			convertView.setTag(holder);
-		}
-		else
-			holder = (ViewHolder) convertView.getTag();
-
-		Picasso.with(mContext).load(mArticle.getImage()).placeholder(R.drawable.placeholder).into(holder.imgPreview);
-
-		if(mArticle.getTags().size() > 0) {
+		if(article.getTags().size() > 0) {
 			holder.txtTag.setVisibility(View.VISIBLE);
-			holder.txtTag.setText(mArticle.getTags().get(0));
+			holder.txtTag.setText(article.getTags().get(0));
 		}
 		else
 			holder.txtTag.setVisibility(View.GONE);
-		holder.txtTitle.setText(mArticle.getTitle());
-		holder.txtDescription.setText(mArticle.getDescription());
-		holder.txtAuthor.setText("By " + mArticle.getAuthor());
-		holder.txtDate.setText(Utils.getRelativeDate(mArticle.getDate()));
 
-		holder.mCard.setOnClickListener(new View.OnClickListener() {
+		holder.txtTitle.setText(article.getTitle());
+		holder.txtDescription.setText(article.getDescription());
+		holder.txtAuthor.setText("By " + article.getAuthor());
+		holder.txtDate.setText(Utils.getRelativeDate(article.getDate()));
+
+		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mListener != null)
-					mListener.onClick(mArticle);
+				if(listener != null)
+					listener.onArticleClick(article);
 			}
 		});
 		holder.imgFavorite.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean favorite = !mArticle.isFavorite();
-				mArticle.saveFavorite(favorite);
+				boolean favorite = !article.isFavorite();
+				article.saveFavorite(favorite);
 
-				if(mListener != null)
-					mListener.onAddFavorite(mArticle, favorite);
+				if(listener != null)
+					listener.onArticleFavorite(article, favorite);
 
 				notifyDataSetChanged();
 			}
 		});
 
-		if(grayscaleRead && mArticle.isRead())
-			holder.imgPreview.setColorFilter(mFilter);
+		if(grayscaleEnabled && article.isRead())
+			holder.imgPreview.setColorFilter(grayscaleFilter);
 		else
 			holder.imgPreview.clearColorFilter();
 
-		holder.imgFavorite.setImageResource(mArticle.isFavorite() ? R.drawable.selector_favorite_full : R.drawable.selector_favorite_empty);
-
-		return convertView;
+		holder.imgFavorite.setImageResource(article.isFavorite() ? R.drawable.selector_favorite_full : R.drawable.selector_favorite_empty);
 	}
 
-	public interface OnArticleClickListener {
-		public void onClick(Article article);
-		public void onAddFavorite(Article article, boolean favorite);
+	@Override
+	public int getItemCount() {
+		return articles.size();
 	}
 
-	private class ViewHolder {
-		public View mCard;
-		public ImageView imgPreview;
-		public ImageView imgFavorite;
-		public TextView txtTag;
-		public TextView txtTitle;
-		public TextView txtDescription;
-		public TextView txtAuthor;
-		public TextView txtDate;
-		public int currentTag;
+	public static class ViewHolder extends RecyclerView.ViewHolder {
+		final View mCard;
+		final ImageView imgPreview;
+		final ImageView imgFavorite;
+		final TextView txtTag;
+		final TextView txtTitle;
+		final TextView txtDescription;
+		final TextView txtAuthor;
+		final TextView txtDate;
+
+		public ViewHolder(View itemView) {
+			super(itemView);
+			mCard = itemView.findViewById(R.id.card);
+			imgPreview = (ImageView) itemView.findViewById(R.id.imgPreview);
+			imgFavorite = (ImageView) itemView.findViewById(R.id.imgFavorite);
+			txtTag = (TextView) itemView.findViewById(R.id.txtTag);
+			txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+			txtDescription = (TextView) itemView.findViewById(R.id.txtDescription);
+			txtAuthor = (TextView) itemView.findViewById(R.id.txtAuthor);
+			txtDate= (TextView) itemView.findViewById(R.id.txtDate);
+		}
+	}
+
+	public interface ArticleListener {
+		void onArticleClick(Article article);
+		void onArticleFavorite(Article article, boolean favorite);
 	}
 }

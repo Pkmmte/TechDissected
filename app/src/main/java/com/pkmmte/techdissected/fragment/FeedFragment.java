@@ -1,21 +1,23 @@
 package com.pkmmte.techdissected.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.Toast;
 import com.pkmmte.pkrss.Article;
@@ -31,19 +33,19 @@ import com.pkmmte.techdissected.view.PkSwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClickListener, Callback, PkSwipeRefreshLayout.OnRefreshListener {
+public class FeedFragment extends Fragment implements Callback, PkSwipeRefreshLayout.OnRefreshListener, FeedAdapter.ArticleListener, SwipeRefreshLayout.OnRefreshListener {
 	// Passed Arguments
 	private Category category;
 	private String search;
 
 	// Feed list & adapter
-	private List<Article> mFeed = new ArrayList<Article>();
-	private FeedAdapter mAdapter;
+	private List<Article> mFeed = new ArrayList<>();
+	private final FeedAdapter mFeedAdapter = new FeedAdapter(this);
 
 	// Views
 	private MenuItem refreshItem;
-	private PkSwipeRefreshLayout mSwipeLayout;
-	private GridView mGrid;
+	private SwipeRefreshLayout mSwipeLayout;
+	private RecyclerView mFeedList;
 	private View noContent;
 
 	@Override
@@ -53,6 +55,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 			setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		initViews(view);
+		initList();
 		return view;
 	}
 
@@ -62,7 +65,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 		mSwipeLayout.setOnRefreshListener(this);
 		mSwipeLayout.setColorSchemeResources(R.color.action_swipe_1, R.color.action_swipe_2,
-		                                     R.color.action_swipe_3, R.color.action_swipe_4);
+				R.color.action_swipe_3, R.color.action_swipe_4);
 
 		//
 		initFeed();
@@ -102,7 +105,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 				return true;
 			case R.id.action_read:
 				PkRSS.with(getActivity()).markAllRead(true);
-				mAdapter.notifyDataSetChanged();
+				mFeedAdapter.notifyDataSetChanged();
 				return true;
 			case R.id.action_unfavorite:
 				new AlertDialog.Builder(getActivity())
@@ -112,7 +115,7 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 						@Override
 						public void onClick(DialogInterface dialog, int whichButton) {
 							PkRSS.with(getActivity()).deleteAllFavorites();
-							mAdapter.notifyDataSetChanged();
+							mFeedAdapter.notifyDataSetChanged();
 						}})
 					.setNegativeButton(android.R.string.no, null).show();
 				return true;
@@ -133,9 +136,18 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 	}
 
 	private void initViews(View v) {
-		mSwipeLayout = (PkSwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
-		mGrid = (GridView) v.findViewById(R.id.feedGrid);
+		mSwipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeLayout);
+		mFeedList = (RecyclerView) v.findViewById(R.id.feedList);
 		noContent = v.findViewById(R.id.noContent);
+	}
+
+	private void initList() {
+		SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+		mFeedAdapter.setGrayscaleEnabled(preferences.getBoolean(Constants.PREF_READ, false));
+
+		mFeedList.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.feed_columns)));
+		mFeedList.setHasFixedSize(true);
+		mFeedList.setAdapter(mFeedAdapter);
 	}
 
 	private void retrieveArguments() {
@@ -165,61 +177,44 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 
 	private void refreshFeedContent() {
 		noContent.setVisibility(View.GONE);
-		mGrid.setVisibility(View.VISIBLE);
+		mFeedList.setVisibility(View.VISIBLE);
 
-		if(mAdapter == null) {
-			mAdapter = new FeedAdapter(getActivity(), mFeed);
-			mGrid.setAdapter(mAdapter);
-		}
-		else
-			mAdapter.updateFeed(mFeed);
+		mFeedAdapter.setArticles(mFeed);
 
-		mAdapter.setOnClickListener(FeedFragment.this);
-		mSwipeLayout.setScrollTarget(mGrid);
-
-		mGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
-			int currentVisibleItemCount = 0;
-			int preLast = 0;
-
-			@Override public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
+		mFeedList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			private boolean loading;
 
 			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				this.currentVisibleItemCount = visibleItemCount;
-				final int lastItem = firstVisibleItem + visibleItemCount;
-				if (lastItem == totalItemCount - 1) {
-					if (preLast != lastItem) { //to avoid multiple calls for last item
-						PkRSS.with(getActivity())
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				if (loading || dy < 0)
+					return;
+
+				final LinearLayoutManager layoutManager = (LinearLayoutManager) mFeedList.getLayoutManager();
+				final int childCount = layoutManager.getChildCount();
+				final int itemCount = layoutManager.getItemCount();
+				final int firstPosition = layoutManager.findFirstVisibleItemPosition();
+
+				if (childCount + firstPosition >= itemCount) {
+					loading = true;
+					PkRSS.with(getActivity())
 							.load(category.getUrl())
 							.search(search)
 							.nextPage()
 							.callback(FeedFragment.this)
 							.async();
-						preLast = lastItem;
-					}
 				}
 			}
 		});
 	}
 
 	@Override
-	public void onClick(Article article) {
-		Intent intent = new Intent(getActivity(), ArticleActivity.class);
-		intent.putExtra(PkRSS.KEY_ARTICLE_ID, article.getId());
-		intent.putExtra(PkRSS.KEY_CATEGORY_NAME, category.getName());
-		intent.putExtra(PkRSS.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + Uri.encode(search));
-		startActivity(intent);
-	}
-
-	@Override
-	public void onAddFavorite(Article article, boolean favorite) {
-		//
-	}
-
-	@Override
 	public void onRefresh() {
-		PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
+		PkRSS.with(getActivity())
+				.load(category.getUrl())
+				.search(search)
+				.skipCache()
+				.callback(this)
+				.async();
 	}
 
 	@Override
@@ -251,5 +246,19 @@ public class FeedFragment extends Fragment implements FeedAdapter.OnArticleClick
 		args.putString(PkRSS.KEY_SEARCH, search);
 		mFragment.setArguments(args);
 		return mFragment;
+	}
+
+	@Override
+	public void onArticleClick(Article article) {
+		Intent intent = new Intent(getActivity(), ArticleActivity.class);
+		intent.putExtra(PkRSS.KEY_ARTICLE_ID, article.getId());
+		intent.putExtra(PkRSS.KEY_CATEGORY_NAME, category.getName());
+		intent.putExtra(PkRSS.KEY_FEED_URL, search == null ? category.getUrl() : category.getUrl() + "?s=" + Uri.encode(search));
+		startActivity(intent);
+	}
+
+	@Override
+	public void onArticleFavorite(Article article, boolean favorite) {
+		//
 	}
 }
