@@ -1,27 +1,27 @@
 <com.pkmmte.techdissected.view.PkDrawerLayout
-  android:id="@+id/drawer_layout"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+		android:id="@+id/drawer_layout"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-  <FrameLayout
-    android:id="@+id/feedContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+	<FrameLayout
+			android:id="@+id/feedContainer"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
 
-  <ListView
-    android:id="@+id/drawer_list"
-    android:layout_width="@dimen/nav_drawer_width"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:background="@color/action_background"
-    android:clipToPadding="false"
-    android:divider="#FF2f4154"
-    android:dividerHeight="1dp"
-    android:drawSelectorOnTop="false"
-    android:footerDividersEnabled="false"
-    android:headerDividersEnabled="false"
-    android:listSelector="@drawable/selector_preview_overlay"
-    android:scrollbars="none" />
+	<ListView
+			android:id="@+id/drawer_list"
+			android:layout_width="@dimen/nav_drawer_width"
+			android:layout_height="match_parent"
+			android:layout_gravity="start"
+			android:background="@color/action_background"
+			android:clipToPadding="false"
+			android:divider="#FF2f4154"
+			android:dividerHeight="1dp"
+			android:drawSelectorOnTop="false"
+			android:footerDividersEnabled="false"
+			android:headerDividersEnabled="false"
+			android:listSelector="@drawable/selector_light_bounded"
+			android:scrollbars="none"/>
 
 </com.pkmmte.techdissected.view.PkDrawerLayout>

@@ -1,93 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-  <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FF252e38"
-    android:ellipsize="end"
-    android:fontFamily="sans-serif-condensed"
-    android:gravity="center_horizontal"
-    android:maxLines="1"
-    android:paddingBottom="4dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingTop="4dp"
-    android:text="Extras"
-    android:textAllCaps="true"
-    android:textColor="@color/brand_orange"
-    android:textSize="18sp" />
+	<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="#FF252e38"
+			android:ellipsize="end"
+			android:fontFamily="sans-serif-condensed"
+			android:gravity="center_horizontal"
+			android:maxLines="1"
+			android:paddingBottom="4dp"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp"
+			android:paddingTop="4dp"
+			android:text="Extras"
+			android:textAllCaps="true"
+			android:textColor="@color/brand_orange"
+			android:textSize="18sp"/>
 
-  <Button
-    android:id="@+id/btnAbout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/selector_preview_overlay"
-    android:drawableLeft="@drawable/ic_action_info"
-    android:drawablePadding="8dp"
-    android:ellipsize="end"
-    android:fontFamily="sans-serif-light"
-    android:gravity="left|center_vertical"
-    android:maxLines="1"
-    android:minHeight="0dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="8dp"
-    android:text="About"
-    android:textColor="@color/white"
-    android:textSize="20sp" />
+	<Button
+			android:id="@+id/btnAbout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/selector_light_bounded"
+			android:drawableLeft="@drawable/ic_action_info"
+			android:drawablePadding="8dp"
+			android:ellipsize="end"
+			android:fontFamily="sans-serif-light"
+			android:gravity="left|center_vertical"
+			android:maxLines="1"
+			android:minHeight="0dp"
+			android:paddingBottom="8dp"
+			android:paddingLeft="16dp"
+			android:paddingRight="16dp"
+			android:paddingTop="8dp"
+			android:text="About"
+			android:textColor="@color/white"
+			android:textSize="20sp"/>
 
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="#FF2f4154" />
+	<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="#FF2f4154"/>
 
-  <Button
-    android:id="@+id/btnDonate"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/selector_preview_overlay"
-    android:drawableLeft="@drawable/ic_android"
-    android:drawablePadding="8dp"
-    android:ellipsize="end"
-    android:fontFamily="sans-serif-light"
-    android:gravity="left|center_vertical"
-    android:maxLines="1"
-    android:minHeight="0dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="8dp"
-    android:text="Donate"
-    android:textColor="@color/white"
-    android:textSize="20sp" />
+	<Button
+			android:id="@+id/btnDonate"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/selector_light_bounded"
+			android:drawableLeft="@drawable/ic_android"
+			android:drawablePadding="8dp"
+			android:ellipsize="end"
+			android:fontFamily="sans-serif-light"
+			android:gravity="left|center_vertical"
+			android:maxLines="1"
+			android:minHeight="0dp"
+			android:paddingBottom="8dp"
+			android:paddingLeft="16dp"
+			android:paddingRight="16dp"
+			android:paddingTop="8dp"
+			android:text="Donate"
+			android:textColor="@color/white"
+			android:textSize="20sp"/>
 
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="#FF2f4154" />
+	<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="#FF2f4154"/>
 
-  <Button
-    android:id="@+id/btnPKRSS"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/selector_preview_overlay"
-    android:drawableLeft="@drawable/ic_pkrss"
-    android:drawablePadding="8dp"
-    android:ellipsize="end"
-    android:fontFamily="sans-serif-light"
-    android:gravity="left|center_vertical"
-    android:maxLines="1"
-    android:minHeight="0dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="8dp"
-    android:text="Powered by PkRSS"
-    android:textColor="@color/white"
-    android:textSize="20sp" />
+	<Button
+			android:id="@+id/btnPKRSS"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/selector_light_bounded"
+			android:drawableLeft="@drawable/ic_pkrss"
+			android:drawablePadding="8dp"
+			android:ellipsize="end"
+			android:fontFamily="sans-serif-light"
+			android:gravity="left|center_vertical"
+			android:maxLines="1"
+			android:minHeight="0dp"
+			android:paddingBottom="8dp"
+			android:paddingLeft="16dp"
+			android:paddingRight="16dp"
+			android:paddingTop="8dp"
+			android:text="Powered by PkRSS"
+			android:textColor="@color/white"
+			android:textSize="20sp"/>
 </LinearLayout>

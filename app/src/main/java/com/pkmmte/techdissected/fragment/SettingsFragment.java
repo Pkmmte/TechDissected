@@ -55,7 +55,7 @@ public class SettingsFragment extends ListFragment
 		getListView().setDividerHeight(0);
 
 		// Apply custom selector
-		getListView().setSelector(R.drawable.selector_transparent_lgray);
+		getListView().setSelector(R.drawable.selector_dark_bounded);
 		getListView().setDrawSelectorOnTop(false);
 
 		// Calculate overall cache size asynchronously

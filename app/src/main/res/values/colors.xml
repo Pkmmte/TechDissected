@@ -25,6 +25,10 @@
     <item>@color/action_swipe_4</item>
   </integer-array>
 
+  <!-- Ripple Colors -->
+  <color name="ripple_dark">#20444444</color>
+  <color name="ripple_light">#20ffffff</color>
+
   <!-- General -->
   <color name="transparent">#00000000</color>
   <color name="white">#FFFFFFFF</color>

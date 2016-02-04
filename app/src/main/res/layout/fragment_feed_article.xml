@@ -1,118 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:clickable="true"
-	app:cardUseCompatPadding="true">
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clickable="true"
+		android:foreground="@drawable/selector_dark_bounded"
+		app:cardUseCompatPadding="true">
 
 
 	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
 
 		<ImageView
-			android:id="@+id/imgPreview"
-			android:layout_width="match_parent"
-			android:layout_height="144dp"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			android:layout_alignParentTop="true"
-			android:scaleType="centerCrop"
-			tools:ignore="ContentDescription"
-			tools:src="@drawable/placeholder"/>
+				android:id="@+id/imgPreview"
+				android:layout_width="match_parent"
+				android:layout_height="144dp"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentTop="true"
+				android:scaleType="centerCrop"
+				tools:ignore="ContentDescription"
+				tools:src="@drawable/placeholder"/>
 
 		<TextView
-			android:id="@+id/txtTag"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="8dp"
-			android:background="#FF4db6ac"
-			android:clickable="false"
-			android:fontFamily="sans-serif-light"
-			android:paddingLeft="8dp"
-			android:paddingRight="8dp"
-			android:paddingTop="4dp"
-			android:textAllCaps="true"
-			android:textColor="@color/white"
-			android:textSize="16sp"
-			tools:text="Tag"/>
+				android:id="@+id/txtTag"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:background="#FF4db6ac"
+				android:clickable="false"
+				android:fontFamily="sans-serif-light"
+				android:paddingLeft="8dp"
+				android:paddingRight="8dp"
+				android:paddingTop="4dp"
+				android:textAllCaps="true"
+				android:textColor="@color/white"
+				android:textSize="16sp"
+				tools:text="Tag"/>
 
 
 		<ImageView
-			android:id="@+id/imgFavorite"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentTop="true"
-			android:padding="4dp"
-			android:src="@drawable/ic_favorite_empty"/>
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignBottom="@+id/imgPreview"
-			android:background="@drawable/shadow_feed_article"
-			android:orientation="horizontal"
-			android:paddingBottom="4dp"
-			android:paddingEnd="16dp"
-			android:paddingLeft="16dp"
-			android:paddingRight="16dp"
-			android:paddingStart="16dp"
-			android:paddingTop="16dp">
-
-			<TextView
-				android:id="@+id/txtAuthor"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:ellipsize="end"
-				android:gravity="start"
-				android:maxLines="1"
-				android:text="By Cliff Wade"
-				android:textColor="@color/white"
-				android:textSize="14sp"/>
-
-			<TextView
-				android:id="@+id/txtDate"
+				android:id="@+id/imgFavorite"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:ellipsize="end"
-				android:maxLines="1"
-				android:textColor="@color/white"
-				android:textSize="14sp"
-				tools:text="9 minutes ago"/>
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
+				android:padding="4dp"
+				android:src="@drawable/ic_favorite_empty"/>
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignBottom="@+id/imgPreview"
+				android:background="@drawable/shadow_feed_article"
+				android:orientation="horizontal"
+				android:paddingBottom="4dp"
+				android:paddingEnd="16dp"
+				android:paddingLeft="16dp"
+				android:paddingRight="16dp"
+				android:paddingStart="16dp"
+				android:paddingTop="16dp">
+
+			<TextView
+					android:id="@+id/txtAuthor"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:ellipsize="end"
+					android:gravity="start"
+					android:maxLines="1"
+					android:text="By Cliff Wade"
+					android:textColor="@color/white"
+					android:textSize="14sp"/>
+
+			<TextView
+					android:id="@+id/txtDate"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:ellipsize="end"
+					android:maxLines="1"
+					android:textColor="@color/white"
+					android:textSize="14sp"
+					tools:text="9 minutes ago"/>
 		</LinearLayout>
 
 		<TextView
-			android:id="@+id/txtTitle"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/imgPreview"
-			android:ellipsize="end"
-			android:maxLines="1"
-			android:paddingLeft="16dp"
-			android:paddingRight="16dp"
-			android:paddingTop="8dp"
-			android:textColor="@color/text_primary"
-			android:textSize="18sp"
-			tools:text="Android One: Pushing For The Next Billion"/>
+				android:id="@+id/txtTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/imgPreview"
+				android:ellipsize="end"
+				android:maxLines="1"
+				android:paddingLeft="16dp"
+				android:paddingRight="16dp"
+				android:paddingTop="8dp"
+				android:textColor="@color/text_primary"
+				android:textSize="18sp"
+				tools:text="Android One: Pushing For The Next Billion"/>
 
 		<TextView
-			android:id="@+id/txtDescription"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/txtTitle"
-			android:ellipsize="end"
-			android:maxLines="3"
-			android:paddingBottom="8dp"
-			android:paddingLeft="16dp"
-			android:paddingRight="16dp"
-			android:textColor="@color/text_secondary"
-			android:textSize="14sp"
-			tools:text="Google has announced its plan to gain its next Billion Android users. Android One brings low cost handsets with direct support from Google."/>
+				android:id="@+id/txtDescription"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/txtTitle"
+				android:ellipsize="end"
+				android:maxLines="3"
+				android:paddingBottom="8dp"
+				android:paddingLeft="16dp"
+				android:paddingRight="16dp"
+				android:textColor="@color/text_secondary"
+				android:textSize="14sp"
+				tools:text="Google has announced its plan to gain its next Billion Android users. Android One brings low cost handsets with direct support from Google."/>
 	</RelativeLayout>
 </android.support.v7.widget.CardView>
