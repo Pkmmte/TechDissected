@@ -87,7 +87,6 @@
     <com.pkmmte.view.CircularImageView
       android:layout_width="64dp"
       android:layout_height="64dp"
-      android:background="@drawable/selector_action_overlay"
       android:clickable="true"
       android:src="@drawable/ic_launcher" />
   </com.pkmmte.techdissected.view.FlowLayout>

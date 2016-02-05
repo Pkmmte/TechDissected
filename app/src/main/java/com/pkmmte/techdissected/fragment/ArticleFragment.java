@@ -41,8 +41,6 @@ public class ArticleFragment extends Fragment {
 	private Article article;
 
 	// Action Bar
-	private ActionBar actionBar;
-	private Drawable actionBarDrawable;
 	private CustomShareActionProvider mShareActionProvider;
 	private MenuItem menuFavorite;
 
@@ -51,12 +49,6 @@ public class ArticleFragment extends Fragment {
 	private final String mime = "text/html";
 	private final String encoding = "utf-8";
 	private final String history = null;
-
-	// Parallax/Fading helper variables
-	private int lastTopValue = 0;
-	private int headerHeight;
-	private int newAlpha;
-	private float ratio;
 
 	// Views
 	private PkScrollView mScroll;
@@ -72,7 +64,6 @@ public class ArticleFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.fragment_article, container, false);
-		initActionBar();
 		initViews(view);
 		return view;
 	}
@@ -103,28 +94,6 @@ public class ArticleFragment extends Fragment {
 
 		// Hacky custom fix for supporting FAB with sticky header
 		mScroll.setExtraTopOffset(getResources().getDimensionPixelSize(R.dimen.action_height));
-
-		// Scroll listener for parallax/fading effect
-		mScroll.setOnScrollListener(new PkScrollView.PkScrollViewListener() {
-			@Override
-			public void onScrollChanged(PkScrollView scrollView, int x, int y, int oldx, int oldy) {
-				parallaxBanner();
-				fadeActionBar(y);
-			}
-		});
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-	{
-		menu.clear();
-		inflater.inflate(R.menu.article, menu);
-		menuFavorite = menu.findItem(R.id.action_favorite);
-		mShareActionProvider = (CustomShareActionProvider) menu.findItem(R.id.action_share).getActionProvider();
-		setupShare();
-
-		if(article != null)
-			menuFavorite.setIcon(article.isFavorite() ? R.drawable.ic_action_favorite_full : R.drawable.ic_action_favorite_empty);
 	}
 
 	@Override
@@ -169,44 +138,6 @@ public class ArticleFragment extends Fragment {
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	public void toggleActionItems(Menu menu, boolean drawerOpen) {
-		menu.findItem(R.id.action_share).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_favorite).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_browser).setVisible(!drawerOpen);
-	}
-
-	private void initActionBar() {
-		// Get action bar instance
-		actionBar = getActivity().getActionBar();
-
-		// Enable the action bar home/up button
-		actionBar.setHomeButtonEnabled(true);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-
-		// Set custom fading drawable
-		actionBarDrawable = new ColorDrawable(getResources().getColor(R.color.action_background));
-		actionBarDrawable.setAlpha(0);
-		actionBar.setBackgroundDrawable(actionBarDrawable);
-
-		// Older versions require this callback
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			actionBarDrawable.setCallback( new Drawable.Callback() {
-				@Override
-				public void invalidateDrawable(Drawable who) {
-					actionBar.setBackgroundDrawable(who);
-				}
-
-				@Override
-				public void scheduleDrawable(Drawable who, Runnable what, long when) {
-				}
-
-				@Override
-				public void unscheduleDrawable(Drawable who, Runnable what) {
-				}
-			});
 		}
 	}
 
@@ -266,23 +197,6 @@ public class ArticleFragment extends Fragment {
 			btnTag.setText(tag);
 			tagContainer.addView(btnTag);
 		}
-	}
-
-	private void parallaxBanner()
-	{
-		Rect rect = new Rect();
-		imgBanner.getLocalVisibleRect(rect);
-		if (lastTopValue != rect.top){
-			lastTopValue = rect.top;
-			imgBanner.setY((float) (rect.top/2.0));
-		}
-	}
-
-	private void fadeActionBar(int y) {
-		headerHeight = imgBanner.getHeight() - actionBar.getHeight();
-		ratio = (float) Math.min(Math.max(y, 0), headerHeight) / headerHeight;
-		newAlpha = (int) (ratio * 255);
-		actionBarDrawable.setAlpha(newAlpha);
 	}
 
 	private void setupWebView() {

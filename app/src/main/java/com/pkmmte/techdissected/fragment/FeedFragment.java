@@ -43,16 +43,13 @@ public class FeedFragment extends Fragment implements Callback, PkSwipeRefreshLa
 	private final FeedAdapter mFeedAdapter = new FeedAdapter(this);
 
 	// Views
-	private MenuItem refreshItem;
-	private SwipeRefreshLayout mSwipeLayout;
+	private SwipeRefreshLayout swipeLayout;
 	private RecyclerView mFeedList;
 	private View noContent;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		retrieveArguments();
-		if(search == null)
-			setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		initViews(view);
 		initList();
@@ -63,22 +60,14 @@ public class FeedFragment extends Fragment implements Callback, PkSwipeRefreshLa
 	public void onStart() {
 		super.onStart();
 
-		mSwipeLayout.setOnRefreshListener(this);
-		mSwipeLayout.setColorSchemeResources(R.color.action_swipe_1, R.color.action_swipe_2,
-				R.color.action_swipe_3, R.color.action_swipe_4);
-
 		//
 		initFeed();
 	}
 
-	@Override
+	/*@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		menu.clear();
 		inflater.inflate(R.menu.feed, menu);
-
-		refreshItem = menu.findItem(R.id.action_refresh);
-		if(mSwipeLayout.isRefreshing())
-			refreshItem.setActionView(R.layout.refresh);
 
 		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -95,48 +84,14 @@ public class FeedFragment extends Fragment implements Callback, PkSwipeRefreshLa
 				return false;
 			}
 		});
-	}
+	}*/
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_refresh:
-				PkRSS.with(getActivity()).load(category.getUrl()).search(search).skipCache().callback(this).async();
-				return true;
-			case R.id.action_read:
-				PkRSS.with(getActivity()).markAllRead(true);
-				mFeedAdapter.notifyDataSetChanged();
-				return true;
-			case R.id.action_unfavorite:
-				new AlertDialog.Builder(getActivity())
-					.setTitle("Confirm Delete")
-					.setMessage("Do you really want to delete all articles marked as favorite?")
-					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int whichButton) {
-							PkRSS.with(getActivity()).deleteAllFavorites();
-							mFeedAdapter.notifyDataSetChanged();
-						}})
-					.setNegativeButton(android.R.string.no, null).show();
-				return true;
-			case R.id.action_website:
-				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	public void toggleActionItems(Menu menu, boolean drawerOpen) {
-		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_refresh).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_read).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_unfavorite).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_website).setVisible(!drawerOpen);
+	public void notifyDataSetChanged() {
+		mFeedAdapter.notifyDataSetChanged();
 	}
 
 	private void initViews(View v) {
-		mSwipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeLayout);
+		swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeLayout);
 		mFeedList = (RecyclerView) v.findViewById(R.id.feedList);
 		noContent = v.findViewById(R.id.noContent);
 	}
@@ -148,6 +103,9 @@ public class FeedFragment extends Fragment implements Callback, PkSwipeRefreshLa
 		mFeedList.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.feed_columns)));
 		mFeedList.setHasFixedSize(true);
 		mFeedList.setAdapter(mFeedAdapter);
+
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
 	}
 
 	private void retrieveArguments() {
@@ -162,17 +120,6 @@ public class FeedFragment extends Fragment implements Callback, PkSwipeRefreshLa
 		else {
 			PkRSS.with(getActivity()).load(category.getUrl()).search(search).callback(this).async();
 		}
-	}
-
-	private void setRefreshState(boolean refreshing) {
-		// Toggle action bar progress
-		mSwipeLayout.setRefreshing(refreshing);
-
-		// I would use a ternary operator for this but it causes a NullPointerException for some reason...
-		if(refreshItem != null && refreshing)
-			refreshItem.setActionView(R.layout.refresh);
-		else if(refreshItem != null)
-			refreshItem.setActionView(null);
 	}
 
 	private void refreshFeedContent() {
@@ -219,19 +166,19 @@ public class FeedFragment extends Fragment implements Callback, PkSwipeRefreshLa
 
 	@Override
 	public void onPreload() {
-		setRefreshState(true);
+		swipeLayout.setRefreshing(true);
 	}
 
 	@Override
 	public void onLoaded(List<Article> newArticles) {
 		mFeed = PkRSS.with(getActivity()).get(category.getUrl(), search);
-		setRefreshState(false);
+		swipeLayout.setRefreshing(false);
 		refreshFeedContent();
 	}
 
 	@Override
 	public void onLoadFailed() {
-		setRefreshState(false);
+		swipeLayout.setRefreshing(false);
 		Toast.makeText(getActivity(), "Error loading feed. Check your internet connection and try again.", Toast.LENGTH_SHORT).show();
 	}
 

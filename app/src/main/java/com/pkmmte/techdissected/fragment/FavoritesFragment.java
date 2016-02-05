@@ -48,8 +48,7 @@ public class FavoritesFragment extends Fragment implements FeedAdapter.ArticleLi
 
 		//
 		mSwipeLayout.setOnRefreshListener(this);
-		mSwipeLayout.setColorSchemeResources(R.color.action_swipe_1, R.color.action_swipe_2,
-		                                     R.color.action_swipe_3, R.color.action_swipe_4);
+		mSwipeLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent, R.color.colorPrimary, R.color.colorAccent);
 
 		//
 		mFeed = PkRSS.with(getActivity()).getFavorites();

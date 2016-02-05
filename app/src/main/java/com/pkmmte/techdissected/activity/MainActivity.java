@@ -1,15 +1,18 @@
 package com.pkmmte.techdissected.activity;
 
-import android.app.ActionBar;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,13 +32,11 @@ import com.pkmmte.techdissected.util.Constants;
 import com.pkmmte.techdissected.util.Utils;
 import com.pkmmte.techdissected.view.PkDrawerLayout;
 
-public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
-	// Action Bar
-	private ActionBar actionBar;
-	private String mTitle;
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, Toolbar.OnMenuItemClickListener {
+	// For logging purposes
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	// Navigation Drawer
-	private ActionBarDrawerToggle mDrawerToggle;
 	private PkDrawerLayout mDrawerLayout;
 	private NavDrawerAdapter mDrawerAdapter;
 	private ListView mDrawerList;
@@ -46,6 +47,9 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
 	// Loaded status
 	private boolean contentLoaded = false;
+
+	// Views
+	private Toolbar toolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,8 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 		PkRSS.with(this).setLoggingEnabled(true);
 
 		// Initialize basics
-		initActionBar();
 		initViews();
+		initToolbar();
 		initNavDrawer();
 		fragmentManager = getSupportFragmentManager();
 
@@ -72,75 +76,30 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		mDrawerToggle.syncState();
-	}
-
-	@Override
 	protected void onStart() {
 		super.onStart();
 		if(!contentLoaded)
 			selectCategory(0);
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		try {
-			if(currentCategory != null)
-				currentCategory.toggleActionItems(menu, mDrawerLayout.isDrawerOpen(mDrawerList));
-		} catch (Exception e) {}
-
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(item))
-			return true;
-
-		return super.onOptionsItemSelected(item);
-	}
-
-	private void initActionBar() {
-		actionBar = getActionBar();
-		actionBar.setLogo(R.drawable.action_icon);
-		actionBar.setHomeButtonEnabled(true);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		if(mTitle != null)
-			actionBar.setTitle(mTitle);
-	}
-
 	private void initViews() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		mDrawerLayout = (PkDrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.drawer_list);
 	}
 
+	private void initToolbar() {
+		toolbar.inflateMenu(R.menu.feed);
+		toolbar.setOnMenuItemClickListener(this);
+		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mDrawerLayout.openDrawer(GravityCompat.START);
+			}
+		});
+	}
+
 	private void initNavDrawer() {
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.color.transparent, R.string.drawer_open, R.string.drawer_close) {
-			@Override
-			public void onDrawerClosed(View view) {
-				actionBar.setTitle(mTitle);
-				invalidateOptionsMenu();
-			}
-
-			@Override
-			public void onDrawerOpened(View drawerView) {
-				actionBar.setTitle(getString(R.string.app_name));
-				invalidateOptionsMenu();
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		//mDrawerToggle.setDrawerIndicatorEnabled(false);
-
 		mDrawerAdapter = new NavDrawerAdapter(this, Constants.CATEGORIES);
 
 		// Add header
@@ -161,7 +120,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new FavoritesFragment()).commit();
 
-				mTitle = "Favorites";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
 			}
@@ -171,7 +129,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new SettingsFragment()).commit();
 
-				mTitle = "Settings";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
 			}
@@ -181,15 +138,8 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 			public void onClick(View v) {
 				fragmentManager.beginTransaction().replace(R.id.feedContainer, new AboutFragment()).commit();
 
-				mTitle = "About";
 				mDrawerAdapter.setCurrentPage(-1);
 				mDrawerLayout.closeDrawers();
-			}
-		});
-		footerView.findViewById(R.id.btnPKRSS).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.PKRSS_URL)));
 			}
 		});
 	}
@@ -197,8 +147,6 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	protected void selectCategory(int position) {
 		contentLoaded = true;
 		Category category = mDrawerAdapter.getItem(position);
-		mTitle = category.getName();
-		actionBar.setTitle(mTitle);
 
 		currentCategory = FeedFragment.newInstance(category);
 		fragmentManager.beginTransaction().replace(R.id.feedContainer, currentCategory).commit();
@@ -236,5 +184,37 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		selectCategory(position - mDrawerList.getHeaderViewsCount());
+	}
+
+	@Override
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_search:
+				// TODO
+				return true;
+			case R.id.action_read:
+				PkRSS.with(this).markAllRead(true);
+				if (currentCategory != null)
+					currentCategory.notifyDataSetChanged();
+				return true;
+			case R.id.action_unfavorite:
+				new AlertDialog.Builder(this)
+						.setTitle("Confirm Delete")
+						.setMessage("Do you really want to delete all articles marked as favorite?")
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int whichButton) {
+								PkRSS.with(MainActivity.this).deleteAllFavorites();
+								if (currentCategory != null)
+									currentCategory.notifyDataSetChanged();
+							}})
+						.setNegativeButton(android.R.string.no, null).show();
+				return true;
+			case R.id.action_website:
+				startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(Constants.WEBSITE_URL)));
+				return true;
+			default:
+				return false;
+		}
 	}
 }

@@ -1,9 +1,8 @@
 package com.pkmmte.techdissected.activity;
 
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
@@ -12,11 +11,10 @@ import com.pkmmte.pkrss.PkRSS;
 import com.pkmmte.techdissected.R;
 import com.pkmmte.techdissected.fragment.FeedFragment;
 
-public class SearchActivity extends FragmentActivity {
+public class SearchActivity extends AppCompatActivity {
 	private Category category;
 	private String search;
 
-	private ActionBar actionBar;
 	private FragmentManager fragmentManager;
 
 	@Override
@@ -25,7 +23,6 @@ public class SearchActivity extends FragmentActivity {
 		setContentView(R.layout.activity_search);
 
 		retrieveArguments();
-		initActionBar();
 
 		fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.searchContent, FeedFragment.newInstance(category, search)).commit();
@@ -41,7 +38,6 @@ public class SearchActivity extends FragmentActivity {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				search = query;
-				actionBar.setSubtitle(search);
 				fragmentManager.beginTransaction().replace(R.id.searchContent, FeedFragment.newInstance(category, search)).commit();
 				return false;
 			}
@@ -69,12 +65,5 @@ public class SearchActivity extends FragmentActivity {
 	private void retrieveArguments() {
 		category = getIntent().getParcelableExtra(PkRSS.KEY_CATEGORY);
 		search = getIntent().getStringExtra(PkRSS.KEY_SEARCH);
-	}
-
-	private void initActionBar() {
-		actionBar = getActionBar();
-		actionBar.setHomeButtonEnabled(true);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setSubtitle(search);
 	}
 }

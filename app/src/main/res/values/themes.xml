@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <!-- Base application theme. -->
-  <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-    <item name="android:homeAsUpIndicator">@drawable/ic_action_previous</item>
-    <item name="android:actionOverflowButtonStyle">@style/ActionBar.Overflow</item>
-    <item name="android:actionBarStyle">@style/ActionBar</item>
-    <item name="android:actionBarItemBackground">@drawable/selector_action_overlay</item>
-    <item name="android:actionBarWidgetTheme">@style/ActionBar.WidgetTheme</item>
-    <item name="android:listPopupWindowStyle">@style/ActionBar.PopupMenu</item>
+  <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
   </style>
+
+  <style name="AppTheme" parent="BaseAppTheme"/>
 
   <!-- Translucent AB -->
   <style name="AppTheme.Translucent" parent="AppTheme">
-    <item name="android:actionBarStyle">@style/TranslucentActionBar</item>
     <item name="android:windowContentOverlay">@null</item>
     <item name="android:windowActionBarOverlay">true</item>
   </style>

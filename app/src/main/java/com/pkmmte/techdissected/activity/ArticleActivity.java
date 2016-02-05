@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import com.pkmmte.pkrss.Article;
 import com.pkmmte.pkrss.PkRSS;
@@ -13,7 +15,7 @@ import com.pkmmte.techdissected.fragment.ArticleFragment;
 import com.pkmmte.techdissected.view.PkSwipeRefreshLayout;
 import java.util.List;
 
-public class ArticleActivity extends FragmentActivity implements PkSwipeRefreshLayout.OnRefreshListener {
+public class ArticleActivity extends AppCompatActivity implements PkSwipeRefreshLayout.OnRefreshListener {
 	// Argument Variables
 	private String categoryName = null;
 	private String feedUrl = null;
@@ -27,6 +29,7 @@ public class ArticleActivity extends FragmentActivity implements PkSwipeRefreshL
 	private FragmentManager fragmentManager;
 
 	// Views
+	private Toolbar toolbar;
 	private PkSwipeRefreshLayout mSwipeLayout;
 	private View noContent;
 
@@ -37,10 +40,10 @@ public class ArticleActivity extends FragmentActivity implements PkSwipeRefreshL
 
 		retrieveArguments();
 	    initViews();
+	    initToolbar();
 	    mSwipeLayout.setContentPullEnabled(false);
 	    mSwipeLayout.setOnRefreshListener(this);
-	    mSwipeLayout.setColorSchemeResources(R.color.action_swipe_1, R.color.action_swipe_2,
-	                                         R.color.action_swipe_3, R.color.action_swipe_4);
+	    mSwipeLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent, R.color.colorPrimary, R.color.colorAccent);
 	    fragmentManager = getSupportFragmentManager();
 	    showContent();
     }
@@ -54,8 +57,18 @@ public class ArticleActivity extends FragmentActivity implements PkSwipeRefreshL
 	}
 
 	private void initViews() {
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		noContent = findViewById(R.id.noContent);
 		mSwipeLayout = (PkSwipeRefreshLayout) findViewById(R.id.swipeContainer);
+	}
+
+	private void initToolbar() {
+		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackPressed();
+			}
+		});
 	}
 
 	private void showContent() {
@@ -68,7 +81,7 @@ public class ArticleActivity extends FragmentActivity implements PkSwipeRefreshL
 		}
 
 		// Show current category as action bar title
-		getActionBar().setTitle(categoryName);
+		toolbar.setTitle(categoryName);
 
 		// Get list of articles
 		List<Article> articleList = PkRSS.with(this).get(feedUrl);

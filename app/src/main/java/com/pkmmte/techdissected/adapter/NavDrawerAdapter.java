@@ -29,7 +29,7 @@ public class NavDrawerAdapter extends BaseAdapter {
 		this.mDrawerItems = drawerItems;
 		this.mContext = context;
 		this.currentPage = 0;
-		this.highlightColor = context.getResources().getColor(R.color.action_overlay);
+		this.highlightColor = context.getResources().getColor(R.color.colorPrimary);
 	}
 
 	public void addItem(Category drawerItem) {
